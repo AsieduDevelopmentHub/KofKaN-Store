@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - KofKaN-Technologies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/checkout.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Navigation loaded by static.js -->
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <!-- Mobile nav loaded by static.js -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="checkout-main" style="padding-top: 100px;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="../cart/index.html">Cart</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Checkout</span>
+            </div>
+
+            <div class="checkout-header">
+                <h1>Checkout</h1>
+                <p>Complete your purchase securely</p>
+            </div>
+
+            <!-- Checkout Steps -->
+            <div class="checkout-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Information</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Shipping</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+
+            <div class="checkout-layout">
+                <!-- Checkout Form Section -->
+                <div class="checkout-form-section">
+                    <!-- Step 1: Customer Information -->
+                    <form id="checkout-form" class="checkout-form">
+                        <!-- Customer Information Step -->
+                        <div class="checkout-step active" id="step-1">
+                            <div class="step-header">
+                                <h2>Contact Information</h2>
+                                <p>We'll use this to send you order updates</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" id="email" name="email" class="form-input" required>
+                                    <div class="form-error" id="email-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" class="form-input" required
+                                        placeholder="+233 XX XXX XXXX">
+                                    <div class="form-error" id="phone-error"></div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-primary next-step" data-next="2">
+                                    Continue to Shipping
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Shipping Address -->
+                        <div class="checkout-step" id="step-2">
+                            <div class="step-header">
+                                <h2>Shipping Address</h2>
+                                <p>Where should we deliver your order?</p>
+                            </div>
+
+                            <div class="shipping-method-selector">
+                                <h4>Delivery Method</h4>
+                                <div class="shipping-options">
+                                    <label class="shipping-option">
+                                        <input type="radio" name="shipping_method" value="standard" checked>
+                                        <div class="option-content">
+                                            <div class="option-header">
+                                                <span class="option-title">Standard Delivery</span>
+                                                <span class="option-price">GH₵ 15</span>
+                                            </div>
+                                            <span class="option-description">3-5 business days</span>
+                                        </div>
+                                    </label>
+                                    <label class="shipping-option">
+                                        <input type="radio" name="shipping_method" value="express">
+                                        <div class="option-content">
+                                            <div class="option-header">
+                                                <span class="option-title">Express Delivery</span>
+                                                <span class="option-price">GH₵ 30</span>
+                                            </div>
+                                            <span class="option-description">1-2 business days</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="first_name" class="form-label">First Name *</label>
+                                    <input type="text" id="first_name" name="first_name" class="form-input" required>
+                                    <div class="form-error" id="first_name-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="last_name" class="form-label">Last Name *</label>
+                                    <input type="text" id="last_name" name="last_name" class="form-input" required>
+                                    <div class="form-error" id="last_name-error"></div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="address" class="form-label">Street Address *</label>
+                                    <input type="text" id="address" name="address" class="form-input" required
+                                        placeholder="House number, street name">
+                                    <div class="form-error" id="address-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="city" class="form-label">City *</label>
+                                    <input type="text" id="city" name="city" class="form-input" required>
+                                    <div class="form-error" id="city-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="region" class="form-label">Region *</label>
+                                    <select id="region" name="region" class="form-input" required>
+                                        <option value="">Select Region</option>
+                                        <option value="Greater Accra">Greater Accra</option>
+                                        <option value="Ashanti">Ashanti Region</option>
+                                        <option value="Western">Western Region</option>
+                                        <option value="Central">Central Region</option>
+                                        <option value="Eastern">Eastern Region</option>
+                                        <option value="Volta">Volta Region</option>
+                                        <option value="Brong Ahafo">Brong Ahafo</option>
+                                        <option value="Northern">Northern Region</option>
+                                        <option value="Upper East">Upper East Region</option>
+                                        <option value="Upper West">Upper West Region</option>
+                                    </select>
+                                    <div class="form-error" id="region-error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="postal_code" class="form-label">Postal Code</label>
+                                    <input type="text" id="postal_code" name="postal_code" class="form-input">
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="landmark" class="form-label">Landmark (Optional)</label>
+                                    <input type="text" id="landmark" name="landmark" class="form-input"
+                                        placeholder="Near a famous place, building, etc.">
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="save_address" name="save_address">
+                                        <span class="checkmark"></span>
+                                        Save this address for future orders
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline prev-step" data-prev="1">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back to Information
+                                </button>
+                                <button type="button" class="btn btn-primary next-step" data-next="3">
+                                    Continue to Payment
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Payment Method -->
+                        <div class="checkout-step" id="step-3">
+                            <div class="step-header">
+                                <h2>Payment Method</h2>
+                                <p>Choose how you want to pay</p>
+                            </div>
+
+                            <div class="payment-method-selector">
+                                <div class="payment-options">
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="paystack" checked>
+                                        <div class="option-content">
+                                            <div class="option-header">
+                                                <span class="option-title">Pay with Paystack</span>
+                                                <div class="payment-icons">
+                                                    <i class="fab fa-cc-visa"></i>
+                                                    <i class="fab fa-cc-mastercard"></i>
+                                                    <i class="fab fa-cc-amex"></i>
+                                                    <i class="fas fa-mobile-alt"></i>
+                                                </div>
+                                            </div>
+                                            <span class="option-description">Secure payment with cards, mobile money,
+                                                and more</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="mobile_money">
+                                        <div class="option-content">
+                                            <div class="option-header">
+                                                <span class="option-title">Mobile Money</span>
+                                                <div class="payment-icons">
+                                                    <i class="fas fa-mobile-alt"></i>
+                                                </div>
+                                            </div>
+                                            <span class="option-description">Pay with MTN Mobile Money or Vodafone
+                                                Cash</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment_method" value="bank_transfer">
+                                        <div class="option-content">
+                                            <div class="option-header">
+                                                <span class="option-title">Bank Transfer</span>
+                                                <div class="payment-icons">
+                                                    <i class="fas fa-university"></i>
+                                                </div>
+                                            </div>
+                                            <span class="option-description">Direct bank transfer</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Paystack Payment Details -->
+                            <div class="payment-details" id="paystack-details">
+                                <div class="payment-info">
+                                    <p>You will be redirected to Paystack to complete your payment securely.</p>
+                                    <div class="supported-methods">
+                                        <span>Supported methods:</span>
+                                        <div class="method-icons">
+                                            <i class="fab fa-cc-visa" title="Visa"></i>
+                                            <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                                            <i class="fab fa-cc-amex" title="American Express"></i>
+                                            <i class="fas fa-mobile-alt" title="Mobile Money"></i>
+                                            <i class="fas fa-university" title="Bank Transfer"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Money Details -->
+                            <div class="payment-details hidden" id="mobile_money-details">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="mobile_money_provider" class="form-label">Provider *</label>
+                                        <select id="mobile_money_provider" name="mobile_money_provider"
+                                            class="form-input">
+                                            <option value="">Select Provider</option>
+                                            <option value="mtn">MTN Mobile Money</option>
+                                            <option value="vodafone">Vodafone Cash</option>
+                                            <option value="airteltigo">AirtelTigo Money</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobile_number" class="form-label">Mobile Number *</label>
+                                        <input type="tel" id="mobile_number" name="mobile_number" class="form-input"
+                                            placeholder="+233 XX XXX XXXX">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bank Transfer Details -->
+                            <div class="payment-details hidden" id="bank_transfer-details">
+                                <div class="bank-details">
+                                    <h4>Bank Transfer Instructions</h4>
+                                    <div class="bank-info">
+                                        <div class="bank-item">
+                                            <span class="bank-label">Bank Name:</span>
+                                            <span class="bank-value">GCB Bank</span>
+                                        </div>
+                                        <div class="bank-item">
+                                            <span class="bank-label">Account Name:</span>
+                                            <span class="bank-value">KofKaN-Technologies Ltd</span>
+                                        </div>
+                                        <div class="bank-item">
+                                            <span class="bank-label">Account Number:</span>
+                                            <span class="bank-value">1234567890123</span>
+                                        </div>
+                                        <div class="bank-item">
+                                            <span class="bank-label">Branch:</span>
+                                            <span class="bank-value">Accra Main</span>
+                                        </div>
+                                        <div class="bank-item">
+                                            <span class="bank-label">Reference:</span>
+                                            <span class="bank-value" id="bank-reference">ORDER-12345</span>
+                                        </div>
+                                    </div>
+                                    <p class="bank-note">Please use the order reference above when making your transfer.
+                                        Your order will be processed once payment is confirmed.</p>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline prev-step" data-prev="2">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back to Shipping
+                                </button>
+                                <button type="button" class="btn btn-primary next-step" data-next="4">
+                                    Review Order
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Order Review -->
+                        <div class="checkout-step" id="step-4">
+                            <div class="step-header">
+                                <h2>Review Your Order</h2>
+                                <p>Please verify your information before placing your order</p>
+                            </div>
+
+                            <!-- Order Summary -->
+                            <div class="order-review">
+                                <div class="review-section">
+                                    <h4>Contact Information</h4>
+                                    <div class="review-content" id="review-contact">
+                                        <!-- Contact info will be populated here -->
+                                    </div>
+                                    <button type="button" class="edit-section" data-section="1">Edit</button>
+                                </div>
+
+                                <div class="review-section">
+                                    <h4>Shipping Address</h4>
+                                    <div class="review-content" id="review-shipping">
+                                        <!-- Shipping info will be populated here -->
+                                    </div>
+                                    <button type="button" class="edit-section" data-section="2">Edit</button>
+                                </div>
+
+                                <div class="review-section">
+                                    <h4>Payment Method</h4>
+                                    <div class="review-content" id="review-payment">
+                                        <!-- Payment info will be populated here -->
+                                    </div>
+                                    <button type="button" class="edit-section" data-section="3">Edit</button>
+                                </div>
+
+                                <div class="review-section">
+                                    <h4>Order Items</h4>
+                                    <div class="review-items" id="review-items">
+                                        <!-- Order items will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="terms-section">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="agree_terms" name="agree_terms" required>
+                                    <span class="checkmark"></span>
+                                    I agree to the <a href="../assets/docs/terms.html" target="_blank">Terms and
+                                        Conditions</a>
+                                    and <a href="../assets/docs/privacy.html" target="_blank">Privacy Policy</a> *
+                                </label>
+                                <div class="form-error" id="terms-error"></div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline prev-step" data-prev="3">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back to Payment
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-large" id="place-order-btn">
+                                    <i class="fas fa-lock"></i>
+                                    Place Order
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary Sidebar -->
+                <div class="order-summary-sidebar">
+                    <div class="summary-card">
+                        <h3>Order Summary</h3>
+
+                        <div class="order-items-preview" id="order-items-preview">
+                            <!-- Order items will be loaded here -->
+                        </div>
+
+                        <div class="summary-details">
+                            <div class="summary-line">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">GH₵ 0.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Shipping</span>
+                                <span id="summary-shipping">GH₵ 0.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Tax (VAT)</span>
+                                <span id="summary-tax">GH₵ 0.00</span>
+                            </div>
+
+                            <div class="summary-line discount">
+                                <span>Discount</span>
+                                <span id="summary-discount">- GH₵ 0.00</span>
+                            </div>
+
+                            <div class="summary-divider"></div>
+
+                            <div class="summary-line total">
+                                <strong>Total</strong>
+                                <strong id="summary-total">GH₵ 0.00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Promo Code -->
+                        <div class="promo-section">
+                            <div class="promo-input-group">
+                                <input type="text" id="checkout-promo" placeholder="Promo code" class="promo-input">
+                                <button type="button" class="btn btn-outline" id="apply-checkout-promo">Apply</button>
+                            </div>
+                            <div class="promo-message" id="checkout-promo-message"></div>
+                        </div>
+
+                        <!-- Security Badges -->
+                        <div class="security-badges">
+                            <div class="security-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>SSL Secure Checkout</span>
+                            </div>
+                            <div class="security-badge">
+                                <i class="fas fa-lock"></i>
+                                <span>Payment Protection</span>
+                            </div>
+                            <div class="security-badge">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Privacy Guaranteed</span>
+                            </div>
+                        </div>
+
+                        <!-- Need Help -->
+                        <div class="help-section">
+                            <h4>Need Help?</h4>
+                            <div class="contact-options">
+                                <div class="contact-option">
+                                    <i class="fas fa-phone"></i>
+                                    <span>+233 24 123 4567</span>
+                                </div>
+                                <div class="contact-option">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>support@kofkan-technologies.com</span>
+                                </div>
+                                <div class="contact-option">
+                                    <i class="fas fa-comment"></i>
+                                    <span>Live Chat</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner large"></div>
+            <h3>Processing Your Order</h3>
+            <p>Please wait while we secure your payment...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer loaded by static.js -->
+        </div>
+    </footer>
+
+    <!-- Paystack Inline Payment -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <script src="../js/static.js"></script>
+    <script src="../js/checkout.js"></script>
+</body>
+
+</html>

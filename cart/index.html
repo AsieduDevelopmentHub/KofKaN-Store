@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - KofKaN-Technologies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/cart.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Navigation loaded by static.js -->
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <!-- Mobile nav loaded by static.js -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="cart-main" style="padding-top: 100px;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="../products/index.html">Products</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Shopping Cart</span>
+            </div>
+
+            <div class="cart-header">
+                <h1>Shopping Cart</h1>
+                <p>Review your items and proceed to checkout</p>
+            </div>
+
+            <div class="cart-layout">
+                <!-- Cart Items Section -->
+                <div class="cart-items-section">
+                    <!-- Cart Header -->
+                    <div class="cart-section-header">
+                        <h2>Your Items (<span id="cart-items-count">0</span>)</h2>
+                        <button class="btn btn-outline btn-small" id="clear-cart">
+                            <i class="fas fa-trash"></i> Clear Cart
+                        </button>
+                    </div>
+
+                    <!-- Empty Cart State -->
+                    <div class="empty-cart" id="empty-cart">
+                        <div class="empty-cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Your cart is empty</h3>
+                        <p>Browse our products and add some items to your cart</p>
+                        <a href="../products/index.html" class="btn btn-primary">
+                            <i class="fas fa-shopping-bag"></i> Continue Shopping
+                        </a>
+                    </div>
+
+                    <!-- Cart Items List -->
+                    <div class="cart-items" id="cart-items">
+                        <!-- Cart items will be loaded dynamically -->
+                    </div>
+
+                    <!-- Continue Shopping -->
+                    <div class="continue-shopping">
+                        <a href="../products/index.html" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Order Summary Section -->
+                <div class="order-summary-section">
+                    <div class="order-summary-card">
+                        <h3>Order Summary</h3>
+
+                        <div class="summary-line">
+                            <span>Subtotal</span>
+                            <span id="subtotal-amount">GH₵ 0.00</span>
+                        </div>
+
+                        <div class="summary-line">
+                            <span>Shipping</span>
+                            <span id="shipping-amount">GH₵ 0.00</span>
+                        </div>
+
+                        <div class="summary-line">
+                            <span>Tax (VAT)</span>
+                            <span id="tax-amount">GH₵ 0.00</span>
+                        </div>
+
+                        <div class="summary-line discount-line">
+                            <span>Discount</span>
+                            <span id="discount-amount">- GH₵ 0.00</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-line total-line">
+                            <strong>Total</strong>
+                            <strong id="total-amount">GH₵ 0.00</strong>
+                        </div>
+
+                        <!-- Shipping Calculator -->
+                        <div class="shipping-calculator">
+                            <h4>Calculate Shipping</h4>
+                            <select id="shipping-region" class="shipping-select">
+                                <option value="">Select your region</option>
+                                <option value="accra">Greater Accra (Free)</option>
+                                <option value="kumasi">Ashanti Region (GH₵ 15)</option>
+                                <option value="takoradi">Western Region (GH₵ 15)</option>
+                                <option value="central">Central Region (GH₵ 20)</option>
+                                <option value="other">Other Regions (GH₵ 25)</option>
+                            </select>
+                        </div>
+
+                        <!-- Promo Code -->
+                        <div class="promo-code">
+                            <h4>Promo Code</h4>
+                            <div class="promo-input-group">
+                                <input type="text" id="promo-code" placeholder="Enter promo code" class="promo-input">
+                                <button class="btn btn-outline" id="apply-promo">Apply</button>
+                            </div>
+                            <div class="promo-message" id="promo-message"></div>
+                        </div>
+
+                        <!-- Checkout Button -->
+                        <button class="btn btn-primary btn-large checkout-btn" id="checkout-btn">
+                            <i class="fas fa-lock"></i> Proceed to Checkout
+                        </button>
+
+                        <!-- Trust Badges -->
+                        <div class="trust-badges">
+                            <div class="trust-badge">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Secure Checkout</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-truck"></i>
+                                <span>Fast Delivery</span>
+                            </div>
+                            <div class="trust-badge">
+                                <i class="fas fa-undo"></i>
+                                <span>Easy Returns</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recently Viewed -->
+                    <div class="recently-viewed">
+                        <h4>Recently Viewed</h4>
+                        <div class="recent-items" id="recent-items">
+                            <!-- Recently viewed items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Frequently Bought Together -->
+            <section class="frequently-bought">
+                <h2>Frequently Bought Together</h2>
+                <div class="products-grid" id="frequently-bought">
+                    <!-- Frequently bought items will be loaded here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Remove Item Modal -->
+    <div class="modal remove-modal" id="remove-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Remove Item</h3>
+                <button class="modal-close" id="remove-modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this item from your cart?</p>
+                <div class="modal-item" id="modal-item-preview">
+                    <!-- Item preview will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancel-remove">Cancel</button>
+                <button class="btn btn-primary" id="confirm-remove">Remove Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer loaded by static.js -->
+        </div>
+    </footer>
+
+    <script src="../js/static.js"></script>
+    <script src="../js/cart.js"></script>
+</body>
+
+</html>

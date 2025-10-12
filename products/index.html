@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - KofKaN-Technologies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/products.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Navigation loaded by static.js -->
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <!-- Mobile nav loaded by static.js -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="products-main" style="padding-top: 100px;">
+        <!-- Search and Filter Section -->
+        <section class="search-filter-section">
+            <div class="container">
+                <div class="search-header">
+                    <h1>Electronics Components</h1>
+                    <p>Find Arduino kits, sensors, and mechatronics components</p>
+                </div>
+                
+                <div class="search-controls">
+                    <div class="search-bar-container">
+                        <div class="search-bar">
+                            <input type="text" id="product-search" placeholder="Search for components, sensors, boards..." class="search-input">
+                            <button class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="search-suggestions" id="search-suggestions">
+                            <!-- Suggestions will appear here -->
+                        </div>
+                    </div>
+
+                    <div class="filter-controls">
+                        <button class="filter-toggle" id="filter-toggle">
+                            <i class="fas fa-filter"></i> Filters
+                        </button>
+                        <div class="view-controls">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Panel -->
+                <div class="filter-panel" id="filter-panel">
+                    <div class="filter-group">
+                        <h4>Categories</h4>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" name="category" value="development-boards">
+                                <span class="checkmark"></span>
+                                Development Boards
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" name="category" value="sensors">
+                                <span class="checkmark"></span>
+                                Sensors
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" name="category" value="actuators">
+                                <span class="checkmark"></span>
+                                Actuators
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" name="category" value="displays">
+                                <span class="checkmark"></span>
+                                Displays
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" name="category" value="kits-bundles">
+                                <span class="checkmark"></span>
+                                Kits & Bundles
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Price Range</h4>
+                        <div class="price-range">
+                            <input type="range" min="0" max="1000" value="500" class="price-slider" id="price-slider">
+                            <div class="price-values">
+                                <span>GH₵ 0</span>
+                                <span>GH₵ <span id="price-value">500</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <h4>Stock Status</h4>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" name="stock" value="in-stock" checked>
+                                <span class="checkmark"></span>
+                                In Stock
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" name="stock" value="low-stock">
+                                <span class="checkmark"></span>
+                                Low Stock
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" id="apply-filters">Apply Filters</button>
+                        <button class="btn btn-outline" id="reset-filters">Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="products-listing">
+            <div class="container">
+                <div class="products-header">
+                    <div class="results-info">
+                        <span id="results-count">Loading products...</span>
+                        <div class="sort-by">
+                            <label for="sort-select">Sort by:</label>
+                            <select id="sort-select" class="sort-select">
+                                <option value="newest">Newest First</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name">Name A-Z</option>
+                                <option value="popular">Most Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="products-container">
+                    <div class="products-view" id="products-view">
+                        <!-- Products will be loaded here -->
+                    </div>
+                    
+                    <div class="loading-spinner-container" id="loading-spinner">
+                        <div class="loading-spinner large"></div>
+                        <p>Loading products...</p>
+                    </div>
+
+                    <div class="no-results hidden" id="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your search or filters</p>
+                        <button class="btn btn-primary" id="clear-search">Clear Search</button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer loaded by static.js -->
+        </div>
+    </footer>
+
+    <!-- QuickView Modal -->
+    <div class="modal quickview-modal" id="quickview-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="quickview-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="quickview-content" id="quickview-content">
+                <!-- QuickView content will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/static.js"></script>
+    <script src="../js/products.js"></script>
+</body>
+</html>
