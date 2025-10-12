@@ -40,7 +40,10 @@ class StaticComponents {
         if (navContainer && !document.querySelector('.nav-menu')) {
             navContainer.innerHTML = `
                 <div class="nav-logo">
-                    <a href="/index.html">KofKaN-Technologies</a>
+                    <a href="/index.html">
+                    <img src="/images/logos/logo.jpg" alt="KofKaN-Technologies Logo" class="logo-image">
+                    KofKaN-Technologies
+                    </a>
                 </div>
                 <ul class="nav-menu">
                     <li class="nav-item">
@@ -54,7 +57,7 @@ class StaticComponents {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/about/index.html" class="nav-link">
+                        <a href="https://kofkantechnologies.com/about.html" target="_blank" class="nav-link">
                             <i class="fas fa-info-circle"></i>About
                         </a>
                     </li>
@@ -64,14 +67,24 @@ class StaticComponents {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <button class="theme-toggle">
-                            <i class="fas ${this.currentTheme === 'light' ? 'fa-moon' : 'fa-sun'}"></i>
-                        </button>
+                        <a href="/account/index.html" class="nav-link cart-link">
+                            <i class="fas fa-user"></i>Account
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/wishlist/index.html" class="nav-link cart-link">
+                            <i class="fas fa-heart"></i>Wishlist <span class="wishlist-count">0</span>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a href="/cart/index.html" class="nav-link cart-link">
                             <i class="fas fa-shopping-cart"></i>Cart <span class="cart-count">0</span>
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="theme-toggle">
+                            <i class="fas ${this.currentTheme === 'light' ? 'fa-sun' : 'fa-moon'}"></i>
+                        </button>
                     </li>
                 </ul>
                 <div class="hamburger">
@@ -107,13 +120,13 @@ class StaticComponents {
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="mobile-nav-link" data-page="wishlist">
+                        <a href="/wishlist/index.html" class="mobile-nav-link" data-page="wishlist">
                             <i class="fas fa-heart mobile-nav-icon"></i>
                             <span>Wishlist</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="mobile-nav-link" data-page="account">
+                        <a href="/account/index.html" class="mobile-nav-link" data-page="account">
                             <i class="fas fa-user mobile-nav-icon"></i>
                             <span>Account</span>
                         </a>

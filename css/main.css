@@ -10,9 +10,11 @@
     --secondary-color: #ffffff;
     --accent-color: #333333;
     --text-primary: #000000;
-    --text-secondary: #666666;
+    --text-secondary: #a09696;
+    --text-tertiary: #e0c7c7;
     --text-light: #999999;
     --bg-primary: #ffffff;
+    --white: #ffffff;
     --bg-secondary: #f8f8f8;
     --bg-dark: #000000;
     --border-color: #e0e0e0;
@@ -25,7 +27,7 @@
     --secondary-color: #000000;
     --accent-color: #cccccc;
     --text-primary: #ffffff;
-    --text-secondary: #cccccc;
+    --text-secondary: #d1caca;
     --text-light: #999999;
     --bg-primary: #000000;
     --bg-secondary: #111111;
@@ -126,8 +128,8 @@ p {
 
 /* Theme Toggle */
 .theme-toggle {
-    background: none;
-    border: none;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     color: var(--text-primary);
     cursor: pointer;
     padding: 8px;
@@ -136,7 +138,7 @@ p {
 }
 
 .theme-toggle:hover {
-    background: var(--bg-secondary);
+    background: var(--bg-primary);
 }
 
 /* Loading Spinner */

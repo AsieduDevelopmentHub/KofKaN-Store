@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - KofKaN-Technologies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/account.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Navigation loaded by static.js -->
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <!-- Mobile nav loaded by static.js -->
+    </nav>
+
+    <!-- Main Content -->
+    <main class="account-main" style="padding-top: 100px;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>My Account</span>
+            </div>
+
+            <!-- Account Header -->
+            <div class="account-header">
+                <div class="user-welcome">
+                    <div class="user-avatar">
+                        <img src="../images/avatars/default-avatar.jpg" alt="User Avatar" id="user-avatar">
+                        <button class="avatar-edit" id="avatar-edit-btn">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="user-info">
+                        <h1>Welcome back, <span id="user-name">User</span>!</h1>
+                        <p class="user-email" id="user-email">user@example.com</p>
+                        <p class="member-since">Member since <span id="member-since">2024</span></p>
+                    </div>
+                </div>
+                <div class="account-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="total-orders">0</span>
+                            <span class="stat-label">Total Orders</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="wishlist-count">0</span>
+                            <span class="stat-label">Wishlist Items</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="total-reviews">0</span>
+                            <span class="stat-label">Reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-layout">
+                <!-- Sidebar Navigation -->
+                <aside class="account-sidebar">
+                    <nav class="sidebar-nav">
+                        <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#orders" class="nav-item" data-tab="orders">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>My Orders</span>
+                            <span class="nav-badge" id="orders-badge">0</span>
+                        </a>
+                        <a href="#profile" class="nav-item" data-tab="profile">
+                            <i class="fas fa-user"></i>
+                            <span>Profile Information</span>
+                        </a>
+                        <a href="#addresses" class="nav-item" data-tab="addresses">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Address Book</span>
+                        </a>
+                        <a href="#wishlist" class="nav-item" data-tab="wishlist">
+                            <i class="fas fa-heart"></i>
+                            <span>My Wishlist</span>
+                            <span class="nav-badge" id="wishlist-badge">0</span>
+                        </a>
+                        <a href="#reviews" class="nav-item" data-tab="reviews">
+                            <i class="fas fa-star"></i>
+                            <span>My Reviews</span>
+                        </a>
+                        <a href="#preferences" class="nav-item" data-tab="preferences">
+                            <i class="fas fa-cog"></i>
+                            <span>Preferences</span>
+                        </a>
+                        <a href="#security" class="nav-item" data-tab="security">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Security</span>
+                        </a>
+                        <div class="nav-divider"></div>
+                        <a href="../auth/signin.html" class="nav-item nav-logout" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Main Content Area -->
+                <div class="account-content">
+                    <!-- Dashboard Tab -->
+                    <div class="account-tab active" id="dashboard-tab">
+                        <div class="tab-header">
+                            <h2>Account Dashboard</h2>
+                            <p>Overview of your account activity and recent orders</p>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="dashboard-stats">
+                            <div class="stat-grid">
+                                <div class="dashboard-stat">
+                                    <div class="stat-main">
+                                        <i class="fas fa-clock"></i>
+                                        <div>
+                                            <span class="stat-value" id="pending-orders">0</span>
+                                            <span class="stat-title">Pending Orders</span>
+                                        </div>
+                                    </div>
+                                    <a href="#orders" class="stat-link" data-tab="orders">View All</a>
+                                </div>
+                                <div class="dashboard-stat">
+                                    <div class="stat-main">
+                                        <i class="fas fa-truck"></i>
+                                        <div>
+                                            <span class="stat-value" id="shipping-orders">0</span>
+                                            <span class="stat-title">Shipping</span>
+                                        </div>
+                                    </div>
+                                    <a href="#orders" class="stat-link" data-tab="orders">Track</a>
+                                </div>
+                                <div class="dashboard-stat">
+                                    <div class="stat-main">
+                                        <i class="fas fa-wallet"></i>
+                                        <div>
+                                            <span class="stat-value">GH₵ <span id="total-spent">0.00</span></span>
+                                            <span class="stat-title">Total Spent</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dashboard-stat">
+                                    <div class="stat-main">
+                                        <i class="fas fa-percentage"></i>
+                                        <div>
+                                            <span class="stat-value" id="savings-percent">0%</span>
+                                            <span class="stat-title">Total Savings</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="dashboard-sections">
+                            <div class="dashboard-section">
+                                <div class="section-header">
+                                    <h3>Recent Orders</h3>
+                                    <a href="#orders" class="view-all" data-tab="orders">View All</a>
+                                </div>
+                                <div class="recent-orders" id="recent-orders">
+                                    <!-- Recent orders will be loaded here -->
+                                    <div class="empty-state">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        <p>No recent orders</p>
+                                        <a href="../products/index.html" class="btn btn-primary">Start Shopping</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-section">
+                                <div class="section-header">
+                                    <h3>Recently Viewed</h3>
+                                    <a href="../products/index.html" class="view-all">Browse More</a>
+                                </div>
+                                <div class="recently-viewed-grid" id="recently-viewed">
+                                    <!-- Recently viewed items will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Tab -->
+                    <div class="account-tab" id="orders-tab">
+                        <div class="tab-header">
+                            <h2>My Orders</h2>
+                            <p>View and track your recent purchases</p>
+                        </div>
+
+                        <div class="orders-filters">
+                            <div class="filter-group">
+                                <label>Filter by:</label>
+                                <select id="order-status-filter" class="filter-select">
+                                    <option value="all">All Orders</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Time period:</label>
+                                <select id="order-time-filter" class="filter-select">
+                                    <option value="all">All Time</option>
+                                    <option value="30">Last 30 days</option>
+                                    <option value="90">Last 3 months</option>
+                                    <option value="365">Last year</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="orders-list" id="orders-list">
+                            <!-- Orders will be loaded here -->
+                        </div>
+
+                        <div class="pagination" id="orders-pagination">
+                            <!-- Pagination will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Profile Tab -->
+                    <div class="account-tab" id="profile-tab">
+                        <div class="tab-header">
+                            <h2>Profile Information</h2>
+                            <p>Manage your personal information and account details</p>
+                        </div>
+
+                        <form id="profile-form" class="profile-form">
+                            <div class="form-section">
+                                <h3>Personal Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="profile-first-name" class="form-label">First Name</label>
+                                        <input type="text" id="profile-first-name" name="first_name" class="form-input"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile-last-name" class="form-label">Last Name</label>
+                                        <input type="text" id="profile-last-name" name="last_name" class="form-input"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile-email" class="form-label">Email Address</label>
+                                        <input type="email" id="profile-email" name="email" class="form-input" required>
+                                        <div class="form-hint">Your email address is also your login ID</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile-phone" class="form-label">Phone Number</label>
+                                        <input type="tel" id="profile-phone" name="phone" class="form-input"
+                                            placeholder="+233 XX XXX XXXX">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile-dob" class="form-label">Date of Birth</label>
+                                        <input type="date" id="profile-dob" name="date_of_birth" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile-gender" class="form-label">Gender</label>
+                                        <select id="profile-gender" name="gender" class="form-input">
+                                            <option value="">Prefer not to say</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="cancel-profile">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div class="account-tab" id="addresses-tab">
+                        <div class="tab-header">
+                            <h2>Address Book</h2>
+                            <p>Manage your shipping and billing addresses</p>
+                        </div>
+
+                        <div class="addresses-header">
+                            <h3>Saved Addresses</h3>
+                            <button class="btn btn-primary" id="add-address-btn">
+                                <i class="fas fa-plus"></i> Add New Address
+                            </button>
+                        </div>
+
+                        <div class="addresses-grid" id="addresses-list">
+                            <!-- Addresses will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Wishlist Tab -->
+                    <div class="account-tab" id="wishlist-tab">
+                        <div class="tab-header">
+                            <h2>My Wishlist</h2>
+                            <p>Your saved items and favorite products</p>
+                        </div>
+
+                        <div class="wishlist-actions">
+                            <div class="wishlist-filters">
+                                <button class="filter-btn active" data-filter="all">All Items</button>
+                                <button class="filter-btn" data-filter="available">In Stock</button>
+                                <button class="filter-btn" data-filter="unavailable">Out of Stock</button>
+                            </div>
+                            <button class="btn btn-outline" id="clear-wishlist">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                        </div>
+
+                        <div class="wishlist-grid" id="wishlist-items">
+                            <!-- Wishlist items will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Add more tabs for Reviews, Preferences, Security as needed -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Address Modal -->
+    <div class="modal" id="add-address-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Address</h3>
+                <button class="modal-close" id="close-address-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="address-form" class="modal-form">
+                <div class="form-group">
+                    <label for="address-type" class="form-label">Address Type</label>
+                    <select id="address-type" name="address_type" class="form-input" required>
+                        <option value="home">Home</option>
+                        <option value="work">Work</option>
+                        <option value="billing">Billing</option>
+                        <option value="shipping">Shipping</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address-street" class="form-label">Street Address</label>
+                    <input type="text" id="address-street" name="street_address" class="form-input" required
+                        placeholder="House number, street name">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="address-city" class="form-label">City</label>
+                        <input type="text" id="address-city" name="city" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address-region" class="form-label">Region</label>
+                        <select id="address-region" name="region" class="form-input" required>
+                            <option value="">Select Region</option>
+                            <option value="Greater Accra">Greater Accra</option>
+                            <option value="Ashanti">Ashanti Region</option>
+                            <option value="Western">Western Region</option>
+                            <option value="Central">Central Region</option>
+                            <option value="Eastern">Eastern Region</option>
+                            <option value="Volta">Volta Region</option>
+                            <option value="Brong Ahafo">Brong Ahafo</option>
+                            <option value="Northern">Northern Region</option>
+                            <option value="Upper East">Upper East Region</option>
+                            <option value="Upper West">Upper West Region</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address-postal" class="form-label">Postal Code</label>
+                    <input type="text" id="address-postal" name="postal_code" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="address-landmark" class="form-label">Landmark (Optional)</label>
+                    <input type="text" id="address-landmark" name="landmark" class="form-input"
+                        placeholder="Near a famous place, building, etc.">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="address-default" name="is_default">
+                        <span class="checkmark"></span>
+                        Set as default address
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-address">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer loaded by static.js -->
+        </div>
+    </footer>
+
+    <script src="../js/static.js"></script>
+    <script src="../js/account.js"></script>
+</body>
+
+</html>

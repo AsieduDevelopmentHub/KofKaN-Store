@@ -2,6 +2,9 @@ const express = require('express');
 const mysql = require('mysql2');
 const path = require('path');
 const cors = require('cors');
+// Authentication API Routes
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -345,6 +348,435 @@ app.get('/api/health', (req, res) => {
             return;
         }
         res.json({ status: 'OK', database: 'Connected' });
+    });
+});
+
+// Signup endpoint
+app.post('/api/auth/signup', async (req, res) => {
+    const { first_name, last_name, email, phone, password, newsletter } = req.body;
+
+    try {
+        // Check if user already exists
+        const existingUser = await new Promise((resolve, reject) => {
+            db.query('SELECT id FROM users WHERE email = ?', [email], (err, results) => {
+                if (err) reject(err);
+                resolve(results[0]);
+            });
+        });
+
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: 'User with this email already exists',
+                field: 'email'
+            });
+        }
+
+        // Hash password
+        const saltRounds = 12;
+        const passwordHash = await bcrypt.hash(password, saltRounds);
+
+        // Generate verification token
+        const verificationToken = require('crypto').randomBytes(32).toString('hex');
+
+        // Create user
+        const userQuery = `
+            INSERT INTO users (first_name, last_name, email, phone, password_hash, verification_token)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+
+        const result = await new Promise((resolve, reject) => {
+            db.query(userQuery, [first_name, last_name, email, phone, passwordHash, verificationToken], (err, results) => {
+                if (err) reject(err);
+                resolve(results);
+            });
+        });
+
+        // Create user preferences
+        const preferencesQuery = `
+            INSERT INTO user_preferences (user_id, newsletter_subscribed, marketing_emails)
+            VALUES (?, ?, ?)
+        `;
+
+        await new Promise((resolve, reject) => {
+            db.query(preferencesQuery, [result.insertId, newsletter, newsletter], (err, results) => {
+                if (err) reject(err);
+                resolve(results);
+            });
+        });
+
+        // Send verification email (implementation depends on your email service)
+        // await sendVerificationEmail(email, verificationToken);
+
+        res.json({
+            success: true,
+            message: 'User created successfully. Please check your email for verification.'
+        });
+
+    } catch (error) {
+        console.error('Signup error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+// Signin endpoint
+app.post('/api/auth/signin', async (req, res) => {
+    const { email, password, remember_me } = req.body;
+
+    try {
+        // Find user
+        const userQuery = `
+            SELECT u.*, up.newsletter_subscribed, up.theme_preference 
+            FROM users u 
+            LEFT JOIN user_preferences up ON u.id = up.user_id 
+            WHERE u.email = ?
+        `;
+
+        const user = await new Promise((resolve, reject) => {
+            db.query(userQuery, [email], (err, results) => {
+                if (err) reject(err);
+                resolve(results[0]);
+            });
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password'
+            });
+        }
+
+        // Check if account is locked
+        if (user.account_locked) {
+            return res.status(401).json({
+                success: false,
+                message: 'Account is locked. Please contact support.'
+            });
+        }
+
+        // Verify password
+        const isValidPassword = await bcrypt.compare(password, user.password_hash);
+
+        if (!isValidPassword) {
+            // Increment login attempts
+            const newAttempts = user.login_attempts + 1;
+            const lockAccount = newAttempts >= 5;
+
+            await new Promise((resolve, reject) => {
+                db.query(
+                    'UPDATE users SET login_attempts = ?, account_locked = ? WHERE id = ?',
+                    [newAttempts, lockAccount, user.id],
+                    (err, results) => {
+                        if (err) reject(err);
+                        resolve(results);
+                    }
+                );
+            });
+
+            return res.status(401).json({
+                success: false,
+                message: lockAccount 
+                    ? 'Account locked due to too many failed attempts' 
+                    : 'Invalid email or password'
+            });
+        }
+
+        // Reset login attempts on successful login
+        await new Promise((resolve, reject) => {
+            db.query(
+                'UPDATE users SET login_attempts = 0, last_login = NOW() WHERE id = ?',
+                [user.id],
+                (err, results) => {
+                    if (err) reject(err);
+                    resolve(results);
+                }
+            );
+        });
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user.id, email: user.email },
+            process.env.JWT_SECRET || 'your-secret-key',
+            { expiresIn: remember_me ? '30d' : '1d' }
+        );
+
+        // Remove sensitive data
+        const { password_hash, verification_token, reset_token, ...safeUser } = user;
+
+        res.json({
+            success: true,
+            user: safeUser,
+            token
+        });
+
+    } catch (error) {
+        console.error('Signin error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+// Middleware to verify JWT token
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    if (!token) {
+        return res.status(401).json({ message: 'Access token required' });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid or expired token' });
+        }
+        req.user = user;
+        next();
+    });
+};
+
+// Middleware to verify token
+const verifyToken = async (req, res, next) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+
+    try {
+        // Verify JWT token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Check if token exists in database (optional for logout functionality)
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(401).json({ error: 'User not found' });
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        return res.status(401).json({ error: 'Invalid token' });
+    }
+};
+
+// Verification endpoint
+// app.get('/api/auth/verify', verifyToken, (req, res) => {
+//     res.json({ 
+//         valid: true, 
+//         user: {
+//             id: req.user._id,
+//             first_name: req.user.first_name,
+//             last_name: req.user.last_name,
+//             email: req.user.email
+//         }
+//     });
+// });
+
+// Protected route example
+app.get('/api/auth/verify', authenticateToken, (req, res) => {
+    const userQuery = `
+        SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.avatar_url, 
+               u.email_verified, u.created_at, up.newsletter_subscribed, up.theme_preference
+        FROM users u 
+        LEFT JOIN user_preferences up ON u.id = up.user_id 
+        WHERE u.id = ?
+    `;
+
+    db.query(userQuery, [req.user.userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ user: results[0] });
+    });
+});
+
+
+// Get user profile
+app.get('/api/user/profile', authenticateToken, (req, res) => {
+    const userQuery = `
+        SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.avatar_url, 
+               u.email_verified, u.date_of_birth, u.gender, u.created_at,
+               up.newsletter_subscribed, up.theme_preference, up.language, up.currency
+        FROM users u 
+        LEFT JOIN user_preferences up ON u.id = up.user_id 
+        WHERE u.id = ?
+    `;
+
+    db.query(userQuery, [req.user.userId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json({ user: results[0] });
+    });
+});
+
+// Update user profile
+app.put('/api/user/profile', authenticateToken, (req, res) => {
+    const { first_name, last_name, phone, date_of_birth, gender } = req.body;
+    
+    const updateQuery = `
+        UPDATE users 
+        SET first_name = ?, last_name = ?, phone = ?, date_of_birth = ?, gender = ?, updated_at = NOW()
+        WHERE id = ?
+    `;
+
+    db.query(updateQuery, [first_name, last_name, phone, date_of_birth, gender, req.user.userId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        // Get updated user data
+        const userQuery = `
+            SELECT u.id, u.first_name, u.last_name, u.email, u.phone, u.avatar_url, 
+                   u.email_verified, u.date_of_birth, u.gender, u.created_at,
+                   up.newsletter_subscribed, up.theme_preference
+            FROM users u 
+            LEFT JOIN user_preferences up ON u.id = up.user_id 
+            WHERE u.id = ?
+        `;
+
+        db.query(userQuery, [req.user.userId], (err, userResults) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error' });
+            }
+
+            res.json({ 
+                success: true,
+                user: userResults[0] 
+            });
+        });
+    });
+});
+
+// Get user addresses
+app.get('/api/user/addresses', authenticateToken, (req, res) => {
+    const addressesQuery = `
+        SELECT * FROM addresses 
+        WHERE user_id = ? 
+        ORDER BY is_default DESC, created_at DESC
+    `;
+
+    db.query(addressesQuery, [req.user.userId], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        res.json({ addresses: results });
+    });
+});
+
+// Add new address
+app.post('/api/user/addresses', authenticateToken, (req, res) => {
+    const { address_type, street_address, city, region, postal_code, landmark, is_default } = req.body;
+    
+    // If this is set as default, update other addresses
+    if (is_default) {
+        db.query(
+            'UPDATE addresses SET is_default = FALSE WHERE user_id = ?',
+            [req.user.userId],
+            (err) => {
+                if (err) {
+                    console.error('Database error:', err);
+                    return res.status(500).json({ message: 'Database error' });
+                }
+            }
+        );
+    }
+
+    const insertQuery = `
+        INSERT INTO addresses (user_id, address_type, street_address, city, region, postal_code, landmark, is_default)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(insertQuery, [
+        req.user.userId, address_type, street_address, city, region, postal_code, landmark, is_default
+    ], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        res.json({ 
+            success: true,
+            message: 'Address added successfully',
+            addressId: results.insertId
+        });
+    });
+});
+
+// Get user orders
+app.get('/api/user/orders', authenticateToken, (req, res) => {
+    const { status, period } = req.query;
+    
+    let ordersQuery = `
+        SELECT o.*, COUNT(oi.id) as item_count
+        FROM orders o
+        LEFT JOIN order_items oi ON o.id = oi.order_id
+        WHERE o.customer_email = ?
+    `;
+
+    const params = [req.user.email];
+
+    // Add status filter
+    if (status && status !== 'all') {
+        ordersQuery += ' AND o.status = ?';
+        params.push(status);
+    }
+
+    // Add time period filter
+    if (period && period !== 'all') {
+        const days = parseInt(period);
+        ordersQuery += ' AND o.created_at >= DATE_SUB(NOW(), INTERVAL ? DAY)';
+        params.push(days);
+    }
+
+    ordersQuery += ' GROUP BY o.id ORDER BY o.created_at DESC';
+
+    db.query(ordersQuery, params, (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        res.json({ orders: results });
+    });
+});
+
+// Get user stats
+app.get('/api/user/stats', authenticateToken, (req, res) => {
+    const statsQuery = `
+        SELECT 
+            (SELECT COUNT(*) FROM orders WHERE customer_email = ?) as total_orders,
+            (SELECT COUNT(*) FROM orders WHERE customer_email = ? AND status = 'pending') as pending_orders,
+            (SELECT COUNT(*) FROM orders WHERE customer_email = ? AND status = 'shipped') as shipped_orders,
+            (SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE customer_email = ? AND payment_status = 'successful') as total_spent
+    `;
+
+    db.query(statsQuery, [req.user.email, req.user.email, req.user.email, req.user.email], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        res.json({ stats: results[0] });
     });
 });
 

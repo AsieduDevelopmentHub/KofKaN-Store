@@ -69,7 +69,7 @@ class KofkanEcommerce {
         if (!featuredContainer) return;
 
         try {
-            const response = await fetch('/api/products?limit=12');
+            const response = await fetch('/api/products?limit=6');
             const data = await response.json();
             
             if (data.products && data.products.length > 0) {
@@ -109,7 +109,7 @@ class KofkanEcommerce {
 
     createProductCard(product) {
         return `
-            <div class="product-card">
+            <div class="product-card" onclick="window.location.href='/products/product.html?id=${product.id}'">
                 ${product.stock_quantity < 10 ? '<span class="product-badge">Low Stock</span>' : ''}
                 <img src="${product.image_url || 'images/products/default.jpg'}" 
                      alt="${product.name}" 
@@ -117,7 +117,7 @@ class KofkanEcommerce {
                      onerror="this.src='images/products/default.jpg'">
                 <h3 class="product-title">${product.name}</h3>
                 <p class="product-price">${parseFloat(product.price).toFixed(2)}</p>
-                <p class="product-description">${product.description?.substring(0, 100)}...</p>
+                <p class="product-description">${product.description?.substring(0, 50)}...</p>
                 <div class="product-actions">
                     <button class="btn btn-primary btn-small" onclick="ecommerce.addToCart(${product.id})">
                         <i class="fas fa-cart-plus"></i> Add to Cart
