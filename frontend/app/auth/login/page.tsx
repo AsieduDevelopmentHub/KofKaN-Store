@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Globe, Lock, Mail } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { useAppSession } from "@/components/Providers";
+import { GoogleMark } from "@/components/icons/GoogleMark";
 import { signInWithGoogle } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -35,7 +36,7 @@ export default function LoginPage() {
           onClick={() => void signInWithGoogle()}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-kofkan-border bg-kofkan-bg-secondary py-2.5 font-semibold"
         >
-          <Globe className="h-4 w-4" />
+          <GoogleMark className="h-4 w-4" />
           Continue with Google
         </button>
         <form className="mt-6 space-y-4" onSubmit={submit}>

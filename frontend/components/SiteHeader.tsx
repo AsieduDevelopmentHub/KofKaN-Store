@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, ShoppingCart, Store } from "lucide-react";
+import { LogIn, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 
 import { useAppSession } from "@/components/Providers";
 
@@ -18,7 +19,9 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-kofkan-border bg-kofkan-white/95 backdrop-blur">
       <div className="kofkan-shell flex h-16 items-center justify-between gap-3">
         <Link href="/" className="inline-flex items-center gap-2 text-xl font-bold tracking-wide">
-          <Store className="h-5 w-5" />
+          <span className="overflow-hidden rounded-full border border-kofkan-border bg-white p-0.5">
+            <Image src="/brand/logo.jpg" alt="KofKaN logo" width={24} height={24} className="h-6 w-6 rounded-full object-cover" />
+          </span>
           <span>KofKaN Store</span>
         </Link>
         <nav className="hidden items-center gap-5 text-sm font-medium text-kofkan-charcoal md:flex">
