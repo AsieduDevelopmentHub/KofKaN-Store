@@ -19,6 +19,8 @@ def validate_production_config_or_raise() -> None:
         errors.append("HTTPS_ENABLED must be true in production")
     if settings.disable_openapi is False:
         errors.append("DISABLE_OPENAPI should be true in production")
+    if not settings.paystack_webhook_secret.strip():
+        errors.append("PAYSTACK_WEBHOOK_SECRET must be configured in production")
     if errors:
         raise RuntimeError("Invalid production configuration: " + "; ".join(errors))
 

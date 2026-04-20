@@ -1,55 +1,69 @@
-from datetime import datetime
-from uuid import uuid4
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from fastapi import APIRouter, Depends, Header, Request
+from sqlmodel import Session
 
 from app.api.v1.auth.dependencies import get_current_active_user
 from app.db import get_session
-from app.models import Order, PaymentIntent, User
+from app.models import User
+from app.api.v1.payments.schemas import (
+    PaymentInitializeRequest,
+    PaymentInitializeResponse,
+    PaymentStatusResponse,
+    PaymentWebhookPayload,
+)
+from app.api.v1.payments.services import (
+    apply_webhook_status,
+    get_payment_by_reference,
+    initialize_payment_for_order,
+    verify_webhook_signature,
+)
 
 router = APIRouter(prefix="/payments", tags=["Payments"])
 
 
 @router.post("/initialize")
 def initialize_payment(
-    payload: dict,
+    payload: PaymentInitializeRequest,
     current_user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
-):
-    order_id = int(payload.get("order_id", 0))
-    order = session.get(Order, order_id)
-    if not order or order.user_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Order not found")
-
-    reference = f"KOFKAN-{uuid4().hex[:14].upper()}"
-    intent = PaymentIntent(
-        user_id=current_user.id or 0,
-        order_id=order.id,
-        reference=reference,
-        amount=order.total_amount,
-        currency="GHS",
-        status="initialized",
-        created_at=datetime.utcnow(),
+) -> PaymentInitializeResponse:
+    intent = initialize_payment_for_order(session=session, user=current_user, order_id=payload.order_id)
+    return PaymentInitializeResponse(
+        reference=intent.reference,
+        authorization_url=f"https://pay.example/checkout/{intent.reference}",
+        amount=intent.amount,
+        currency=intent.currency,
+        status=intent.status,
     )
-    session.add(intent)
-    session.commit()
-    return {
-        "reference": reference,
-        "authorization_url": f"https://pay.example/checkout/{reference}",
-        "amount": order.total_amount,
-        "currency": "GHS",
-    }
 
 
-@router.get("/verify/{reference}")
+@router.get("/verify/{reference}", response_model=PaymentStatusResponse)
 def verify_payment(reference: str, current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
-    intent = session.exec(select(PaymentIntent).where(PaymentIntent.reference == reference)).first()
-    if not intent or intent.user_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Payment not found")
-    return {
-        "reference": intent.reference,
-        "status": intent.status,
-        "amount": intent.amount,
-        "currency": intent.currency,
-    }
+    intent = get_payment_by_reference(session=session, user=current_user, reference=reference)
+    return PaymentStatusResponse(
+        reference=intent.reference,
+        status=intent.status,
+        amount=intent.amount,
+        currency=intent.currency,
+        provider=intent.provider,
+        updated_at=intent.created_at,
+    )
+
+
+@router.post("/webhook", response_model=PaymentStatusResponse)
+async def payment_webhook(
+    payload: PaymentWebhookPayload,
+    request: Request,
+    x_paystack_signature: str | None = Header(default=None),
+    session: Session = Depends(get_session),
+):
+    raw_body = await request.body()
+    verify_webhook_signature(raw_body=raw_body, provided_signature=x_paystack_signature)
+    intent = apply_webhook_status(session=session, reference=payload.reference, provider_status=payload.status)
+    return PaymentStatusResponse(
+        reference=intent.reference,
+        status=intent.status,
+        amount=intent.amount,
+        currency=intent.currency,
+        provider=intent.provider,
+        updated_at=intent.created_at,
+    )

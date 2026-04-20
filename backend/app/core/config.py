@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     disable_openapi: bool = False
     frontend_base_url: str = "http://localhost:3000"
     google_client_id: str = ""
+    paystack_webhook_secret: str = ""
     cors_allow_credentials: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

@@ -1,29 +1,41 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
 
 from app.api.v1.auth.dependencies import get_current_active_user
 from app.db import get_session
-from app.models import Order, OrderReturn, User
+from app.models import User
+from app.api.v1.returns.schemas import ReturnCreateRequest, ReturnReadResponse
+from app.api.v1.returns.services import create_order_return, list_user_returns
 
 router = APIRouter(prefix="/returns", tags=["Returns"])
 
 
 @router.get("")
 def list_my_returns(current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
-    return session.exec(select(OrderReturn).where(OrderReturn.user_id == current_user.id).order_by(OrderReturn.created_at.desc())).all()
+    rows = list_user_returns(session=session, user=current_user)
+    return [
+        ReturnReadResponse(
+            id=item.id or 0,
+            order_id=item.order_id,
+            user_id=item.user_id,
+            reason=item.reason,
+            status=item.status,
+            created_at=item.created_at,
+        )
+        for item in rows
+    ]
 
 
 @router.post("")
-def create_return(payload: dict, current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
-    order_id = int(payload.get("order_id", 0))
-    order = session.get(Order, order_id)
-    if not order or order.user_id != current_user.id:
-        raise HTTPException(status_code=404, detail="Order not found")
-    reason = str(payload.get("reason", "")).strip()
-    if not reason:
-        raise HTTPException(status_code=400, detail="reason is required")
-    item = OrderReturn(order_id=order_id, user_id=current_user.id or 0, reason=reason, status="pending")
-    session.add(item)
-    session.commit()
-    session.refresh(item)
-    return item
+def create_return(
+    payload: ReturnCreateRequest, current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)
+) -> ReturnReadResponse:
+    item = create_order_return(session=session, user=current_user, order_id=payload.order_id, reason=payload.reason)
+    return ReturnReadResponse(
+        id=item.id or 0,
+        order_id=item.order_id,
+        user_id=item.user_id,
+        reason=item.reason,
+        status=item.status,
+        created_at=item.created_at,
+    )
