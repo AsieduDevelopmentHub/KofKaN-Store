@@ -67,6 +67,8 @@ class UserBase(SQLModel):
     email: str = Field(index=True, unique=True, max_length=255)
     full_name: str = Field(max_length=120)
     is_admin: bool = False
+    is_active: bool = True
+    admin_role: str = Field(default="customer", max_length=32)
     google_sub: Optional[str] = Field(default=None, max_length=255, unique=True)
 
 
@@ -96,8 +98,22 @@ class UserRead(SQLModel):
 
 class TokenResponse(SQLModel):
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
+    expires_in: int
     user: UserRead
+
+
+class RefreshTokenRequest(SQLModel):
+    refresh_token: str
+
+
+class TokenBlacklist(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    token: str = Field(index=True, unique=True, max_length=2048)
+    expires_at: datetime
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class CartItemBase(SQLModel):

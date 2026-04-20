@@ -13,9 +13,14 @@ class Settings(BaseSettings):
     supabase_service_role_key: str = ""
     secret_key: str = "change-me-in-production"
     jwt_algorithm: str = "HS256"
-    access_token_expire_minutes: int = 60 * 24
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 7
+    https_enabled: bool = False
+    debug: bool = False
+    disable_openapi: bool = False
     frontend_base_url: str = "http://localhost:3000"
     google_client_id: str = ""
+    cors_allow_credentials: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

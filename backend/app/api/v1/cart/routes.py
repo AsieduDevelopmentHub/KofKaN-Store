@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
-from app.api.v1.auth.routes import get_current_user
+from app.api.v1.auth.dependencies import get_current_active_user
 from app.db import get_session
 from app.models import CartItem, CartItemCreate, CartItemUpdate, CartLineRead, Product, User
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/cart", tags=["Cart"])
 
 
 @router.get("", response_model=list[CartLineRead])
-def get_cart(current_user: User = Depends(get_current_user), session: Session = Depends(get_session)):
+def get_cart(current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
     items = session.exec(select(CartItem).where(CartItem.user_id == current_user.id)).all()
     result: list[CartLineRead] = []
     for item in items:
@@ -35,7 +35,7 @@ def get_cart(current_user: User = Depends(get_current_user), session: Session = 
 @router.post("", response_model=list[CartLineRead])
 def add_to_cart(
     payload: CartItemCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
 ):
     product = session.get(Product, payload.product_id)
@@ -57,7 +57,7 @@ def add_to_cart(
 def update_cart_item(
     cart_item_id: int,
     payload: CartItemUpdate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_active_user),
     session: Session = Depends(get_session),
 ):
     item = session.get(CartItem, cart_item_id)
@@ -71,7 +71,7 @@ def update_cart_item(
 
 
 @router.delete("/{cart_item_id}", response_model=list[CartLineRead])
-def remove_cart_item(cart_item_id: int, current_user: User = Depends(get_current_user), session: Session = Depends(get_session)):
+def remove_cart_item(cart_item_id: int, current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
     item = session.get(CartItem, cart_item_id)
     if not item or item.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Cart item not found")
