@@ -57,8 +57,16 @@ async def payment_webhook(
     session: Session = Depends(get_session),
 ):
     raw_body = await request.body()
-    verify_webhook_signature(raw_body=raw_body, provided_signature=x_paystack_signature)
-    intent = apply_webhook_status(session=session, reference=payload.reference, provider_status=payload.status)
+    digest = verify_webhook_signature(raw_body=raw_body, provided_signature=x_paystack_signature)
+    event_key = f"{payload.provider}:{payload.event_id or digest}"
+    intent = apply_webhook_status(
+        session=session,
+        reference=payload.reference,
+        provider_status=payload.status,
+        provider=payload.provider,
+        event_key=event_key,
+        provider_event_id=payload.event_id,
+    )
     return PaymentStatusResponse(
         reference=intent.reference,
         status=intent.status,

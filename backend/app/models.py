@@ -217,6 +217,17 @@ class PaymentIntent(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
+class PaymentWebhookEvent(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    event_key: str = Field(index=True, unique=True, max_length=160)
+    reference: str = Field(index=True, max_length=128)
+    provider: str = Field(default="paystack", max_length=32)
+    provider_event_id: Optional[str] = Field(default=None, max_length=128)
+    status: str = Field(default="pending", max_length=32)
+    processed: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
 class WishlistItem(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id", index=True)

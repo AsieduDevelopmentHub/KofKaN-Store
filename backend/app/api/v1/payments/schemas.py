@@ -29,3 +29,4 @@ class PaymentWebhookPayload(BaseModel):
     reference: str = Field(min_length=4, max_length=128)
     status: Literal["success", "failed", "abandoned", "pending", "refunded"] = "pending"
     provider: str = "paystack"
+    event_id: Optional[str] = Field(default=None, max_length=128)

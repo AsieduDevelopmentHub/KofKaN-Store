@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
 from app.api.v1.auth.dependencies import require_admin_permission
+from app.api.v1.payments.services import update_payment_status_by_reference
 from app.db import get_session
 from app.models import PaymentIntent, User
 
@@ -30,11 +31,4 @@ def update_payment_status(
     session: Session = Depends(get_session),
 ):
     _ = current_user
-    payment = session.exec(select(PaymentIntent).where(PaymentIntent.reference == reference)).first()
-    if not payment:
-        raise HTTPException(status_code=404, detail="Payment not found")
-    payment.status = payload.status.strip().lower()
-    session.add(payment)
-    session.commit()
-    session.refresh(payment)
-    return payment
+    return update_payment_status_by_reference(session=session, reference=reference, next_status=payload.status)
