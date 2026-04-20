@@ -15,6 +15,11 @@ export default async function CategoriesPage() {
           </article>
         ))}
       </div>
+      {categories.length === 0 ? (
+        <p className="mt-6 rounded-lg border border-dashed border-kofkan-border p-4 text-sm text-kofkan-muted">
+          No categories loaded yet. Start the backend API to seed and serve category data.
+        </p>
+      ) : null}
     </main>
   );
 }

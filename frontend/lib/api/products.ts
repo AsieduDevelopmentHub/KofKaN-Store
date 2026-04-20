@@ -23,13 +23,25 @@ export type Category = {
 };
 
 export async function fetchFeaturedProducts() {
-  return apiGet<Product[]>("/products?featured_only=true&limit=8");
+  try {
+    return await apiGet<Product[]>("/products?featured_only=true&limit=8");
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchProducts() {
-  return apiGet<Product[]>("/products?limit=30");
+  try {
+    return await apiGet<Product[]>("/products?limit=30");
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchCategories() {
-  return apiGet<Category[]>("/categories");
+  try {
+    return await apiGet<Category[]>("/categories");
+  } catch {
+    return [];
+  }
 }
