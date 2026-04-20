@@ -61,3 +61,102 @@ class ProductRead(ProductBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class UserBase(SQLModel):
+    email: str = Field(index=True, unique=True, max_length=255)
+    full_name: str = Field(max_length=120)
+    is_admin: bool = False
+    google_sub: Optional[str] = Field(default=None, max_length=255, unique=True)
+
+
+class User(UserBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    password_hash: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class UserCreate(SQLModel):
+    email: str
+    full_name: str
+    password: str
+
+
+class UserLogin(SQLModel):
+    email: str
+    password: str
+
+
+class UserRead(SQLModel):
+    id: int
+    email: str
+    full_name: str
+    is_admin: bool
+
+
+class TokenResponse(SQLModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserRead
+
+
+class CartItemBase(SQLModel):
+    product_id: int = Field(foreign_key="product.id", index=True)
+    quantity: int = Field(default=1, ge=1)
+
+
+class CartItem(CartItemBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class CartItemCreate(SQLModel):
+    product_id: int
+    quantity: int = Field(default=1, ge=1)
+
+
+class CartItemUpdate(SQLModel):
+    quantity: int = Field(ge=1)
+
+
+class CartLineRead(SQLModel):
+    id: int
+    product_id: int
+    product_name: str
+    price: float
+    image_url: Optional[str] = None
+    quantity: int
+    line_total: float
+
+
+class Order(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    status: str = Field(default="pending", max_length=32)
+    total_amount: float = Field(default=0, ge=0)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class OrderItem(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    order_id: int = Field(foreign_key="order.id", index=True)
+    product_id: int = Field(foreign_key="product.id")
+    quantity: int = Field(ge=1)
+    unit_price: float = Field(ge=0)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class OrderRead(SQLModel):
+    id: int
+    status: str
+    total_amount: float
+    created_at: datetime
+
+
+class AdminDashboardSummary(SQLModel):
+    users: int
+    products: int
+    open_orders: int
+    revenue: float

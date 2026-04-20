@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import "@/app/globals.css";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { Providers } from "@/components/Providers";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -13,9 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <Providers>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+          <MobileBottomNav />
+        </Providers>
       </body>
     </html>
   );

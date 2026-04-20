@@ -8,16 +8,16 @@ export default async function HomePage() {
 
   return (
     <main>
-      <section className="border-b border-kofkan-border bg-kofkan-black text-kofkan-white">
-        <div className="kofkan-shell py-16 md:py-20">
+      <section className="border-b border-kofkan-border bg-gradient-to-br from-black via-[#151515] to-[#2b2b2b] text-kofkan-white">
+        <div className="kofkan-shell py-12 md:py-20">
           <p className="mb-3 text-xs uppercase tracking-[0.2em] text-zinc-300">Electronics & Mechatronics</p>
-          <h1 className="max-w-3xl text-4xl font-bold md:text-5xl">
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight md:text-5xl">
             Build Faster with Reliable Components from KofKaN Store
           </h1>
           <p className="mt-4 max-w-2xl text-zinc-300">
             Arduino kits, sensors, power modules, and maker essentials delivered across Ghana.
           </p>
-          <div className="mt-8 flex gap-4">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/shop"
               className="rounded-lg border-2 border-kofkan-white bg-kofkan-white px-5 py-3 font-semibold text-kofkan-black transition hover:bg-transparent hover:text-kofkan-white"

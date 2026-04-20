@@ -1,7 +1,8 @@
 from sqlmodel import Session, select
 
+from app.core.security import hash_password
 from app.db import engine
-from app.models import Category, Product
+from app.models import Category, Product, User
 
 
 def seed_demo_data() -> None:
@@ -74,4 +75,12 @@ def seed_demo_data() -> None:
         ]
 
         session.add_all(products)
+        session.add(
+            User(
+                email="admin@kofkan.store",
+                full_name="KofKaN Admin",
+                password_hash=hash_password("Admin@123"),
+                is_admin=True,
+            )
+        )
         session.commit()

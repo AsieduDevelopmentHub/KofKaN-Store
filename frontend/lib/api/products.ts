@@ -45,3 +45,8 @@ export async function fetchCategories() {
     return [];
   }
 }
+
+export async function fetchProductById(id: number) {
+  const all = await fetchProducts();
+  return all.find((item) => item.id === id) ?? null;
+}
