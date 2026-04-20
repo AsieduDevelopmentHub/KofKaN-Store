@@ -39,19 +39,13 @@ backend/.env.production
 
 # python uncommit
 __pycache__/
-*.coverage
-*.pytest_cache/
-*.htmlcov/
-*.pyc
-*.pyo
-*.pyd
-*.pyw
-*.pyz
-*.pywz
-*.pyzz
-*.pywzz
-*.pyzzz
-*.pywzzz
+__pycache__
+*.py[cod]
+/backend/venv
+/backend/.venv
+/backend/.env
+/backend/.env.production
+/frontend/.env.local
 
 # nextjs uncommit
 *.next/
