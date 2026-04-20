@@ -49,3 +49,27 @@ def get_current_admin_user(current_user: User = Depends(get_current_active_user)
     if not current_user.is_admin:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
     return current_user
+
+
+def _permission_set(user: User) -> set[str]:
+    raw = (user.admin_permissions or "").strip()
+    if not raw:
+        return set()
+    return {perm.strip().lower() for perm in raw.split(",") if perm.strip()}
+
+
+def require_admin_permission(permission: str):
+    required = permission.strip().lower()
+
+    def _checker(current_user: User = Depends(get_current_admin_user)) -> User:
+        role = (current_user.admin_role or "").strip().lower()
+        if role == "super_admin":
+            return current_user
+        if required in _permission_set(current_user):
+            return current_user
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Missing admin permission: {required}",
+        )
+
+    return _checker

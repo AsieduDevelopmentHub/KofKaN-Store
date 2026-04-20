@@ -3,9 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi import Request
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from app.api.v1.routes import router as api_v1_router
 from app.core.config import settings
+from app.core.rate_limit import limiter
+from app.core.startup_checks import validate_production_config_or_raise, warn_dev_secret
 from app.db import create_db_and_tables
 from app.seed import seed_demo_data
 
@@ -26,6 +31,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.add_middleware(GZipMiddleware, minimum_size=1200)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 if settings.https_enabled and not settings.debug:
     app.add_middleware(HTTPSRedirectMiddleware)
@@ -35,6 +43,8 @@ app.include_router(api_v1_router, prefix=settings.api_v1_prefix)
 
 @app.on_event("startup")
 def on_startup() -> None:
+    validate_production_config_or_raise()
+    warn_dev_secret()
     create_db_and_tables()
     seed_demo_data()
 
@@ -56,7 +66,7 @@ def root() -> dict:
         "status": "ok",
         "service": settings.app_name,
         "version": settings.app_version,
-        "docs": "/docs",
+        "docs": None if settings.disable_openapi else "/docs",
     }
 
 

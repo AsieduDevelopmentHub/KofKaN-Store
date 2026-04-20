@@ -69,6 +69,7 @@ class UserBase(SQLModel):
     is_admin: bool = False
     is_active: bool = True
     admin_role: str = Field(default="customer", max_length=32)
+    admin_permissions: str = Field(default="", max_length=4000)
     google_sub: Optional[str] = Field(default=None, max_length=255, unique=True)
 
 
@@ -94,6 +95,7 @@ class UserRead(SQLModel):
     email: str
     full_name: str
     is_admin: bool
+    admin_role: str
 
 
 class TokenResponse(SQLModel):
@@ -106,6 +108,15 @@ class TokenResponse(SQLModel):
 
 class RefreshTokenRequest(SQLModel):
     refresh_token: str
+
+
+class TwoFASetupResponse(SQLModel):
+    secret: str
+    otp_uri: str
+
+
+class TwoFAVerifyRequest(SQLModel):
+    code: str
 
 
 class TokenBlacklist(SQLModel, table=True):
@@ -176,3 +187,57 @@ class AdminDashboardSummary(SQLModel):
     products: int
     open_orders: int
     revenue: float
+
+
+class TwoFactorSecret(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True, unique=True)
+    secret: str = Field(max_length=128)
+    verified: bool = False
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    verified_at: Optional[datetime] = None
+
+
+class EmailSubscription(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str = Field(index=True, unique=True, max_length=255)
+    is_subscribed: bool = True
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class PaymentIntent(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    order_id: Optional[int] = Field(default=None, foreign_key="order.id", index=True)
+    reference: str = Field(index=True, unique=True, max_length=128)
+    provider: str = Field(default="paystack", max_length=32)
+    amount: float = Field(default=0, ge=0)
+    currency: str = Field(default="GHS", max_length=8)
+    status: str = Field(default="pending", max_length=32)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class WishlistItem(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    product_id: int = Field(foreign_key="product.id", index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class OrderReturn(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    order_id: int = Field(foreign_key="order.id", index=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    reason: str = Field(max_length=240)
+    status: str = Field(default="pending", max_length=32)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class Review(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    product_id: int = Field(foreign_key="product.id", index=True)
+    user_id: int = Field(foreign_key="user.id", index=True)
+    rating: int = Field(ge=1, le=5)
+    title: str = Field(max_length=140)
+    content: Optional[str] = Field(default=None, max_length=2000)
+    created_at: datetime = Field(default_factory=datetime.utcnow)

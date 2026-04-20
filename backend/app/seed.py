@@ -273,6 +273,14 @@ def seed_demo_data() -> None:
                     full_name="KofKaN Admin",
                     password_hash=hash_password("Admin@123"),
                     is_admin=True,
+                    admin_role="super_admin",
+                    admin_permissions="view_dashboard,manage_newsletter,manage_orders,manage_products",
                 )
             )
+        else:
+            admin.is_admin = True
+            admin.admin_role = "super_admin"
+            if not (admin.admin_permissions or "").strip():
+                admin.admin_permissions = "view_dashboard,manage_newsletter,manage_orders,manage_products"
+            session.add(admin)
         session.commit()

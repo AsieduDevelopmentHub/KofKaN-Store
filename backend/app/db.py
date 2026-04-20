@@ -29,3 +29,5 @@ def _apply_sqlite_compat_patches() -> None:
                 connection.execute(text("ALTER TABLE user ADD COLUMN is_active BOOLEAN DEFAULT 1"))
             if "admin_role" not in columns:
                 connection.execute(text("ALTER TABLE user ADD COLUMN admin_role VARCHAR(32) DEFAULT 'customer'"))
+            if "admin_permissions" not in columns:
+                connection.execute(text("ALTER TABLE user ADD COLUMN admin_permissions VARCHAR(4000) DEFAULT ''"))
