@@ -14,7 +14,7 @@ export async function apiGet<T>(path: string, token?: string): Promise<T> {
 type JsonBody = Record<string, unknown> | unknown[] | null;
 
 async function request<T>(
-  method: "POST" | "PUT" | "DELETE",
+  method: "POST" | "PUT" | "PATCH" | "DELETE",
   path: string,
   body?: JsonBody,
   token?: string
@@ -41,6 +41,10 @@ export function apiPost<T>(path: string, body?: JsonBody, token?: string) {
 
 export function apiPut<T>(path: string, body?: JsonBody, token?: string) {
   return request<T>("PUT", path, body, token);
+}
+
+export function apiPatch<T>(path: string, body?: JsonBody, token?: string) {
+  return request<T>("PATCH", path, body, token);
 }
 
 export function apiDelete<T>(path: string, token?: string) {

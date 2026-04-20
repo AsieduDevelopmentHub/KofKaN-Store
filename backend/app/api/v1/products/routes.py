@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
 
 from app.api.v1.products.schemas import ProductListQuery
-from app.api.v1.products.services import list_products
+from app.api.v1.products.services import get_product_by_id, list_products
 from app.db import get_session
 from app.models import ProductRead
 
@@ -30,3 +30,11 @@ def get_products(
         featured_only=query.featured_only,
         limit=query.limit,
     )
+
+
+@router.get("/{product_id}", response_model=ProductRead)
+def get_product(product_id: int, session: Session = Depends(get_session)):
+    product = get_product_by_id(session=session, product_id=product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product

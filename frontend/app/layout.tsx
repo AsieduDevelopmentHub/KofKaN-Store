@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "KofKaN Store | Electronics Commerce",
-  description: "Premium electronics components storefront powered by FastAPI and Next.js."
+  description: "KofKaN Store — electronics components, dev boards, and maker supplies in Ghana."
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

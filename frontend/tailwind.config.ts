@@ -11,6 +11,7 @@ const config: Config = {
           charcoal: "#333333",
           muted: "#a09696",
           pearl: "#f8f8f8",
+          "bg-secondary": "#f8f8f8",
           border: "#e0e0e0"
         }
       },

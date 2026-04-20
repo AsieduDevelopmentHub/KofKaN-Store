@@ -1,33 +1,27 @@
-# KofKaN Store Rebuild
+# KofKaN Store
 
-KofKaN Store has been rebuilt to follow the Sikapa architecture pattern while adapting the product domain for electronics.
+Monorepo for the KofKaN electronics storefront: a Next.js customer app and a FastAPI API.
 
-## Architecture (Sikapa-inspired)
+## Repository layout
 
-- `frontend/` - Next.js App Router storefront (TypeScript + Tailwind)
-- `backend/` - FastAPI app with modular versioned routes (`/api/v1`)
-- `backend/app/core` - environment/config settings
-- `backend/app/api/v1/*` - domain modules (`products`, `categories`)
-- `backend/app/models.py` - SQLModel entities (Supabase/Postgres compatible)
+- `frontend/` — Next.js App Router (TypeScript, Tailwind)
+- `backend/` — FastAPI, SQLModel, versioned routes under `/api/v1`
+- `docs/` — architecture and integration notes
 
-## Tech Stack
+## Tech stack
 
-- Frontend: Next.js, TypeScript, Tailwind CSS
-- Backend: FastAPI, SQLModel
-- Database: Supabase Postgres (or SQLite for local bootstrap)
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+- **Backend:** FastAPI, SQLModel
+- **Database:** Supabase Postgres in production, or SQLite for local development
 
-## Design System
+## Design
 
-The new storefront keeps the original KofKaN palette:
+Palette (original KofKaN):
 
-- Primary: `#000000`
-- Secondary: `#ffffff`
-- Accent: `#333333`
-- Muted text: `#a09696`
-- Soft background: `#f8f8f8`
-- Border: `#e0e0e0`
+- Primary `#000000`, secondary `#ffffff`, accent `#333333`
+- Muted text `#a09696`, soft background `#f8f8f8`, border `#e0e0e0`
 
-## Run Locally
+## Run locally
 
 ### Backend
 
@@ -49,4 +43,10 @@ copy .env.local.example .env.local
 npm run dev
 ```
 
-Frontend defaults to `http://127.0.0.1:8000/api/v1`.
+Set `NEXT_PUBLIC_API_BASE_URL` in `frontend/.env.local` if the API is not at `http://127.0.0.1:8000/api/v1`.
+
+## Features (high level)
+
+- Storefront: shop, product detail, reviews, wishlist, cart, checkout, orders, payments (initialize / verify)
+- Auth: email/password and Google via Supabase
+- Admin: dashboard, users, orders, inventory, payments, newsletter list, security settings snapshot

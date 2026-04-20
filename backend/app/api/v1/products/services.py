@@ -3,6 +3,13 @@ from sqlmodel import Session, select
 from app.models import Product
 
 
+def get_product_by_id(session: Session, product_id: int) -> Product | None:
+    product = session.get(Product, product_id)
+    if not product or not product.is_active:
+        return None
+    return product
+
+
 def list_products(
     session: Session,
     search: str | None,

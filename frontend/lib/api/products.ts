@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   slug: string;
   description: string | null;
+  category_id: number | null;
   sku: string;
   brand: string | null;
   voltage_spec: string | null;
@@ -13,6 +14,9 @@ export type Product = {
   stock_quantity: number;
   image_url: string | null;
   is_featured: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 export type Category = {
@@ -47,6 +51,9 @@ export async function fetchCategories() {
 }
 
 export async function fetchProductById(id: number) {
-  const all = await fetchProducts();
-  return all.find((item) => item.id === id) ?? null;
+  try {
+    return await apiGet<Product>(`/products/${id}`);
+  } catch {
+    return null;
+  }
 }

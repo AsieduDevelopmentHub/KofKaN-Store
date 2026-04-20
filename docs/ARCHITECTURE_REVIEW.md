@@ -1,47 +1,32 @@
-# Sikapa Architecture Review for KofKaN
+# KofKaN Store architecture
 
-This document maps Sikapa's structure to the KofKaN rebuild.
+Overview of how this repository is structured and how the pieces fit together.
 
-## 1) Structural parity
+## Monorepo
 
-- **Sikapa:** `frontend/` + `backend/` monorepo
-- **KofKaN:** same monorepo split with separate startup and env files
+- **`frontend/`** and **`backend/`** are separate deployable apps with their own dependencies and environment files.
+- The API is namespaced at **`/api/v1`**.
 
-- **Sikapa backend:** `app/api/v1/<domain>/{routes,schemas,services}.py`
-- **KofKaN backend:** same modular pattern for `products` and `categories`
+## Backend modules
 
-- **Sikapa frontend:** App Router with reusable component slices
-- **KofKaN frontend:** App Router + reusable `SiteHeader`, `SiteFooter`, and product grid blocks
+- Domain code lives under `backend/app/api/v1/<domain>/` with **`routes`**, **`schemas`**, and **`services`** where applicable (e.g. products, payments, admin).
+- Shared models: `backend/app/models.py`
+- Configuration: `backend/app/core/config.py`
+- Database session and SQLite compatibility helpers: `backend/app/db.py`
 
-## 2) Domain adaptation
+## Frontend
 
-- **Sikapa domain:** beauty/lifestyle catalog
-- **KofKaN domain:** electronics inventory with SKU, brand, voltage spec, stock quantity
+- App Router under `frontend/app/`
+- Shared UI: `frontend/components/` (layout, product grid, payments, newsletter, etc.)
+- Typed API clients: `frontend/lib/api/*` calling the FastAPI base URL
 
-- Seeded categories are electronics-first:
-  - Microcontrollers
-  - Sensors
-  - Power & Batteries
+## Domain
 
-## 3) Design adaptation
+- Electronics catalog: SKUs, brands, voltage specs, stock, categories
+- Commerce: cart, orders, payment intents, webhooks (Paystack-oriented), returns, reviews, newsletter subscriptions
+- Authorization: JWT access tokens; admin routes use permission strings on the user record
 
-- Kept KofKaN original palette:
-  - `#000000`, `#ffffff`, `#333333`, `#a09696`, `#f8f8f8`, `#e0e0e0`
-- Applied as global CSS variables and Tailwind color tokens
-- Hero + section rhythm follows Sikapa pattern but with electronics messaging
+## Operations
 
-## 4) Platform wiring
-
-- FastAPI API routes: `/api/v1/products`, `/api/v1/categories`
-- Next.js typed API client (`frontend/lib/api`)
-- Supabase readiness:
-  - backend config includes URL/anon/service-role keys
-  - backend helper `app/core/supabase.py`
-  - frontend Supabase env accessor
-
-## 5) Next planned modules
-
-- Auth/session parity with Sikapa flow
-- Cart + checkout + order domain
-- Admin inventory and product management views
-- Payments integration and order lifecycle states
+- Production: configure `DATABASE_URL`, secrets, HTTPS, CORS, and payment webhook secrets per `backend/.env.example`
+- Local: SQLite under `backend/db/` is optional; seed data runs on backend startup
