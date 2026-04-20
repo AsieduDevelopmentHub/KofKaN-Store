@@ -1,0 +1,10 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+sqlmodel==0.0.22
+alembic==1.14.0
+psycopg2-binary==2.9.10
+supabase==2.15.3
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
+python-multipart==0.0.9
+httpx==0.28.1

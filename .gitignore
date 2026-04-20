@@ -23,3 +23,37 @@ testem.log
 
 # databse schemas
 *.sql
+
+# environment variables
+*.env
+*.env.local
+
+# virtual environment
+backend/venv/
+backend/.venv/
+backend/.env.production
+*.env.production
+*.env
+*.logs
+*.env.local
+
+# python uncommit
+__pycache__/
+*.coverage
+*.pytest_cache/
+*.htmlcov/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzz
+*.pywzz
+*.pyzzz
+*.pywzzz
+
+# nextjs uncommit
+*.next/
+*.out/
+coverage/
