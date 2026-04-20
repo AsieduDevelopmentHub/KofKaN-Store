@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShieldCheck, Truck, Wrench } from "lucide-react";
 
 import { ProductGrid } from "@/components/ProductGrid";
 import { fetchCategories, fetchFeaturedProducts } from "@/lib/api/products";
@@ -43,6 +44,26 @@ export default async function HomePage() {
               <p className="mt-2 text-sm text-kofkan-muted">{category.description ?? "Electronics category"}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="kofkan-shell pb-6">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <article className="rounded-xl border border-kofkan-border bg-kofkan-bg-secondary p-4">
+            <Truck className="h-5 w-5" />
+            <h3 className="mt-2 font-semibold">Fast Delivery</h3>
+            <p className="mt-1 text-sm text-kofkan-muted">Dispatch across Ghana with reliable courier partners.</p>
+          </article>
+          <article className="rounded-xl border border-kofkan-border bg-kofkan-bg-secondary p-4">
+            <ShieldCheck className="h-5 w-5" />
+            <h3 className="mt-2 font-semibold">Trusted Quality</h3>
+            <p className="mt-1 text-sm text-kofkan-muted">Every component is checked before shipment.</p>
+          </article>
+          <article className="rounded-xl border border-kofkan-border bg-kofkan-bg-secondary p-4">
+            <Wrench className="h-5 w-5" />
+            <h3 className="mt-2 font-semibold">Expert Support</h3>
+            <p className="mt-1 text-sm text-kofkan-muted">Get practical help for prototypes and repair projects.</p>
+          </article>
         </div>
       </section>
 

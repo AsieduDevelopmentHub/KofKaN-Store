@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 import { useAppSession } from "@/components/Providers";
@@ -31,7 +32,10 @@ export function ProductGrid({ title, products }: ProductGridProps) {
       </div>
       <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
         {products.map((product) => (
-          <article key={product.id} className="rounded-xl border border-kofkan-border bg-kofkan-white p-3 shadow-soft sm:p-4">
+          <article
+            key={product.id}
+            className="rounded-xl border border-kofkan-border bg-kofkan-white p-3 shadow-soft transition hover:-translate-y-0.5 hover:shadow-lg sm:p-4"
+          >
             <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-lg bg-kofkan-bg-secondary">
               <Image
                 src={product.image_url ?? "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80"}
@@ -46,8 +50,9 @@ export function ProductGrid({ title, products }: ProductGridProps) {
             <button
               type="button"
               onClick={() => void add(product.id)}
-              className="mt-3 w-full rounded-lg bg-kofkan-black px-3 py-2 text-sm font-semibold text-kofkan-white transition hover:bg-kofkan-charcoal"
+              className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-kofkan-black px-3 py-2 text-sm font-semibold text-kofkan-white transition hover:bg-kofkan-charcoal"
             >
+              <ShoppingCart className="h-4 w-4" />
               Add to Cart
             </button>
           </article>

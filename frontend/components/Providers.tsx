@@ -12,6 +12,7 @@ type AuthContextValue = {
   cartTotal: number;
   loginUser: (payload: { email: string; password: string }) => Promise<void>;
   registerUser: (payload: { email: string; full_name: string; password: string }) => Promise<void>;
+  applyAuth: (auth: AuthResponse) => void;
   logout: () => void;
   refreshCart: () => Promise<void>;
   addItem: (productId: number) => Promise<void>;
@@ -85,6 +86,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     setCart([]);
   };
 
+  const applyAuth = (auth: AuthResponse) => {
+    persistSession(auth);
+    setToken(auth.access_token);
+    setUser(auth.user);
+  };
+
   const addItem = async (productId: number) => {
     if (!token) {
       throw new Error("Please login first");
@@ -118,6 +125,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     cartTotal,
     loginUser,
     registerUser,
+    applyAuth,
     logout,
     refreshCart,
     addItem,

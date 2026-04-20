@@ -28,3 +28,12 @@ export function fetchProfile(token: string) {
 export function googleOauthUrl() {
   return apiGet<{ provider: string; url: string }>("/auth/google/url");
 }
+
+export function completeGoogleLogin(payload: { email: string; name: string; sub: string }) {
+  const search = new URLSearchParams({
+    email: payload.email,
+    name: payload.name,
+    sub: payload.sub
+  });
+  return apiGet<AuthResponse>(`/auth/google/callback?${search.toString()}`);
+}
