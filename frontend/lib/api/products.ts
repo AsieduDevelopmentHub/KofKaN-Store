@@ -41,7 +41,7 @@ export type CatalogCategory = {
 };
 
 const PLACEHOLDER_IMG =
-  "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop";
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop";
 
 const BOGUS_IMAGE_TOKENS = new Set([
   "string",

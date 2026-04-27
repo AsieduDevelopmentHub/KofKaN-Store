@@ -188,7 +188,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <Link href="/system" className="block" onClick={closeMobile}>
           <div className="flex items-center gap-2.5">
             <Image
-              src="/assets/logos/brandmark.png"
+              src="/brand/logo.jpg"
               alt="KofKaN"
               width={34}
               height={34}

@@ -3,9 +3,9 @@
  * Screen layout and hierarchy follow `public/assets/mockups/mockups.png`.
  */
 export const LOGOS = {
-  brandmark: "/assets/logos/brandmark.png",
-  navigation: "/assets/logos/navigation.png",
+  brandmark: "/brand/logo.jpg",
+  navigation: "/brand/logo.jpg",
   /** App bar / header when `html` has class `dark`. */
-  navigationDark: "/assets/logos/navigation_darkmode.png",
-  primary: "/assets/logos/primary.png",
+  navigationDark: "/brand/logo.jpg",
+  primary: "/brand/logo.jpg",
 } as const;

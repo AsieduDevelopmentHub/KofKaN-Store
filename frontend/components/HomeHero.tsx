@@ -1,16 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-
-/** Hero portrait from `public/assets/icons/hero.png`. */
-const HERO_MODEL_SRC = "/assets/icons/hero.png";
 
 export function HomeHero() {
   return (
     <section
-      className="relative min-h-[min(62vh,500px)] overflow-hidden"
+      className="kofkan-circuit-grid relative min-h-[min(62vh,500px)] overflow-hidden"
       style={{ background: "var(--kofkan-hero-gradient)" }}
       aria-labelledby="hero-heading"
     >
@@ -31,27 +27,17 @@ export function HomeHero() {
         initial={{ opacity: 0, x: 28 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        className="pointer-events-none absolute bottom-0 right-[-8%] top-[6%] z-0 w-[78%] max-w-[300px] sm:right-[-4%] sm:max-w-[320px]"
+        className="pointer-events-none absolute bottom-[-18%] right-[-18%] top-[8%] z-0 w-[86%] max-w-[420px] sm:right-[-12%] sm:max-w-[460px]"
+        aria-hidden
       >
-        <div
-          className="relative h-full w-full"
-          style={{
-            maskImage: "linear-gradient(to right, transparent 0%, black 38%, black 100%)",
-            WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 38%, black 100%)",
-          }}
-        >
-          <Image
-            src={HERO_MODEL_SRC}
-            alt=""
-            fill
-            className="object-cover object-[center_12%]"
-            sizes="(max-width:430px) 78vw, 320px"
-            priority
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-[#0a3650]/55 via-transparent to-transparent mix-blend-soft-light"
-            aria-hidden
-          />
+        <div className="relative h-full w-full">
+          <div className="absolute inset-0 rounded-[38px] bg-gradient-to-br from-[#00d4ff]/18 via-transparent to-[#7d52ff]/18 blur-[2px]" />
+          <div className="absolute inset-[10%] rounded-[34px] border border-white/10 bg-black/10 shadow-[0_0_0_1px_rgba(0,184,217,0.18),0_24px_60px_rgba(0,0,0,0.38)]" />
+          <div className="absolute inset-[18%] rounded-[28px] border border-white/10 bg-gradient-to-b from-white/10 to-transparent" />
+          <div className="absolute left-[18%] top-[22%] h-2 w-2 rounded-full bg-kofkan-cyan shadow-[0_0_0_6px_rgba(0,184,217,0.12)]" />
+          <div className="absolute left-[62%] top-[18%] h-2 w-2 rounded-full bg-kofkan-accent shadow-[0_0_0_6px_rgba(125,82,255,0.12)]" />
+          <div className="absolute left-[32%] top-[58%] h-2 w-2 rounded-full bg-white/70 shadow-[0_0_0_6px_rgba(255,255,255,0.06)]" />
+          <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_20%_20%,rgba(0,184,217,0.24),transparent_38%),radial-gradient(circle_at_80%_25%,rgba(125,82,255,0.18),transparent_44%)]" />
         </div>
       </motion.div>
 
@@ -65,7 +51,7 @@ export function HomeHero() {
             >
               <h1
                 id="hero-heading"
-                className="font-serif font-semibold tracking-[0.02em] text-white"
+                className="font-mono font-semibold tracking-[0.04em] text-white"
               >
                 <span className="block text-[1.95rem] leading-[1.06] sm:text-[2.2rem]">Build.</span>
                 <span className="mt-1.5 block text-[1.95rem] leading-[1.06] sm:text-[2.2rem]">
@@ -81,7 +67,7 @@ export function HomeHero() {
               initial={{ opacity: 0, scaleX: 0 }}
               animate={{ opacity: 1, scaleX: 1 }}
               transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
-              className="mt-4 h-px w-14 bg-gradient-to-r from-kofkan-gold/90 via-kofkan-gold to-transparent origin-left sm:w-16"
+              className="mt-4 h-px w-14 bg-gradient-to-r from-kofkan-cyan/90 via-kofkan-cyan to-transparent origin-left sm:w-16"
               aria-hidden
             />
 
@@ -134,7 +120,7 @@ export function HomeHero() {
               height="18"
               viewBox="0 0 24 24"
               fill="none"
-              className="animate-bounce text-kofkan-gold/70"
+              className="animate-bounce text-kofkan-cyan/70"
               aria-hidden
             >
               <path

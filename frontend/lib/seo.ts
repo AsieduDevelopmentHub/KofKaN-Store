@@ -37,10 +37,10 @@ export function metadataBaseUrl(): URL {
 }
 
 /** OG / Twitter preview image (under `public/`). */
-export const SITE_OG_IMAGE = "/assets/logos/primary.png";
+export const SITE_OG_IMAGE = "/brand/logo.jpg";
 
 /** Browser tab / shortcut icon (square logo under `public/`). */
-export const SITE_FAVICON_IMAGE = "/assets/logos/brandmark.png";
+export const SITE_FAVICON_IMAGE = "/brand/logo.jpg";
 
 /**
  * Default metadata merged at the root; individual routes can export `metadata` to override title/description.

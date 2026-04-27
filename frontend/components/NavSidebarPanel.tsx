@@ -177,7 +177,7 @@ export function NavSidebarPanel() {
                   onClick={() => setPreference(opt.id)}
                   className={`kofkan-tap rounded-[8px] border px-2 py-2 text-[11px] font-semibold ${
                     preference === opt.id
-                      ? "border-kofkan-gold bg-kofkan-cream text-kofkan-text-primary dark:bg-zinc-800 dark:text-zinc-100"
+                      ? "border-kofkan-cyan bg-kofkan-cream text-kofkan-text-primary dark:bg-zinc-800 dark:text-zinc-100"
                       : "border-kofkan-gray-soft text-kofkan-text-secondary dark:border-white/10 dark:text-zinc-400"
                   }`}
                 >

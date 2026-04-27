@@ -1,5 +1,5 @@
 /** Physical location (home + footer). District omitted for a shorter public line. */
-export const KOFKAN_LOCATION_LINE = "New Edubiase, Ashanti Region, Ghana";
+export const KOFKAN_LOCATION_LINE = "Accra, Greater Accra Region, Ghana";
 
 /**
  * Public site URL for legal links in emails (optional). Defaults to in-app routes.

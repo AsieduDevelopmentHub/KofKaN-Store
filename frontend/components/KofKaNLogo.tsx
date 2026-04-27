@@ -4,7 +4,7 @@ import { LOGOS } from "@/lib/assets";
 export type KofKaNLogoAsset = "brandmark" | "navigation" | "primary";
 
 type Props = {
-  /** Which file under `public/assets/logos/`. */
+  /** Which logo variant to render. */
   asset?: KofKaNLogoAsset;
   className?: string;
   /** Merged onto the inner `Image` (e.g. splash size overrides). */
@@ -40,23 +40,11 @@ const DIMENSIONS: Record<
 const NAV_LOGO_FRAME =
   "relative h-[3.25rem] w-[min(200px,44vw)] shrink-0 overflow-visible sm:h-[3.25rem] sm:w-[min(200px,46vw)]";
 
-/** Intrinsic size of `public/assets/logos/navigation.png` — update when the file changes. */
-const NAV_LIGHT_PX = { w: 877, h: 285 } as const;
-/** Intrinsic size of `public/assets/logos/navigation_darkmode.png` — update when the file changes. */
-const NAV_DARK_PX = { w: 1111, h: 391 } as const;
-
 /**
- * Header slot is height-limited; mismatched aspects → different drawn widths under `object-contain`.
- * Scale dark so its width matches light: `(lightW/lightH) / (darkW/darkH)`.
- */
-const NAV_DARK_MATCH_LIGHT_SCALE =
-  (NAV_LIGHT_PX.w / NAV_LIGHT_PX.h) / (NAV_DARK_PX.w / NAV_DARK_PX.h);
-
-/**
- * Renders logos from `public/assets/logos/`.
- * - **navigation** — horizontal “KOFKAN ENTERPRISE” for the app bar (see mockups).
- * - **brandmark** — gold emblem; splash uses it on a cream panel over crimson.
- * - **primary** — stacked lockup when you need the full vertical mark.
+ * Renders logos.
+ * - **navigation** — header slot (uses the same KofKaN logo image now).
+ * - **brandmark** — square mark for favicon/splash.
+ * - **primary** — larger lockup if needed.
  */
 export function KofKaNLogo({
   asset = "navigation",
@@ -76,21 +64,9 @@ export function KofKaNLogo({
             src={LOGOS.navigation}
             alt={alt}
             fill
-            className={`${imgClass} dark:hidden`.trim()}
+            className={imgClass}
             sizes="(max-width: 640px) 168px, 178px"
             priority={priority}
-          />
-          <Image
-            src={LOGOS.navigationDark}
-            alt={alt}
-            fill
-            className={`${imgClass} hidden dark:block`.trim()}
-            sizes="(max-width: 640px) 168px, 178px"
-            priority={priority}
-            style={{
-              transform: `scale(${NAV_DARK_MATCH_LIGHT_SCALE})`,
-              transformOrigin: "center center",
-            }}
           />
         </span>
       </span>

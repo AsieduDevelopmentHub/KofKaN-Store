@@ -12,30 +12,35 @@ def seed_demo_data() -> None:
                 name="Microcontrollers",
                 slug="microcontrollers",
                 description="Arduino, ESP, Raspberry Pi and compatible boards.",
+                image_url="https://images.unsplash.com/photo-1591799265444-d66432b91588?auto=format&fit=crop&w=900&q=80",
                 sort_order=1,
             ),
             "sensors": Category(
                 name="Sensors",
                 slug="sensors",
                 description="Motion, temperature, gas, and industrial sensors.",
+                image_url="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
                 sort_order=2,
             ),
             "power-batteries": Category(
                 name="Power & Batteries",
                 slug="power-batteries",
                 description="Power modules, adapters, chargers, and battery packs.",
+                image_url="https://images.unsplash.com/photo-1584277261846-c6a1672ed979?auto=format&fit=crop&w=900&q=80",
                 sort_order=3,
             ),
             "robotics-motors": Category(
                 name="Robotics & Motors",
                 slug="robotics-motors",
                 description="DC motors, servos, steppers, and motion control modules.",
+                image_url="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=900&q=80",
                 sort_order=4,
             ),
             "tools-prototyping": Category(
                 name="Tools & Prototyping",
                 slug="tools-prototyping",
                 description="Breadboards, jumper cables, soldering, and repair accessories.",
+                image_url="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?auto=format&fit=crop&w=900&q=80",
                 sort_order=5,
             ),
         }
@@ -44,6 +49,13 @@ def seed_demo_data() -> None:
         for slug, draft in categories.items():
             existing = session.exec(select(Category).where(Category.slug == slug)).first()
             if existing:
+                existing.name = draft.name
+                existing.description = draft.description
+                existing.sort_order = draft.sort_order
+                existing.is_active = True
+                existing.image_url = draft.image_url
+                session.add(existing)
+                session.flush()
                 category_ids[slug] = existing.id or 0
                 continue
             session.add(draft)
@@ -259,9 +271,25 @@ def seed_demo_data() -> None:
                 description="Male-to-male, male-to-female, and female-to-female jumper assortment.",
             ),
         ]
-        existing_skus = set(session.exec(select(Product.sku)).all())
         for product in products:
-            if product.sku in existing_skus:
+            existing = session.exec(select(Product).where(Product.sku == product.sku)).first()
+            if existing:
+                # Upsert so Supabase sync stays current.
+                existing.name = product.name
+                existing.slug = product.slug
+                existing.brand = product.brand
+                existing.voltage_spec = product.voltage_spec
+                existing.category_id = product.category_id
+                existing.price = product.price
+                existing.currency = product.currency
+                existing.stock_quantity = product.stock_quantity
+                existing.image_url = product.image_url
+                existing.is_featured = product.is_featured
+                existing.is_active = True
+                existing.description = product.description
+                existing.warranty_months = product.warranty_months
+                existing.tech_specs = product.tech_specs
+                session.add(existing)
                 continue
             session.add(product)
 
