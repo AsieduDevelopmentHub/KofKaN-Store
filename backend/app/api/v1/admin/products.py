@@ -25,6 +25,35 @@ class ProductCreate(BaseModel):
     is_active: bool = True
 
 
+@router.post("/bulk-import")
+def bulk_import_products(
+    current_user: User = Depends(require_admin_permission("manage_products")),
+):
+    """
+    Compatibility stub for the admin bulk import UI.
+    Full CSV parsing + create/update can be added later.
+    """
+    _ = current_user
+    return {
+        "mode": "dry_run",
+        "total_rows": 0,
+        "created": 0,
+        "updated": 0,
+        "skipped": 0,
+        "errors": 0,
+        "results": [],
+    }
+
+
+@router.get("/low-stock/list")
+def low_stock_list(
+    current_user: User = Depends(require_admin_permission("manage_products")),
+):
+    """Compatibility stub for the low stock table page (list view)."""
+    _ = current_user
+    return []
+
+
 @router.get("")
 def list_products(
     skip: int = Query(default=0, ge=0),
@@ -61,6 +90,8 @@ def list_products(
     return res
 
 
+# NOTE: keep any literal paths ABOVE this route, otherwise FastAPI will try to
+# parse them as `{product_id}`.
 @router.get("/{product_id}")
 def get_product(
     product_id: int,
