@@ -6,11 +6,14 @@ from pydantic import BaseModel, Field
 
 class PaymentInitializeRequest(BaseModel):
     order_id: int
+    callback_url: str | None = None
 
 
 class PaymentInitializeResponse(BaseModel):
     reference: str
     authorization_url: str
+    access_code: str
+    public_key: str | None = None
     amount: float
     currency: str
     status: str

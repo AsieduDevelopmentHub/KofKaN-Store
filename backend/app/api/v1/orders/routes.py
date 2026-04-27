@@ -7,6 +7,35 @@ from app.api.v1.auth.dependencies import get_current_active_user
 from app.db import get_session
 from app.models import CartItem, Order, OrderItem, OrderRead, Product, User
 
+
+def _order_row(o: Order) -> dict[str, Any]:
+    # Sikapa-style order row used by the Next.js checkout + orders screens.
+    now_iso = o.created_at.isoformat() if getattr(o, "created_at", None) else None
+    return {
+        "id": int(o.id or 0),
+        "user_id": int(o.user_id),
+        "total_price": float(o.total_amount),
+        "subtotal_amount": float(o.total_amount),
+        "delivery_fee": 0,
+        "shipping_method": None,
+        "shipping_region": None,
+        "shipping_city": None,
+        "status": o.status,
+        "shipping_address": None,
+        "shipping_provider": None,
+        "shipping_contact_name": None,
+        "shipping_contact_phone": None,
+        "notes": None,
+        "payment_status": "paid" if o.status == "paid" else "unpaid",
+        "paystack_reference": None,
+        "confirmation_email_sent_at": None,
+        "created_at": now_iso,
+        "updated_at": now_iso,
+        "preview_product_name": None,
+        "preview_image_url": None,
+        "line_count": None,
+    }
+
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
 _DEFAULT_SHIPPING_OPTIONS: dict[str, Any] = {
@@ -79,6 +108,48 @@ def get_shipping_options(session: Session = Depends(get_session)):
 def list_orders(current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
     orders = session.exec(select(Order).where(Order.user_id == current_user.id).order_by(Order.created_at.desc())).all()
     return [OrderRead(id=o.id or 0, status=o.status, total_amount=o.total_amount, created_at=o.created_at) for o in orders]
+
+
+@router.post("", response_model=dict[str, Any])
+@router.post("/", response_model=dict[str, Any])
+def create_order_from_cart(
+    payload: dict[str, Any],
+    current_user: User = Depends(get_current_active_user),
+    session: Session = Depends(get_session),
+):
+    """
+    Frontend checkout calls POST /orders/ with a shipping payload.
+    For now we create the order from current cart lines and return a Sikapa-compatible order row.
+    """
+    cart_items = session.exec(select(CartItem).where(CartItem.user_id == current_user.id)).all()
+    if not cart_items:
+        raise HTTPException(status_code=400, detail="Cart is empty")
+
+    total = 0.0
+    order = Order(user_id=current_user.id or 0, status="pending_payment", total_amount=0)
+    session.add(order)
+    session.flush()
+
+    for cart_item in cart_items:
+        product = session.get(Product, cart_item.product_id)
+        if not product:
+            continue
+        total += product.price * cart_item.quantity
+        session.add(
+            OrderItem(
+                order_id=order.id or 0,
+                product_id=product.id or 0,
+                quantity=cart_item.quantity,
+                unit_price=product.price,
+            )
+        )
+        session.delete(cart_item)
+
+    order.total_amount = total
+    session.add(order)
+    session.commit()
+    session.refresh(order)
+    return _order_row(order)
 
 
 @router.post("/checkout", response_model=OrderRead)
