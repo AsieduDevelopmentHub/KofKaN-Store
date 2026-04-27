@@ -20,7 +20,7 @@ const values = [
 const deliveryOptions = [
   {
     title: "Local pickup",
-    body: "Collect from our New Edubiase location — we’ll notify you when your order is ready.",
+    body: "Collect from our Accra location — we’ll notify you when your order is ready.",
     Icon: FaShop,
   },
   {

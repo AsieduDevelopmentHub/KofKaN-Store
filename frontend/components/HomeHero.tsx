@@ -1,7 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
+
+const HERO_VISUAL =
+  "https://images.unsplash.com/photo-1766596796538-75b67ff9109c?auto=format&fit=crop&w=1600&q=80";
 
 export function HomeHero() {
   return (
@@ -31,6 +35,24 @@ export function HomeHero() {
         aria-hidden
       >
         <div className="relative h-full w-full">
+          <div className="absolute inset-[12%] overflow-hidden rounded-[34px] border border-white/10 bg-black/10">
+            <Image
+              src={HERO_VISUAL}
+              alt=""
+              fill
+              priority
+              className="object-cover opacity-[0.92]"
+              sizes="(max-width: 640px) 70vw, 460px"
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/10 to-black/40"
+              aria-hidden
+            />
+            <div
+              className="absolute inset-0 bg-[radial-gradient(circle_at_24%_18%,rgba(0,184,217,0.26),transparent_46%),radial-gradient(circle_at_86%_30%,rgba(125,82,255,0.18),transparent_52%)]"
+              aria-hidden
+            />
+          </div>
           <div className="absolute inset-0 rounded-[38px] bg-gradient-to-br from-[#00d4ff]/18 via-transparent to-[#7d52ff]/18 blur-[2px]" />
           <div className="absolute inset-[10%] rounded-[34px] border border-white/10 bg-black/10 shadow-[0_0_0_1px_rgba(0,184,217,0.18),0_24px_60px_rgba(0,0,0,0.38)]" />
           <div className="absolute inset-[18%] rounded-[28px] border border-white/10 bg-gradient-to-b from-white/10 to-transparent" />

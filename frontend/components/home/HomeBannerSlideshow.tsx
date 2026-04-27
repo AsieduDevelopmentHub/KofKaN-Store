@@ -6,19 +6,19 @@ import { useEffect, useRef, useState } from "react";
 /** First four promotional banners (`banner5.png` and beyond are omitted). */
 const SLIDES: { src: string; alt: string }[] = [
   {
-    src: "/assets/banners/banner1.png",
+    src: "https://images.unsplash.com/photo-1520367691844-3df6787b3b6f?auto=format&fit=crop&w=1600&q=80",
     alt: "KofKaN — embedded systems, robotics, and programming gear",
   },
   {
-    src: "/assets/banners/banner2.png",
+    src: "https://images.unsplash.com/photo-1631378297854-185cff6b0986?auto=format&fit=crop&w=1600&q=80",
     alt: "Featured kits — microcontrollers, sensors, motors, and prototyping tools",
   },
   {
-    src: "/assets/banners/banner3.png",
+    src: "https://images.unsplash.com/photo-1766596796538-75b67ff9109c?auto=format&fit=crop&w=1600&q=80",
     alt: "Build smarter projects with quality components",
   },
   {
-    src: "/assets/banners/banner4.png",
+    src: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1600&q=80",
     alt: "Starter packs and project bundles",
   },
 ];
@@ -131,7 +131,7 @@ export function HomeBannerSlideshow({ variant = "full" }: Props) {
                     src={slide.src}
                     alt=""
                     fill
-                    className="rounded-[5px] object-contain object-center"
+                    className="rounded-[5px] object-cover object-center"
                     sizes="(max-width: 480px) 100vw, 430px"
                     priority={i === 0}
                   />

@@ -1,3 +1,5 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
@@ -6,6 +8,71 @@ from app.db import get_session
 from app.models import CartItem, Order, OrderItem, OrderRead, Product, User
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
+
+_DEFAULT_SHIPPING_OPTIONS: dict[str, Any] = {
+    "regions": [
+        {
+            "slug": "greater-accra",
+            "label": "Greater Accra",
+            "base_fee": 25.0,
+            "cities": [
+                {"name": "Accra", "fee": 25.0},
+                {"name": "Tema", "fee": 28.0},
+                {"name": "Madina", "fee": 26.0},
+            ],
+        },
+        {
+            "slug": "ashanti",
+            "label": "Ashanti",
+            "base_fee": 45.0,
+            "cities": [{"name": "Kumasi", "fee": 45.0}],
+        },
+        {
+            "slug": "central",
+            "label": "Central",
+            "base_fee": 42.0,
+            "cities": [{"name": "Cape Coast", "fee": 42.0}],
+        },
+        {
+            "slug": "eastern",
+            "label": "Eastern",
+            "base_fee": 40.0,
+            "cities": [{"name": "Koforidua", "fee": 40.0}],
+        },
+        {
+            "slug": "western",
+            "label": "Western",
+            "base_fee": 50.0,
+            "cities": [{"name": "Takoradi", "fee": 50.0}],
+        },
+        {
+            "slug": "volta",
+            "label": "Volta",
+            "base_fee": 55.0,
+            "cities": [{"name": "Ho", "fee": 55.0}],
+        },
+        {
+            "slug": "northern",
+            "label": "Northern",
+            "base_fee": 65.0,
+            "cities": [{"name": "Tamale", "fee": 65.0}],
+        },
+    ],
+    "couriers": [
+        {"name": "Standard delivery", "fee_delta": 0.0},
+        {"name": "Express (same/next day)", "fee_delta": 15.0},
+        {"name": "Doorstep (fragile handling)", "fee_delta": 10.0},
+    ],
+}
+
+
+@router.get("/shipping-options", response_model=dict[str, Any])
+def get_shipping_options(session: Session = Depends(get_session)):
+    """
+    Public endpoint used by checkout to populate shipping method/region/courier UI.
+    """
+    # Later: make this configurable from DB/business settings.
+    return _DEFAULT_SHIPPING_OPTIONS
 
 
 @router.get("", response_model=list[OrderRead])
