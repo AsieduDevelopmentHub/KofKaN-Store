@@ -47,7 +47,7 @@ TABLES = [
     "invoice",
     "paystack_init_idempotency",
     "paystack_transaction",
-    "adminauditlog",
+    "auditlog",
     "inventoryadjustment",
     "coupon",
     "couponusage",
@@ -79,7 +79,7 @@ def _drop_existing_policies(conn) -> None:
                     'cartitem','wishlistitem','review','reviewmedia',
                     'emailsubscription','user','order','orderitem','invoice',
                     'paystack_init_idempotency','paystack_transaction',
-                    'adminauditlog','inventoryadjustment','coupon','couponusage',
+                    'auditlog','inventoryadjustment','coupon','couponusage',
                     'businesssetting','orderreturn','orderreturnitem',
                     'searchquerylog',
                     'tokenblacklist','otpcode','twofactorsecret','passwordreset'
@@ -486,7 +486,7 @@ def setup_rls_policies() -> None:
            WITH CHECK (app.is_admin() OR user_id = app.current_uid());""",
         """CREATE POLICY p_emailsub_del ON emailsubscription FOR DELETE
            USING (app.is_admin());""",
-        """CREATE POLICY p_audit_all ON adminauditlog FOR ALL
+        """CREATE POLICY p_audit_all ON auditlog FOR ALL
            USING (app.is_admin()) WITH CHECK (app.is_admin());""",
         """CREATE POLICY p_invadj_all ON inventoryadjustment FOR ALL
            USING (app.is_admin()) WITH CHECK (app.is_admin());""",
