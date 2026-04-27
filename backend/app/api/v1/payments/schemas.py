@@ -1,35 +1,57 @@
-from datetime import datetime
-from typing import Literal, Optional
+from typing import Any, Optional
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
-from pydantic import BaseModel, Field
-
-
-class PaymentInitializeRequest(BaseModel):
-    order_id: int
-    callback_url: str | None = None
+from app.core.sanitization import sanitize_multiline_text
 
 
-class PaymentInitializeResponse(BaseModel):
-    reference: str
+class PaystackInitializeRequest(BaseModel):
+    order_id: int = Field(..., ge=1)
+    callback_url: HttpUrl
+
+
+class PaystackInitializeResponse(BaseModel):
     authorization_url: str
     access_code: str
-    public_key: str | None = None
-    amount: float
-    currency: str
-    status: str
-
-
-class PaymentStatusResponse(BaseModel):
     reference: str
+    public_key: Optional[str] = None
+
+
+class PaystackVerifyResponse(BaseModel):
     status: str
-    amount: float
+    reference: str
+    amount_subunit: int
     currency: str
-    provider: str
-    updated_at: Optional[datetime] = None
+    paid_at: Optional[str] = None
+    customer_email: Optional[str] = None
+    metadata: Optional[Any] = None
+    already_confirmed: bool = False
+    order_id: Optional[int] = None
 
 
-class PaymentWebhookPayload(BaseModel):
-    reference: str = Field(min_length=4, max_length=128)
-    status: Literal["success", "failed", "abandoned", "pending", "refunded"] = "pending"
-    provider: str = "paystack"
-    event_id: Optional[str] = Field(default=None, max_length=128)
+class PaystackWebhookAck(BaseModel):
+    received: bool = True
+
+
+class PaystackRefundRequestBody(BaseModel):
+    amount: Optional[float] = Field(
+        None,
+        gt=0,
+        description="Major currency units (e.g. GHS); omit for full refund",
+    )
+    customer_note: Optional[str] = None
+    merchant_note: Optional[str] = None
+
+    @field_validator("customer_note", "merchant_note", mode="before")
+    @classmethod
+    def _sanitize_notes(cls, v):
+        return sanitize_multiline_text(v, max_length=2000)
+
+
+class PaystackRefundResponse(BaseModel):
+    order_id: int
+    payment_status: str
+    refund_id: Optional[int] = None
+    amount_subunit: int
+    currency: str
+    paystack_status: str
+    message: str = ""

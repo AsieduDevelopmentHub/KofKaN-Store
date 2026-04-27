@@ -1,1 +1,3 @@
-# Reviews module
+"""
+Reviews module
+"""

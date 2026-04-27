@@ -1,1 +1,3 @@
-# Admin module
+"""
+Admin module
+"""

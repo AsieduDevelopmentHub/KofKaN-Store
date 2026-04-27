@@ -1,65 +1,134 @@
-from sqlalchemy import text
-from sqlmodel import Session, SQLModel, create_engine
+import os
+from pathlib import Path
 
-from app.core.config import settings
+from dotenv import load_dotenv
+from fastapi import Request
+from sqlalchemy import event, text
+from sqlmodel import Session, SQLModel, create_engine, select
 
-connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
-engine = create_engine(settings.database_url, echo=False, connect_args=connect_args)
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the backend directory path
+backend_dir = Path(__file__).parent.parent
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{backend_dir}/db/sikapa.db")
+
+# Configure connection arguments based on database type
+connect_args = {}
+engine_kwargs = {
+    "echo": os.getenv("DEBUG", "false").lower() == "true",
+}
+
+if DATABASE_URL.startswith("sqlite"):
+    connect_args["check_same_thread"] = False
+elif DATABASE_URL.startswith("postgresql"):
+    engine_kwargs["pool_size"] = 10
+    engine_kwargs["max_overflow"] = 20
+    engine_kwargs["pool_pre_ping"] = True
+
+engine = create_engine(
+    DATABASE_URL,
+    connect_args=connect_args,
+    **engine_kwargs,
+)
 
 
-def create_db_and_tables() -> None:
-    if settings.database_url.startswith("sqlite"):
-        _apply_sqlite_compat_patches()
-    SQLModel.metadata.create_all(engine)
+if DATABASE_URL.startswith("sqlite"):
+
+    @event.listens_for(engine, "connect")
+    def _sqlite_pragmas(dbapi_connection, _connection_record) -> None:
+        if os.getenv("SQLITE_WAL", "true").lower() != "true":
+            return
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
 
 
-def get_session():
+def apply_postgres_session_user(session: Session, user_id: int | None) -> None:
+    """Transaction-local GUC for RLS (PostgreSQL only). Call after you know the acting user id."""
+    if not DATABASE_URL.startswith("postgresql"):
+        return
+    val = "" if user_id is None else str(int(user_id))
+    session.connection().execute(
+        text("SELECT set_config('app.current_user_id', :v, true)"),
+        {"v": val},
+    )
+
+
+def _configure_postgres_rls_for_request(session: Session, request: Request) -> None:
+    """Set app.current_user_id from Bearer JWT (same rules as get_current_user blacklist check)."""
+    if not DATABASE_URL.startswith("postgresql"):
+        return
+
+    from app.core.security import decode_access_token
+    from app.models import TokenBlacklist
+
+    conn = session.connection()
+
+    def _clear() -> None:
+        conn.execute(
+            text("SELECT set_config('app.current_user_id', :v, true)"),
+            {"v": ""},
+        )
+
+    auth_header = (
+        request.headers.get("authorization") or request.headers.get("Authorization") or ""
+    )
+    token = ""
+    if auth_header.lower().startswith("bearer "):
+        token = auth_header[7:].strip()
+
+    if not token:
+        _clear()
+        return
+
+    try:
+        payload = decode_access_token(token)
+    except Exception:
+        _clear()
+        return
+
+    subject = payload.get("sub")
+    if not subject:
+        _clear()
+        return
+
+    from app.core.pg_rls_auth import fetch_user_by_subject
+
+    user = fetch_user_by_subject(session, str(subject))
+    if not user:
+        _clear()
+        return
+
+    conn.execute(
+        text("SELECT set_config('app.current_user_id', :v, true)"),
+        {"v": str(user.id)},
+    )
+    bl = session.exec(
+        select(TokenBlacklist).where(TokenBlacklist.token == token)
+    ).first()
+    if bl:
+        _clear()
+
+
+def get_session(request: Request):
+    """Dependency: DB session with PostgreSQL RLS user context from the incoming request."""
+    with Session(engine) as session:
+        _configure_postgres_rls_for_request(session, request)
+        yield session
+
+
+from contextlib import contextmanager
+
+@contextmanager
+def get_session_context():
+    """Context manager for background tasks where FastAPI dependency injection is not available."""
     with Session(engine) as session:
         yield session
 
 
-def _apply_sqlite_compat_patches() -> None:
-    """Add new columns to existing SQLite tables so older dev DBs keep booting.
-
-    SQLModel's `create_all` only creates *missing* tables; it never alters
-    existing ones. When we add new fields to a model we need to extend this
-    patch so legacy DB files don't 500 on first query.
-    """
-    with engine.begin() as connection:
-        user_columns = {
-            row[1]
-            for row in connection.execute(text("PRAGMA table_info('user')")).fetchall()
-        }
-        if user_columns:
-            if "is_active" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN is_active BOOLEAN DEFAULT 1"))
-            if "admin_role" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN admin_role VARCHAR(32) DEFAULT 'customer'"))
-            if "admin_permissions" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN admin_permissions VARCHAR(4000) DEFAULT ''"))
-            if "google_sub" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN google_sub VARCHAR(255)"))
-            if "username" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN username VARCHAR(120)"))
-            if "phone" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN phone VARCHAR(40)"))
-            if "is_email_verified" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN is_email_verified BOOLEAN DEFAULT 0"))
-            if "updated_at" not in user_columns:
-                connection.execute(text("ALTER TABLE user ADD COLUMN updated_at DATETIME"))
-
-        product_columns = {
-            row[1]
-            for row in connection.execute(text("PRAGMA table_info('product')")).fetchall()
-        }
-        if product_columns:
-            if "brand" not in product_columns:
-                connection.execute(text("ALTER TABLE product ADD COLUMN brand VARCHAR(120)"))
-            if "voltage_spec" not in product_columns:
-                connection.execute(text("ALTER TABLE product ADD COLUMN voltage_spec VARCHAR(120)"))
-            if "warranty_months" not in product_columns:
-                connection.execute(text("ALTER TABLE product ADD COLUMN warranty_months INTEGER DEFAULT 12"))
-            if "tech_specs" not in product_columns:
-                connection.execute(text("ALTER TABLE product ADD COLUMN tech_specs VARCHAR(4000)"))
-            if "currency" not in product_columns:
-                connection.execute(text("ALTER TABLE product ADD COLUMN currency VARCHAR(8) DEFAULT 'GHS'"))
+def create_db_and_tables() -> None:
+    """Create all database tables from SQLModel definitions."""
+    SQLModel.metadata.create_all(engine)

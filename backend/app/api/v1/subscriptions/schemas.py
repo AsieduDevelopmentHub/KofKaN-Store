@@ -1,19 +1,15 @@
+"""
+Email subscriptions schemas
+"""
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
 
-
-class NewsletterSubscriptionRequest(BaseModel):
-    email: EmailStr
-
-
-class NewsletterSubscriptionResponse(BaseModel):
-    message: str
-    email: EmailStr
+class SubscriptionResponse(BaseModel):
+    email: str
     is_subscribed: bool
-
-
-class NewsletterSubscriptionRead(BaseModel):
-    email: EmailStr
-    is_subscribed: bool
-    created_at: datetime
+    verified: bool
+    subscribed_at: datetime
+    
+    class Config:
+        from_attributes = True

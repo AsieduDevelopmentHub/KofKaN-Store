@@ -1,43 +1,66 @@
-from fastapi import APIRouter, Depends
+"""
+Email subscriptions routes - newsletter management
+"""
+from fastapi import APIRouter, Depends, status
 from sqlmodel import Session
+from pydantic import BaseModel, EmailStr
 
-from app.api.v1.auth.dependencies import require_admin_permission
 from app.db import get_session
-from app.models import User
-from app.api.v1.subscriptions.schemas import (
-    NewsletterSubscriptionRead,
-    NewsletterSubscriptionRequest,
-    NewsletterSubscriptionResponse,
+from app.api.v1.subscriptions.schemas import SubscriptionResponse
+from app.api.v1.subscriptions.services import (
+    subscribe_email,
+    unsubscribe_by_token,
+    unsubscribe_email,
+    verify_subscription,
 )
-from app.api.v1.subscriptions.services import list_subscriptions, subscribe_email, unsubscribe_email
 
-router = APIRouter(prefix="/subscriptions", tags=["Subscriptions"])
-
-
-@router.post("/newsletter/subscribe")
-def subscribe_newsletter(
-    payload: NewsletterSubscriptionRequest, session: Session = Depends(get_session)
-) -> NewsletterSubscriptionResponse:
-    item = subscribe_email(session=session, email=payload.email)
-    return NewsletterSubscriptionResponse(message="Subscribed successfully", email=item.email, is_subscribed=item.is_subscribed)
+router = APIRouter()
 
 
-@router.post("/newsletter/unsubscribe")
-def unsubscribe_newsletter(
-    payload: NewsletterSubscriptionRequest, session: Session = Depends(get_session)
-) -> NewsletterSubscriptionResponse:
-    item = unsubscribe_email(session=session, email=payload.email)
-    if not item:
-        return NewsletterSubscriptionResponse(
-            message="Unsubscribed successfully", email=payload.email, is_subscribed=False
-        )
-    return NewsletterSubscriptionResponse(message="Unsubscribed successfully", email=item.email, is_subscribed=item.is_subscribed)
+class EmailSubscribeRequest(BaseModel):
+    email: EmailStr
+    marketing_opt_in: bool = False
 
 
-@router.get("/newsletter")
-def list_newsletter_subscriptions(
-    current_user: User = Depends(require_admin_permission("manage_newsletter")),
+class UnsubscribeRequest(BaseModel):
+    email: EmailStr
+
+
+@router.post("/subscribe", response_model=SubscriptionResponse, status_code=status.HTTP_201_CREATED)
+async def subscribe(
+    request: EmailSubscribeRequest,
     session: Session = Depends(get_session),
-) -> list[NewsletterSubscriptionRead]:
-    _ = current_user
-    return [NewsletterSubscriptionRead(email=item.email, is_subscribed=item.is_subscribed, created_at=item.created_at) for item in list_subscriptions(session=session)]
+):
+    """Subscribe email to newsletter."""
+    return await subscribe_email(
+        session,
+        request.email,
+        marketing_opt_in=request.marketing_opt_in,
+    )
+
+
+@router.post("/unsubscribe", status_code=status.HTTP_204_NO_CONTENT)
+async def unsubscribe(
+    request: UnsubscribeRequest,
+    session: Session = Depends(get_session),
+):
+    """Unsubscribe email from newsletter."""
+    await unsubscribe_email(session, request.email)
+
+
+@router.get("/unsubscribe/{token}", status_code=status.HTTP_204_NO_CONTENT)
+async def unsubscribe_via_token(
+    token: str,
+    session: Session = Depends(get_session),
+):
+    """One-click unsubscribe endpoint for email footer links."""
+    await unsubscribe_by_token(session, token)
+
+
+@router.get("/verify/{token}", status_code=status.HTTP_200_OK)
+async def verify_email_subscription(
+    token: str,
+    session: Session = Depends(get_session),
+):
+    """Verify email subscription using token."""
+    return await verify_subscription(session, token)

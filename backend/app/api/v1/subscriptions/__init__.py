@@ -1,1 +1,3 @@
-# Subscriptions module
+"""
+Subscriptions module
+"""

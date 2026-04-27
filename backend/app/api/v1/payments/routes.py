@@ -1,113 +1,119 @@
+"""
+Paystack payment endpoints: initialize checkout, verify payment, webhook.
+"""
+from typing import Annotated, Optional
 import os
-from typing import Any
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlmodel import Session
 
-from app.api.v1.auth.dependencies import get_current_active_user
 from app.db import get_session
+from app.api.v1.auth.dependencies import get_current_active_user
 from app.models import User
 from app.api.v1.payments.schemas import (
-    PaymentInitializeRequest,
-    PaymentInitializeResponse,
-    PaymentStatusResponse,
-    PaymentWebhookPayload,
+    PaystackInitializeRequest,
+    PaystackInitializeResponse,
+    PaystackVerifyResponse,
+    PaystackWebhookAck,
 )
-from app.api.v1.payments.services import (
-    apply_webhook_status,
-    get_payment_by_reference,
-    initialize_payment_for_order,
-    update_payment_status_by_reference,
-    verify_webhook_signature,
+from app.api.v1.payments import services as payment_services
+from app.core.placeholder_email import ensure_paystack_customer_email
+
+router = APIRouter()
+
+
+def _webhook_client_ip(request: Request) -> str | None:
+    """Client IP for webhook allowlist (honour reverse-proxy headers on Render/nginx)."""
+    xff = request.headers.get("x-forwarded-for") or request.headers.get("X-Forwarded-For")
+    if xff:
+        return xff.split(",")[0].strip()
+    xri = request.headers.get("x-real-ip") or request.headers.get("X-Real-IP")
+    if xri:
+        return xri.strip()
+    return request.client.host if request.client else None
+
+
+def _webhook_allowlist() -> set[str]:
+    raw = os.getenv("PAYSTACK_WEBHOOK_IP_ALLOWLIST", "").strip()
+    if not raw:
+        return set()
+    return {x.strip() for x in raw.split(",") if x.strip()}
+
+
+@router.post(
+    "/paystack/initialize",
+    response_model=PaystackInitializeResponse,
+    status_code=status.HTTP_200_OK,
 )
-from app.core.config import settings
-from app.core.paystack_client import initialize_transaction, is_configured, money_to_subunit, verify_transaction
-
-router = APIRouter(prefix="/payments", tags=["Payments"])
-
-
-@router.post("/paystack/initialize")
-@router.post("/initialize")
-def initialize_payment(
-    payload: PaymentInitializeRequest,
+def paystack_initialize(
+    payload: PaystackInitializeRequest,
+    session: Session = Depends(get_session),
     current_user: User = Depends(get_current_active_user),
-    session: Session = Depends(get_session),
-) -> PaymentInitializeResponse:
-    intent = initialize_payment_for_order(session=session, user=current_user, order_id=payload.order_id)
-    cb = (payload.callback_url or settings.frontend_base_url).strip() or settings.frontend_base_url
-
-    if not is_configured():
-        raise HTTPException(status_code=500, detail="Paystack is not configured (missing PAYSTACK_SECRET_KEY)")
-
-    email = (current_user.email or "").strip() or f"user-{current_user.id}@kofkan.store"
-    currency = (os.getenv("PAYSTACK_CURRENCY", "") or intent.currency or "GHS").strip().upper()
-    ps = initialize_transaction(
-        email=email,
-        amount_subunit=money_to_subunit(intent.amount),
-        reference=intent.reference,
-        callback_url=f"{cb.rstrip('/')}/checkout/success?order={payload.order_id}",
-        currency=currency,
-        metadata={"order_id": payload.order_id, "user_id": current_user.id},
-    )
-    data: dict[str, Any] = ps.get("data") or {}
-
-    return PaymentInitializeResponse(
-        reference=str(data.get("reference") or intent.reference),
-        authorization_url=str(data.get("authorization_url") or ""),
-        access_code=str(data.get("access_code") or ""),
-        public_key=(os.getenv("PAYSTACK_PUBLIC_KEY", "") or None),
-        amount=float(intent.amount),
-        currency=currency,
-        status=str(intent.status),
-    )
-
-
-@router.get("/paystack/verify/{reference}", response_model=PaymentStatusResponse)
-@router.get("/verify/{reference}", response_model=PaymentStatusResponse)
-def verify_payment(reference: str, current_user: User = Depends(get_current_active_user), session: Session = Depends(get_session)):
-    intent = get_payment_by_reference(session=session, user=current_user, reference=reference)
-    if not is_configured():
-        raise HTTPException(status_code=500, detail="Paystack is not configured (missing PAYSTACK_SECRET_KEY)")
-
-    ps = verify_transaction(reference=intent.reference)
-    data: dict[str, Any] = ps.get("data") or {}
-    provider_status = str(data.get("status") or "pending")
-    update_payment_status_by_reference(session=session, reference=intent.reference, next_status=provider_status)
-    intent = get_payment_by_reference(session=session, user=current_user, reference=reference)
-    return PaymentStatusResponse(
-        reference=intent.reference,
-        status=provider_status,
-        amount=intent.amount,
-        currency=(data.get("currency") or intent.currency),
-        provider=intent.provider,
-        updated_at=intent.created_at,
-    )
-
-
-@router.post("/paystack/webhook", response_model=PaymentStatusResponse)
-@router.post("/webhook", response_model=PaymentStatusResponse)
-async def payment_webhook(
-    payload: PaymentWebhookPayload,
-    request: Request,
-    x_paystack_signature: str | None = Header(default=None),
-    session: Session = Depends(get_session),
+    idempotency_key: Annotated[Optional[str], Header(alias="Idempotency-Key")] = None,
 ):
-    raw_body = await request.body()
-    digest = verify_webhook_signature(raw_body=raw_body, provided_signature=x_paystack_signature)
-    event_key = f"{payload.provider}:{payload.event_id or digest}"
-    intent = apply_webhook_status(
-        session=session,
-        reference=payload.reference,
-        provider_status=payload.status,
-        provider=payload.provider,
-        event_key=event_key,
-        provider_event_id=payload.event_id,
+    """
+    Start a Paystack transaction for an order. Client should redirect the
+    shopper to `authorization_url`, then call verify (or rely on webhook).
+    """
+    pay_email = ensure_paystack_customer_email(session, current_user)
+
+    data = payment_services.initialize_paystack_for_order(
+        session,
+        current_user.id,
+        pay_email,
+        payload.order_id,
+        str(payload.callback_url),
+        idempotency_key=idempotency_key,
     )
-    return PaymentStatusResponse(
-        reference=intent.reference,
-        status=intent.status,
-        amount=intent.amount,
-        currency=intent.currency,
-        provider=intent.provider,
-        updated_at=intent.created_at,
+    return PaystackInitializeResponse(**data)
+
+
+@router.get(
+    "/paystack/verify/{reference}",
+    response_model=PaystackVerifyResponse,
+)
+def paystack_verify(
+    reference: str,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Confirm a transaction with Paystack after redirect (authenticated)."""
+    out = payment_services.verify_paystack_reference(
+        session, current_user.id, reference
     )
+    return PaystackVerifyResponse(
+        status=out["status"],
+        reference=out["reference"],
+        amount_subunit=out["amount_subunit"],
+        currency=out["currency"],
+        paid_at=out.get("paid_at"),
+        customer_email=out.get("customer_email"),
+        metadata=out.get("metadata"),
+        already_confirmed=bool(out.get("already_confirmed")),
+        order_id=out.get("order_id"),
+    )
+
+
+@router.post("/paystack/webhook", response_model=PaystackWebhookAck)
+async def paystack_webhook(request: Request, session: Session = Depends(get_session)):
+    """
+    Paystack server webhook. Configure the same URL in the Paystack dashboard.
+    Verifies `x-paystack-signature` (HMAC SHA512 of raw body with secret key).
+    """
+    allowlist = _webhook_allowlist()
+    if allowlist:
+        src = _webhook_client_ip(request)
+        if not src or src not in allowlist:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Webhook source not allowed",
+            )
+    raw = await request.body()
+    sig = request.headers.get("x-paystack-signature")
+    if not payment_services.verify_paystack_signature(raw, sig):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid signature",
+        )
+    payment_services.handle_paystack_webhook(session, raw)
+    return PaystackWebhookAck()

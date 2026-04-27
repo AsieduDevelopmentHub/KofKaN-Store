@@ -1,34 +1,27 @@
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel, Field
+"""Admin: Paystack transaction audit list."""
+from typing import List
+
+from fastapi import APIRouter, Depends, Query
 from sqlmodel import Session, select
 
+from app.api.v1.admin.schemas import PaystackTransactionRead
 from app.api.v1.auth.dependencies import require_admin_permission
-from app.api.v1.payments.services import update_payment_status_by_reference
 from app.db import get_session
-from app.models import PaymentIntent, User
+from app.models import PaystackTransaction, User
 
-router = APIRouter(prefix="/payments", tags=["Admin"])
-
-
-class AdminPaymentStatusUpdateRequest(BaseModel):
-    status: str = Field(min_length=3, max_length=32)
+router = APIRouter()
 
 
-@router.get("")
-def list_payments(
-    current_user: User = Depends(require_admin_permission("manage_orders")),
+@router.get("/transactions", response_model=List[PaystackTransactionRead])
+async def list_paystack_transactions(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    status: str | None = None,
     session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("view_payments")),
 ):
-    _ = current_user
-    return session.exec(select(PaymentIntent).order_by(PaymentIntent.created_at.desc())).all()
-
-
-@router.patch("/{reference}/status")
-def update_payment_status(
-    reference: str,
-    payload: AdminPaymentStatusUpdateRequest,
-    current_user: User = Depends(require_admin_permission("manage_orders")),
-    session: Session = Depends(get_session),
-):
-    _ = current_user
-    return update_payment_status_by_reference(session=session, reference=reference, next_status=payload.status)
+    stmt = select(PaystackTransaction).order_by(PaystackTransaction.created_at.desc())
+    if status:
+        stmt = stmt.where(PaystackTransaction.status == status)
+    rows = session.exec(stmt.offset(skip).limit(limit)).all()
+    return [PaystackTransactionRead.model_validate(r) for r in rows]

@@ -1,0 +1,16 @@
+__pycache__
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+.env
+.env.*
+*.sqlite
+/backend/db/
+node_modules/
+.git
+*.log
+certs/server.key
+certs/server.crt
+certs/*.key
+certs/*.crt

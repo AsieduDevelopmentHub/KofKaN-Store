@@ -1,94 +1,76 @@
-from __future__ import annotations
+"""
+Admin category management routes
+"""
+from typing import List, Optional
+from fastapi import APIRouter, Depends, File, Query, UploadFile, status
+from sqlmodel import Session
 
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
-from sqlmodel import Session, select
-
-from app.api.v1.auth.dependencies import require_admin_permission
 from app.db import get_session
-from app.models import Category, User
+from app.api.v1.auth.dependencies import require_admin_permission
+from app.api.v1.admin.services import (
+    create_category_admin,
+    update_category_admin,
+    delete_category_admin,
+    get_all_categories_admin,
+    upload_product_image,
+)
+from app.api.v1.admin.schemas import (
+    CategoryAdminRead,
+    CategoryAdminCreate,
+    CategoryAdminUpdate,
+)
+from app.models import User
 
-router = APIRouter(prefix="/categories", tags=["Admin"])
+router = APIRouter()
 
 
-class CategoryCreate(BaseModel):
-    name: str = Field(min_length=2, max_length=120)
-    slug: str = Field(min_length=2, max_length=140)
-    description: str | None = Field(default=None, max_length=600)
-    image_url: str | None = None
-    is_active: bool = True
-    sort_order: int = 0
-
-
-@router.get("/")
-def list_categories(
-    current_user: User = Depends(require_admin_permission("manage_products")),
+@router.get("/", response_model=List[CategoryAdminRead])
+async def list_categories_admin(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    is_active: bool = None,
     session: Session = Depends(get_session),
-):
-    _ = current_user
-    return list(session.exec(select(Category).order_by(Category.sort_order.asc(), Category.name.asc())))
-
-
-@router.post("/")
-def create_category(
-    payload: CategoryCreate,
     current_user: User = Depends(require_admin_permission("manage_products")),
-    session: Session = Depends(get_session),
 ):
-    _ = current_user
-    if session.exec(select(Category).where(Category.slug == payload.slug)).first():
-        raise HTTPException(status_code=400, detail="Slug already exists")
-    c = Category(
-        name=payload.name.strip(),
-        slug=payload.slug.strip(),
-        description=payload.description,
-        image_url=payload.image_url,
-        is_active=payload.is_active,
-        sort_order=payload.sort_order,
-    )
-    session.add(c)
-    session.commit()
-    session.refresh(c)
-    return c
+    """List categories for admin management."""
+    return await get_all_categories_admin(session, skip, limit, is_active)
+
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
+async def create_category(
+    payload: CategoryAdminCreate,
+    session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("manage_products")),
+):
+    return await create_category_admin(session, payload.dict())
 
 
 @router.put("/{category_id}")
-def update_category(
+async def update_category(
     category_id: int,
-    payload: CategoryCreate,
-    current_user: User = Depends(require_admin_permission("manage_products")),
+    payload: CategoryAdminUpdate,
     session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("manage_products")),
 ):
-    _ = current_user
-    c = session.get(Category, category_id)
-    if not c:
-        raise HTTPException(status_code=404, detail="Category not found")
-    existing = session.exec(select(Category).where(Category.slug == payload.slug)).first()
-    if existing and existing.id != c.id:
-        raise HTTPException(status_code=400, detail="Slug already exists")
-    c.name = payload.name.strip()
-    c.slug = payload.slug.strip()
-    c.description = payload.description
-    c.image_url = payload.image_url
-    c.is_active = payload.is_active
-    c.sort_order = payload.sort_order
-    session.add(c)
-    session.commit()
-    session.refresh(c)
-    return c
+    return await update_category_admin(session, category_id, payload.dict(exclude_none=True))
 
 
-@router.delete("/{category_id}")
-def delete_category(
+@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_category(
     category_id: int,
-    current_user: User = Depends(require_admin_permission("manage_products")),
     session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("manage_products")),
 ):
-    _ = current_user
-    c = session.get(Category, category_id)
-    if not c:
-        raise HTTPException(status_code=404, detail="Category not found")
-    session.delete(c)
-    session.commit()
-    return {"message": "deleted"}
+    await delete_category_admin(session, category_id)
 
+
+@router.post("/{category_id}/image", response_model=CategoryAdminRead)
+async def upload_category_image(
+    category_id: int,
+    image: UploadFile = File(...),
+    session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("manage_products")),
+):
+    """Upload and set category image."""
+    image_url = await upload_product_image(image, session, folder="categories")
+    return await update_category_admin(session, category_id, {"image_url": image_url})

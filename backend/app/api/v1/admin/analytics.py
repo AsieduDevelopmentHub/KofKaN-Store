@@ -1,140 +1,157 @@
-from __future__ import annotations
+"""
+Admin analytics routes - dashboard data and business metrics
+"""
+from typing import Optional
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Depends, status
+from sqlalchemy import and_
+from sqlmodel import Session, select, func
 
-from datetime import date, datetime, timedelta
-
-from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
-from sqlmodel import Session, func, select
-
-from app.api.v1.auth.dependencies import require_admin_permission
 from app.db import get_session
-from app.models import Order, OrderItem, Product, User
+from app.api.v1.auth.dependencies import require_admin_permission
+from app.models import User, Order, OrderItem, Review, Product, CartItem
+from app.api.v1.admin.schemas import (
+    DashboardMetrics,
+    TopProduct,
+    RevenueStat,
+)
 
-router = APIRouter(prefix="/analytics", tags=["Admin"])
-
-
-class DashboardTopProduct(BaseModel):
-    product_id: int
-    name: str
-    price: float
-    quantity_sold: int
-    review_count: int = 0
+router = APIRouter()
 
 
-class AdminDashboardMetrics(BaseModel):
-    total_users: int
-    active_users: int
-    new_users: int
-    total_products: int
-    total_orders: int
-    total_revenue: float
-    active_carts: int = 0
-    avg_order_value: float
-    order_stats: dict[str, int]
-    top_products: list[DashboardTopProduct]
-    period_days: int
-
-
-class RevenueStat(BaseModel):
-    date: str
-    order_count: int
-    revenue: float
-
-
-def _window_start(days: int) -> datetime:
-    return datetime.utcnow() - timedelta(days=max(1, min(days, 365)))
-
-
-@router.get("/dashboard", response_model=AdminDashboardMetrics)
-def dashboard(
-    days: int = Query(default=30, ge=1, le=365),
-    current_user: User = Depends(require_admin_permission("view_dashboard")),
+@router.get("/dashboard", response_model=DashboardMetrics, status_code=status.HTTP_200_OK)
+async def get_dashboard_metrics(
+    days: int = 30,
     session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("view_analytics")),
 ):
-    _ = current_user
-    since = _window_start(days)
+    """Get dashboard metrics and analytics (cached for 5 mins)."""
+    from app.core.cache import cache
+    
+    cache_key = f"admin:dashboard:{days}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
 
-    total_users = session.exec(select(func.count()).select_from(User)).one()
-    active_users = session.exec(
-        select(func.count()).select_from(User).where(User.is_active.is_(True))
+    # Date range
+    start_date = datetime.utcnow() - timedelta(days=days)
+    
+    # Total metrics
+    total_users = session.exec(select(func.count(User.id))).one()
+    total_products = session.exec(select(func.count(Product.id))).one()
+    
+    # Combined order metrics (count + revenue + avg) in one go if possible, 
+    # but SQLModel/SQLAlchemy select() with multiple funcs is cleaner for readability here.
+    total_orders = session.exec(
+        select(func.count(Order.id)).where(Order.created_at >= start_date)
     ).one()
-    new_users = session.exec(
-        select(func.count()).select_from(User).where(User.created_at >= since)
+    
+    revenue_result = session.exec(
+        select(func.sum(Order.total_price)).where(
+            and_(Order.created_at >= start_date, Order.payment_status == "paid")
+        )
     ).one()
-    total_products = session.exec(select(func.count()).select_from(Product)).one()
+    total_revenue = revenue_result or 0.0
+    
+    avg_result = session.exec(
+        select(func.avg(Order.total_price)).where(
+            and_(Order.created_at >= start_date, Order.payment_status == "paid")
+        )
+    ).one()
+    avg_order_value = avg_result or 0.0
 
-    orders = list(session.exec(select(Order).where(Order.created_at >= since)))
-    total_orders = len(orders)
-    total_revenue = float(sum(o.total_amount for o in orders))
-    avg_order_value = float(total_revenue / total_orders) if total_orders else 0.0
-
-    order_stats: dict[str, int] = {}
-    for o in orders:
-        k = (o.status or "unknown").strip().lower()
-        order_stats[k] = order_stats.get(k, 0) + 1
-
-    # Top products by quantity sold in window.
-    rows = session.exec(
-        select(OrderItem.product_id, func.sum(OrderItem.quantity).label("qty"))
+    # Active carts
+    active_carts = session.exec(select(func.count(CartItem.id))).one()
+    
+    # TOP PRODUCTS (Optimized)
+    top_rows = session.exec(
+        select(OrderItem.product_id, func.sum(OrderItem.quantity))
         .join(Order, Order.id == OrderItem.order_id)
-        .where(Order.created_at >= since)
+        .where(and_(Order.created_at >= start_date, Order.payment_status == "paid"))
         .group_by(OrderItem.product_id)
         .order_by(func.sum(OrderItem.quantity).desc())
-        .limit(8)
+        .limit(10)
     ).all()
+    
+    top_products = []
+    if top_rows:
+        product_ids = [int(r[0]) for r in top_rows]
+        prods = session.exec(select(Product).where(Product.id.in_(product_ids))).all()
+        prod_map = {int(p.id): p for p in prods}
+        
+        for pid, qty in top_rows:
+            p = prod_map.get(int(pid))
+            if p:
+                top_products.append(TopProduct(
+                    product_id=pid,
+                    name=p.name,
+                    price=float(p.price),
+                    quantity_sold=int(qty or 0),
+                    review_count=0, # Simplified for speed
+                ))
 
-    top_products: list[DashboardTopProduct] = []
-    for pid, qty in rows:
-        p = session.get(Product, int(pid))
-        if not p:
-            continue
-        top_products.append(
-            DashboardTopProduct(
-                product_id=int(pid),
-                name=p.name,
-                price=float(p.price),
-                quantity_sold=int(qty or 0),
-                review_count=0,
-            )
-        )
-
-    return AdminDashboardMetrics(
-        total_users=int(total_users or 0),
-        active_users=int(active_users or 0),
-        new_users=int(new_users or 0),
-        total_products=int(total_products or 0),
+    # ORDER STATUS (Optimized batch query)
+    order_stats = {}
+    status_counts = session.exec(
+        select(Order.status, func.count(Order.id))
+        .where(and_(Order.created_at >= start_date, Order.payment_status == "paid"))
+        .group_by(Order.status)
+    ).all()
+    for s_val, count in status_counts:
+        order_stats[str(s_val)] = int(count)
+    
+    # User metrics
+    new_users = session.exec(
+        select(func.count(User.id)).where(User.created_at >= start_date)
+    ).one()
+    active_users = session.exec(select(func.count(User.id)).where(User.is_active == True)).one()
+    
+    result = DashboardMetrics(
+        total_users=total_users,
+        active_users=active_users,
+        new_users=new_users,
+        total_products=total_products,
         total_orders=total_orders,
         total_revenue=total_revenue,
-        active_carts=0,
+        active_carts=active_carts,
         avg_order_value=avg_order_value,
         order_stats=order_stats,
         top_products=top_products,
         period_days=days,
     )
+    
+    # Cache for 5 minutes (300 seconds)
+    cache.set(cache_key, result.model_dump(), ttl=300)
+    return result
 
 
 @router.get("/revenue", response_model=list[RevenueStat])
-def revenue(
-    days: int = Query(default=30, ge=1, le=365),
-    current_user: User = Depends(require_admin_permission("view_dashboard")),
+async def get_revenue_stats(
+    days: int = 30,
     session: Session = Depends(get_session),
+    current_user: User = Depends(require_admin_permission("view_analytics")),
 ):
-    _ = current_user
-    since = _window_start(days)
-
-    orders = list(session.exec(select(Order).where(Order.created_at >= since)))
-
-    # Group by UTC day in Python for SQLite compatibility.
-    buckets: dict[date, RevenueStat] = {}
-    for o in orders:
-        d = (o.created_at or datetime.utcnow()).date()
-        s = buckets.get(d)
-        if not s:
-            s = RevenueStat(date=d.isoformat(), order_count=0, revenue=0.0)
-            buckets[d] = s
-        s.order_count += 1
-        s.revenue += float(o.total_amount or 0)
-
-    # Return ascending dates.
-    return [buckets[d] for d in sorted(buckets.keys())]
-
+    """Get daily revenue statistics."""
+    
+    start_date = datetime.utcnow() - timedelta(days=days)
+    
+    query = (
+        select(
+            func.date(Order.created_at).label("date"),
+            func.count(Order.id).label("order_count"),
+            func.sum(Order.total_price).label("revenue"),
+        )
+        .where(and_(Order.created_at >= start_date, Order.payment_status == "paid"))
+        .group_by(func.date(Order.created_at))
+        .order_by(func.date(Order.created_at))
+    )
+    
+    stats = []
+    for row in session.exec(query).all():
+        stats.append(RevenueStat(
+            date=row[0],
+            order_count=row[1],
+            revenue=row[2] or 0.0,
+        ))
+    
+    return stats
