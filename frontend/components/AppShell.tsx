@@ -10,7 +10,7 @@ import { StorefrontFooter } from "@/components/StorefrontFooter";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin");
+  const isAdmin = pathname?.startsWith("/admin") || pathname?.startsWith("/system");
 
   return (
     <>

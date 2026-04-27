@@ -2,15 +2,21 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from app.api.v1.auth.dependencies import require_admin_permission
+from app.api.v1.admin.analytics import router as analytics_router
+from app.api.v1.admin.categories import router as categories_router
 from app.api.v1.admin.inventory import router as inventory_router
 from app.api.v1.admin.orders import router as orders_router
 from app.api.v1.admin.payments import router as payments_router
+from app.api.v1.admin.products import router as products_router
 from app.api.v1.admin.settings import router as settings_router
 from app.api.v1.admin.users import router as users_router
 from app.db import get_session
 from app.models import AdminDashboardSummary, Order, Product, User
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
+router.include_router(analytics_router)
+router.include_router(products_router)
+router.include_router(categories_router)
 router.include_router(users_router)
 router.include_router(orders_router)
 router.include_router(inventory_router)

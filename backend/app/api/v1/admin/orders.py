@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
@@ -15,11 +15,30 @@ class AdminOrderStatusUpdateRequest(BaseModel):
 
 @router.get("")
 def list_orders(
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=500),
     current_user: User = Depends(require_admin_permission("manage_orders")),
     session: Session = Depends(get_session),
 ):
     _ = current_user
-    return session.exec(select(Order).order_by(Order.created_at.desc())).all()
+    statement = select(Order).order_by(Order.created_at.desc()).offset(skip).limit(limit)
+    orders = session.exec(statement).all()
+    # Shape compatible with frontend `AdminOrderListItem` (fill missing fields).
+    return [
+        {
+            "id": o.id,
+            "user_id": o.user_id,
+            "total_price": float(o.total_amount),
+            "status": o.status,
+            "payment_status": "unknown",
+            "paystack_reference": None,
+            "payment_method": None,
+            "created_at": o.created_at.isoformat(),
+            "updated_at": o.created_at.isoformat(),
+        }
+        for o in orders
+        if o.id is not None
+    ]
 
 
 @router.patch("/{order_id}/status")

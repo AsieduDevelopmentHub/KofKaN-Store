@@ -1,8 +1,12 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from sqlmodel import Session, select
 
 from app.api.v1.auth.dependencies import require_admin_permission
 from app.core.config import settings
+from app.db import get_session
 from app.models import User
 
 router = APIRouter(prefix="/settings", tags=["Admin"])
@@ -32,3 +36,33 @@ def get_security_settings(current_user: User = Depends(require_admin_permission(
         has_google_client_id=bool(settings.google_client_id.strip()),
         has_paystack_webhook_secret=bool(settings.paystack_webhook_secret.strip()),
     )
+
+
+class SettingUpsert(BaseModel):
+    key: str = Field(min_length=2, max_length=120)
+    value: str = Field(min_length=0, max_length=4000)
+
+
+@router.get("/")
+def list_settings(
+    current_user: User = Depends(require_admin_permission("view_dashboard")),
+    session: Session = Depends(get_session),
+):
+    _ = current_user
+    # This build does not yet persist settings in DB. Return an empty list for UI compatibility.
+    return []
+
+
+@router.put("/")
+def upsert_setting(
+    payload: SettingUpsert,
+    current_user: User = Depends(require_admin_permission("view_dashboard")),
+    session: Session = Depends(get_session),
+):
+    # This build does not yet persist settings in DB. Echo back the row so the UI works.
+    return {
+        "key": payload.key,
+        "value": payload.value,
+        "updated_by": current_user.id,
+        "updated_at": datetime.utcnow().isoformat(),
+    }
