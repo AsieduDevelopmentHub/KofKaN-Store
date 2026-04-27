@@ -4,53 +4,228 @@
 
 :root {
   color-scheme: light;
-  --kofkan-primary: #000000;
-  --kofkan-secondary: #ffffff;
-  --kofkan-accent: #333333;
-  --kofkan-text-secondary: #a09696;
-  --kofkan-bg-secondary: #f8f8f8;
-  --kofkan-border: #e0e0e0;
+  --kofkan-cyan: #00b8d9;
+  --kofkan-cyan-dark: #0099b8;
+  --kofkan-deep: #0b0e14;
+  --kofkan-surface: #161b22;
+  --kofkan-silver: #e6edf3;
+  --kofkan-accent: #7d52ff;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Home hero — layered cyan + accent + deep navy (electronics aesthetic) */
+  --kofkan-hero-gradient: radial-gradient(
+      ellipse 95% 70% at 88% 12%,
+      rgba(0, 184, 217, 0.32) 0%,
+      rgba(0, 184, 217, 0.12) 28%,
+      transparent 58%
+    ),
+    radial-gradient(ellipse 55% 45% at 8% 92%, rgba(125, 82, 255, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0, 0, 0, 0.45) 0%, transparent 52%),
+    linear-gradient(
+      118deg,
+      #0b0e14 0%,
+      #0e131c 18%,
+      #11192a 38%,
+      #0f2640 62%,
+      #0a3650 88%,
+      #003a4a 100%
+    );
+}
+
+/* Splash screen — shifting cool-tone gradient with cyan/purple highlights */
+@keyframes kofkan-splash-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes kofkan-splash-sheen {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.08) translate(3%, -2%);
+  }
+}
+
+.kofkan-splash-gradient-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    #0b0e14,
+    #0a1f2e,
+    #00b8d9,
+    #1a4a8a,
+    #7d52ff,
+    #0099b8,
+    #0a1f2e,
+    #00d4ff,
+    #0b0e14,
+    #00b8d9
+  );
+  background-size: 480% 480%;
+  animation: kofkan-splash-gradient-flow 16s ease-in-out infinite;
+}
+
+.kofkan-splash-gradient-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse 75% 65% at 25% 25%,
+      rgba(0, 240, 255, 0.28) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 88% 75%,
+      rgba(11, 14, 20, 0.5) 0%,
+      transparent 50%
+    );
+  animation: kofkan-splash-sheen 9s ease-in-out infinite;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  @apply bg-kofkan-cream font-sans text-kofkan-text-primary antialiased;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--kofkan-secondary);
-  color: var(--kofkan-primary);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+/* Storefront max width scales up from phone (430px cap) to tablet/desktop */
+.kofkan-storefront-max {
+  @apply mx-auto w-full max-w-mobile md:max-w-4xl lg:max-w-6xl xl:max-w-7xl;
 }
 
-body {
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+/* Custom-styled selects — add class `kofkan-select` alongside existing layout classes */
+select.kofkan-select {
+  @apply cursor-pointer appearance-none rounded-[10px] border-0 bg-kofkan-cream py-2.5 pl-3 pr-10 text-body text-kofkan-text-primary outline-none ring-1 ring-kofkan-gray-soft transition-shadow focus:ring-2 focus:ring-kofkan-cyan/40 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-white/10;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236B6B6B' stroke-width='1.5' stroke-linecap='round' d='M1 1.5L6 6l5-4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 12px 8px;
+}
+html.dark select.kofkan-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23A0A0A0' stroke-width='1.5' stroke-linecap='round' d='M1 1.5L6 6l5-4.5'/%3E%3C/svg%3E");
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Subtle film grain over hero (spec) */
+.kofkan-grain {
+  position: relative;
+}
+.kofkan-grain::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
 }
 
-.kofkan-shell {
-  @apply mx-auto w-full max-w-7xl px-4 md:px-6;
+/* Tap feedback (micro-interaction) */
+.kofkan-tap:active {
+  transform: scale(0.97);
+}
+.kofkan-tap-bounce:active {
+  animation: tap-bounce 0.35s ease;
 }
 
-input,
-button {
-  font: inherit;
+@keyframes tap-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
 }
 
-input {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+/* Shimmer skeleton */
+.kofkan-skeleton {
+  background: linear-gradient(
+    90deg,
+    #ededed 0%,
+    #f5f7fa 50%,
+    #ededed 100%
+  );
+  background-size: 200% 100%;
+  @apply animate-shimmer rounded-lg;
 }
 
-input:focus {
-  outline: none;
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+/* Page slide feel for main (optional class on route change wrappers) */
+.kofkan-page-enter {
+  animation: page-slide 0.35s ease-out;
+}
+
+/* Primary CTA — electric cyan gradient (electronics-flavored) */
+.kofkan-btn-gold,
+.kofkan-btn-cyan {
+  background: linear-gradient(180deg, #25cfee 0%, #00b8d9 42%, #0099b8 100%);
+  box-shadow: 0 2px 8px rgba(0, 184, 217, 0.22);
+  color: #ffffff;
+}
+.kofkan-btn-gold:hover,
+.kofkan-btn-cyan:hover {
+  background: linear-gradient(180deg, #00b8d9 0%, #0099b8 100%);
+  color: #ffffff;
+}
+
+/* Secondary CTA — accent purple */
+.kofkan-btn-accent {
+  background: linear-gradient(180deg, #9276ff 0%, #7d52ff 50%, #653dd6 100%);
+  box-shadow: 0 2px 8px rgba(125, 82, 255, 0.25);
+  color: #ffffff;
+}
+.kofkan-btn-accent:hover {
+  background: linear-gradient(180deg, #7d52ff 0%, #5a36c2 100%);
+  color: #ffffff;
+}
+
+@keyframes page-slide {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Long-form article body styling (help center / legal pages) */
+.kofkan-prose p,
+.kofkan-prose li {
+  @apply leading-relaxed;
+}
+.kofkan-prose strong {
+  @apply font-semibold text-kofkan-text-primary;
+}
+.kofkan-prose a {
+  @apply font-medium text-kofkan-cyan underline underline-offset-2;
+}
+
+html.dark body {
+  @apply bg-zinc-950 text-zinc-100;
+}
+
+html.dark {
+  color-scheme: dark;
 }

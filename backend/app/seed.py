@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 
-from app.core.security import hash_password
+from app.core.security import get_password_hash
 from app.db import engine
 from app.models import Category, Product, User
 
@@ -271,7 +271,7 @@ def seed_demo_data() -> None:
                 User(
                     email="admin@kofkan.store",
                     full_name="KofKaN Admin",
-                    password_hash=hash_password("Admin@123"),
+                    password_hash=get_password_hash("Admin@123"),
                     is_admin=True,
                     admin_role="super_admin",
                     admin_permissions="view_dashboard,manage_newsletter,manage_orders,manage_products",

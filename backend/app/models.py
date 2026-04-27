@@ -26,6 +26,8 @@ class ProductBase(SQLModel):
     sku: str = Field(index=True, unique=True, max_length=120)
     brand: Optional[str] = Field(default=None, max_length=120)
     voltage_spec: Optional[str] = Field(default=None, max_length=120)
+    warranty_months: int = Field(default=12, ge=0)
+    tech_specs: Optional[str] = Field(default=None, max_length=4000)
     price: float = Field(ge=0)
     currency: str = Field(default="GHS", max_length=8)
     stock_quantity: int = Field(default=0, ge=0)
@@ -50,6 +52,8 @@ class ProductUpdate(SQLModel):
     category_id: Optional[int] = None
     brand: Optional[str] = None
     voltage_spec: Optional[str] = None
+    warranty_months: Optional[int] = None
+    tech_specs: Optional[str] = None
     price: Optional[float] = None
     stock_quantity: Optional[int] = None
     image_url: Optional[str] = None
@@ -66,8 +70,11 @@ class ProductRead(ProductBase):
 class UserBase(SQLModel):
     email: str = Field(index=True, unique=True, max_length=255)
     full_name: str = Field(max_length=120)
+    username: Optional[str] = Field(default=None, index=True, max_length=120)
+    phone: Optional[str] = Field(default=None, max_length=40)
     is_admin: bool = False
     is_active: bool = True
+    is_email_verified: bool = False
     admin_role: str = Field(default="customer", max_length=32)
     admin_permissions: str = Field(default="", max_length=4000)
     google_sub: Optional[str] = Field(default=None, max_length=255, unique=True)
@@ -77,16 +84,25 @@ class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     password_hash: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
 class UserCreate(SQLModel):
-    email: str
-    full_name: str
+    """Frontend register payload — accepts {username, name, password, email?} as well as the legacy {email, full_name}."""
+
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+    name: Optional[str] = None
+    username: Optional[str] = None
+    phone: Optional[str] = None
     password: str
 
 
 class UserLogin(SQLModel):
-    email: str
+    """Login payload — accepts either `identifier` (frontend) or `email` (legacy)."""
+
+    identifier: Optional[str] = None
+    email: Optional[str] = None
     password: str
 
 
@@ -96,6 +112,33 @@ class UserRead(SQLModel):
     full_name: str
     is_admin: bool
     admin_role: str
+
+
+class UserProfileRead(SQLModel):
+    """Rich profile shape consumed by the storefront's auth context."""
+
+    id: int
+    username: str
+    name: str
+    email: Optional[str] = None
+    email_is_placeholder: bool = False
+    phone: Optional[str] = None
+    shipping_region: Optional[str] = None
+    shipping_city: Optional[str] = None
+    shipping_address_line1: Optional[str] = None
+    shipping_address_line2: Optional[str] = None
+    shipping_landmark: Optional[str] = None
+    shipping_contact_name: Optional[str] = None
+    shipping_contact_phone: Optional[str] = None
+    email_verified: bool = False
+    two_fa_enabled: bool = False
+    two_fa_method: Optional[str] = None
+    is_active: bool = True
+    is_admin: bool = False
+    admin_role: str = "customer"
+    admin_permissions: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
 
 
 class TokenResponse(SQLModel):

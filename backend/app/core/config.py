@@ -23,7 +23,11 @@ class Settings(BaseSettings):
     paystack_webhook_secret: str = ""
     cors_allow_credentials: bool = True
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
     @property
     def cors_origin_list(self) -> list[str]:

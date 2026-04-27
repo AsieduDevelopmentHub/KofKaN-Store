@@ -1,26 +1,40 @@
-import { apiGet, apiPost } from "@/lib/api/client";
+import { apiFetchJsonAuth } from "@/lib/api/client";
+import { V1 } from "@/lib/api/v1-paths";
 
-export type PaymentInitializeResponse = {
-  reference: string;
+export type PaystackInitializeResponse = {
   authorization_url: string;
-  amount: number;
-  currency: string;
-  status: string;
-};
-
-export type PaymentStatusResponse = {
+  access_code: string;
   reference: string;
-  status: string;
-  amount: number;
-  currency: string;
-  provider: string;
-  updated_at: string | null;
+  public_key?: string | null;
 };
 
-export function initializePayment(token: string, orderId: number) {
-  return apiPost<PaymentInitializeResponse>("/payments/initialize", { order_id: orderId }, token);
+export async function paystackInitialize(
+  accessToken: string,
+  orderId: number,
+  callbackUrl: string
+): Promise<PaystackInitializeResponse> {
+  return apiFetchJsonAuth<PaystackInitializeResponse>(accessToken, V1.payments.paystackInitialize, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ order_id: orderId, callback_url: callbackUrl }),
+  });
 }
 
-export function verifyPayment(token: string, reference: string) {
-  return apiGet<PaymentStatusResponse>(`/payments/verify/${encodeURIComponent(reference)}`, token);
+export type PaystackVerifyResponse = {
+  status: string;
+  reference: string;
+  amount_subunit: number;
+  currency: string;
+  order_id?: number | null;
+  already_confirmed?: boolean;
+};
+
+export async function paystackVerify(
+  accessToken: string,
+  reference: string
+): Promise<PaystackVerifyResponse> {
+  return apiFetchJsonAuth<PaystackVerifyResponse>(
+    accessToken,
+    V1.payments.paystackVerify(reference)
+  );
 }

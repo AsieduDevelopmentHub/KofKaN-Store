@@ -1,15 +1,40 @@
-import { apiDelete, apiGet, apiPost } from "@/lib/api/client";
+import { apiFetchJsonAuth } from "@/lib/api/client";
+import { V1 } from "@/lib/api/v1-paths";
 
-import type { Product } from "@/lib/api/products";
+export type WishlistItemRead = {
+  id: number;
+  user_id: number;
+  product_id: number;
+  created_at: string;
+  product: {
+    id: number;
+    name: string;
+    slug: string;
+    price: number;
+    image_url?: string | null;
+  };
+};
 
-export function fetchWishlist(token: string) {
-  return apiGet<Product[]>("/wishlist", token);
+export async function wishlistList(accessToken: string): Promise<WishlistItemRead[]> {
+  return apiFetchJsonAuth<WishlistItemRead[]>(accessToken, V1.wishlist.list);
 }
 
-export function addWishlistItem(token: string, productId: number) {
-  return apiPost<{ message: string }>("/wishlist", { product_id: productId }, token);
+export async function wishlistAdd(accessToken: string, productId: number): Promise<WishlistItemRead> {
+  return apiFetchJsonAuth<WishlistItemRead>(accessToken, V1.wishlist.add, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ product_id: productId }),
+  });
 }
 
-export function removeWishlistItem(token: string, productId: number) {
-  return apiDelete<{ message: string }>(`/wishlist/${productId}`, token);
+export async function wishlistRemove(accessToken: string, itemId: number): Promise<void> {
+  await apiFetchJsonAuth<undefined>(accessToken, V1.wishlist.remove(itemId), {
+    method: "DELETE",
+  });
+}
+
+export async function wishlistRemoveByProduct(accessToken: string, productId: number): Promise<void> {
+  await apiFetchJsonAuth<undefined>(accessToken, V1.wishlist.byProduct(productId), {
+    method: "DELETE",
+  });
 }

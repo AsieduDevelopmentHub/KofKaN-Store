@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timedelta
 
 import pyotp
@@ -9,10 +10,20 @@ from app.core.security import (
     create_access_token,
     create_refresh_token,
     decode_refresh_token,
-    hash_password,
+    get_password_hash,
     verify_password,
 )
-from app.models import TokenBlacklist, TokenResponse, TwoFactorSecret, User, UserCreate, UserRead
+from app.models import (
+    TokenBlacklist,
+    TokenResponse,
+    TwoFactorSecret,
+    User,
+    UserCreate,
+    UserProfileRead,
+    UserRead,
+)
+
+PLACEHOLDER_EMAIL_DOMAIN = "users.kofkan.local"
 
 
 def as_user_read(user: User) -> UserRead:
@@ -25,23 +36,78 @@ def as_user_read(user: User) -> UserRead:
     )
 
 
+def _two_fa_enabled(session: Session, user: User) -> bool:
+    record = session.exec(
+        select(TwoFactorSecret).where(TwoFactorSecret.user_id == user.id)
+    ).first()
+    return bool(record and record.verified)
+
+
+def _email_is_placeholder(email: str | None) -> bool:
+    return bool(email and email.endswith(f"@{PLACEHOLDER_EMAIL_DOMAIN}"))
+
+
+def as_user_profile(session: Session, user: User) -> UserProfileRead:
+    name = (user.full_name or user.username or (user.email or "").split("@")[0]).strip()
+    username = (user.username or (user.email or "").split("@")[0] or "user").strip()
+    return UserProfileRead(
+        id=user.id or 0,
+        username=username,
+        name=name,
+        email=user.email if not _email_is_placeholder(user.email) else None,
+        email_is_placeholder=_email_is_placeholder(user.email),
+        phone=user.phone,
+        email_verified=bool(user.is_email_verified),
+        two_fa_enabled=_two_fa_enabled(session, user),
+        is_active=user.is_active,
+        is_admin=user.is_admin,
+        admin_role=user.admin_role,
+        admin_permissions=user.admin_permissions or None,
+        created_at=user.created_at,
+        updated_at=user.updated_at or user.created_at,
+    )
+
+
 def issue_tokens(user: User) -> TokenResponse:
+    payload = {"sub": str(user.id)}
     return TokenResponse(
-        access_token=create_access_token(str(user.id)),
-        refresh_token=create_refresh_token(str(user.id)),
+        access_token=create_access_token(payload),
+        refresh_token=create_refresh_token(payload),
         expires_in=settings.access_token_expire_minutes * 60,
         user=as_user_read(user),
     )
 
 
+def _slugify_username(raw: str) -> str:
+    cleaned = re.sub(r"[^a-z0-9._-]+", "", raw.strip().lower())
+    return cleaned or "user"
+
+
 def register_user(session: Session, payload: UserCreate) -> TokenResponse:
-    existing = session.exec(select(User).where(User.email == payload.email.lower())).first()
-    if existing:
+    raw_username = (payload.username or "").strip()
+    raw_email = (payload.email or "").strip().lower()
+    raw_name = (payload.name or payload.full_name or raw_username).strip()
+    if not payload.password:
+        raise HTTPException(status_code=400, detail="Password is required")
+    if not raw_username and not raw_email:
+        raise HTTPException(status_code=400, detail="Username or email is required")
+    if not raw_name:
+        raise HTTPException(status_code=400, detail="Display name is required")
+
+    username = _slugify_username(raw_username or raw_email.split("@")[0])
+    email = raw_email or f"{username}@{PLACEHOLDER_EMAIL_DOMAIN}"
+
+    if session.exec(select(User).where(User.email == email)).first():
         raise HTTPException(status_code=400, detail="Email already registered")
+    if session.exec(select(User).where(User.username == username)).first():
+        raise HTTPException(status_code=400, detail="Username already taken")
+
     user = User(
-        email=payload.email.lower(),
-        full_name=payload.full_name.strip(),
-        password_hash=hash_password(payload.password),
+        email=email,
+        full_name=raw_name,
+        username=username,
+        phone=(payload.phone or None),
+        password_hash=get_password_hash(payload.password),
     )
     session.add(user)
     session.commit()
@@ -50,9 +116,15 @@ def register_user(session: Session, payload: UserCreate) -> TokenResponse:
 
 
 def authenticate_user(session: Session, identifier: str, password: str) -> User:
-    user = session.exec(select(User).where(User.email == identifier.lower())).first()
+    """Look up by email or username, then verify password."""
+    needle = (identifier or "").strip()
+    if not needle:
+        raise HTTPException(status_code=400, detail="Identifier is required")
+    user = session.exec(select(User).where(User.email == needle.lower())).first()
+    if not user:
+        user = session.exec(select(User).where(User.username == needle.lower())).first()
     if not user or not verify_password(password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(status_code=400, detail="Invalid credentials")
     if not user.is_active:
         raise HTTPException(status_code=403, detail="User account is inactive")
     return user
@@ -91,7 +163,7 @@ def google_login_or_register(session: Session, email: str, name: str, sub: str) 
             user = User(
                 email=email.lower(),
                 full_name=name,
-                password_hash=hash_password(sub),
+                password_hash=get_password_hash(sub),
                 google_sub=sub,
             )
             session.add(user)

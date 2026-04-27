@@ -3,6 +3,7 @@ from sqlmodel import Session
 
 from app.api.v1.auth.dependencies import get_current_active_user
 from app.api.v1.auth.services import (
+    as_user_profile,
     as_user_read,
     authenticate_user,
     google_login_or_register,
@@ -16,7 +17,17 @@ from app.api.v1.auth.services import (
 from app.core.config import settings
 from app.core.rate_limit import auth_limiter, login_limiter, register_limiter, token_refresh_limiter
 from app.db import get_session
-from app.models import RefreshTokenRequest, TokenResponse, TwoFASetupResponse, TwoFAVerifyRequest, User, UserCreate, UserLogin, UserRead
+from app.models import (
+    RefreshTokenRequest,
+    TokenResponse,
+    TwoFASetupResponse,
+    TwoFAVerifyRequest,
+    User,
+    UserCreate,
+    UserLogin,
+    UserProfileRead,
+    UserRead,
+)
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -30,7 +41,8 @@ def register(request: Request, payload: UserCreate, session: Session = Depends(g
 @router.post("/login", response_model=TokenResponse)
 @login_limiter
 def login(request: Request, payload: UserLogin, session: Session = Depends(get_session)):
-    user = authenticate_user(session, payload.email, payload.password)
+    identifier = (payload.identifier or payload.email or "").strip()
+    user = authenticate_user(session, identifier, payload.password)
     return issue_tokens(user)
 
 
@@ -54,9 +66,12 @@ def logout(
     return {"message": "Logout successful"}
 
 
-@router.get("/profile", response_model=UserRead)
-def profile(current_user: User = Depends(get_current_active_user)):
-    return as_user_read(current_user)
+@router.get("/profile", response_model=UserProfileRead)
+def profile(
+    current_user: User = Depends(get_current_active_user),
+    session: Session = Depends(get_session),
+):
+    return as_user_profile(session, current_user)
 
 
 @router.get("/google/url")

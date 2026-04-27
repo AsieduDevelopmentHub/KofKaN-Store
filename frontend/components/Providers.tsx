@@ -1,145 +1,94 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { NavSidebarPanel } from "@/components/NavSidebarPanel";
+import { AppShell } from "@/components/AppShell";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { CatalogProvider } from "@/context/CatalogContext";
+import { CartProvider } from "@/context/CartContext";
+import { NavDrawerProvider } from "@/context/NavDrawerContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { DialogProvider } from "@/context/DialogContext";
+import { ToastProvider } from "@/context/ToastContext";
+import { WishlistProvider } from "@/context/WishlistContext";
+import { CookieConsentBanner } from "@/components/legal/CookieConsentBanner";
 
-import { login, register, type AuthResponse, type AuthUser } from "@/lib/api/auth";
-import { addToCart, fetchCart, removeCartItem, type CartLine, updateCartItem } from "@/lib/api/cart";
+export function Providers({
+  children,
+  showCookieConsent = false,
+}: {
+  children: ReactNode;
+  showCookieConsent?: boolean;
+}) {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 1 minute
+        retry: 1,
+      },
+    },
+  }));
 
-type AuthContextValue = {
-  token: string | null;
-  user: AuthUser | null;
-  cart: CartLine[];
-  cartTotal: number;
-  loginUser: (payload: { email: string; password: string }) => Promise<void>;
-  registerUser: (payload: { email: string; full_name: string; password: string }) => Promise<void>;
-  applyAuth: (auth: AuthResponse) => void;
-  logout: () => void;
-  refreshCart: () => Promise<void>;
-  addItem: (productId: number) => Promise<void>;
-  updateItem: (cartItemId: number, quantity: number) => Promise<void>;
-  removeItem: (cartItemId: number) => Promise<void>;
-};
-
-const AuthContext = createContext<AuthContextValue | null>(null);
-
-function persistSession(auth: AuthResponse) {
-  localStorage.setItem("kofkan_token", auth.access_token);
-  localStorage.setItem("kofkan_user", JSON.stringify(auth.user));
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <NavDrawerProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <DialogProvider>
+              <CatalogProvider>
+                <WishlistProvider>
+                  <CartProvider>
+                    <AppShell>{children}</AppShell>
+                    <NavSidebarPanel />
+                    <CookieConsentBanner required={showCookieConsent} />
+                  </CartProvider>
+                </WishlistProvider>
+              </CatalogProvider>
+            </DialogProvider>
+          </ToastProvider>
+        </AuthProvider>
+      </NavDrawerProvider>
+    </ThemeProvider>
+    </QueryClientProvider>
+  );
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [cart, setCart] = useState<CartLine[]>([]);
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem("kofkan_token");
-    const savedUser = localStorage.getItem("kofkan_user");
-    if (savedToken) {
-      setToken(savedToken);
-    }
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser) as AuthUser);
-      } catch {
-        setUser(null);
-      }
-    }
-  }, []);
-
-  const refreshCart = async () => {
-    if (!token) {
-      setCart([]);
-      return;
-    }
-    try {
-      const lines = await fetchCart(token);
-      setCart(lines);
-    } catch {
-      setCart([]);
-    }
-  };
-
-  useEffect(() => {
-    void refreshCart();
-  }, [token]);
-
-  const loginUser = async (payload: { email: string; password: string }) => {
-    const auth = await login(payload);
-    persistSession(auth);
-    setToken(auth.access_token);
-    setUser(auth.user);
-  };
-
-  const registerUser = async (payload: { email: string; full_name: string; password: string }) => {
-    const auth = await register(payload);
-    persistSession(auth);
-    setToken(auth.access_token);
-    setUser(auth.user);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("kofkan_token");
-    localStorage.removeItem("kofkan_user");
-    setToken(null);
-    setUser(null);
-    setCart([]);
-  };
-
-  const applyAuth = (auth: AuthResponse) => {
-    persistSession(auth);
-    setToken(auth.access_token);
-    setUser(auth.user);
-  };
-
-  const addItem = async (productId: number) => {
-    if (!token) {
-      throw new Error("Please login first");
-    }
-    const lines = await addToCart(token, { product_id: productId, quantity: 1 });
-    setCart(lines);
-  };
-
-  const updateItem = async (cartItemId: number, quantity: number) => {
-    if (!token) {
-      return;
-    }
-    const lines = await updateCartItem(token, cartItemId, quantity);
-    setCart(lines);
-  };
-
-  const removeItem = async (cartItemId: number) => {
-    if (!token) {
-      return;
-    }
-    const lines = await removeCartItem(token, cartItemId);
-    setCart(lines);
-  };
-
-  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.line_total, 0), [cart]);
-
-  const value: AuthContextValue = {
-    token,
-    user,
-    cart,
-    cartTotal,
-    loginUser,
-    registerUser,
-    applyAuth,
-    logout,
-    refreshCart,
-    addItem,
-    updateItem,
-    removeItem
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
+/**
+ * Convenience adapter used by a few simple pages (auth/login, auth/register,
+ * account/returns) that prefer an "email + password" shape for sign-in/up
+ * over the underlying `AuthContext` (which supports username + email).
+ *
+ * Returns:
+ *   - `token`        – the current access token (or null)
+ *   - `user`         – the signed-in user profile (or null)
+ *   - `loginUser`    – `{ email, password }` → resolves on success
+ *   - `registerUser` – `{ email, password, full_name }` → resolves on success
+ */
 export function useAppSession() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) {
-    throw new Error("useAppSession must be used inside Providers");
-  }
-  return ctx;
+  const { user, accessToken, login, register, logout, loading } = useAuth();
+  return useMemo(
+    () => ({
+      token: accessToken,
+      user,
+      loading,
+      logout,
+      loginUser: async ({ email, password }: { email: string; password: string }) => {
+        await login(email, password);
+      },
+      registerUser: async ({
+        email,
+        password,
+        full_name,
+      }: {
+        email: string;
+        password: string;
+        full_name: string;
+      }) => {
+        await register(email, full_name, password, email);
+      },
+    }),
+    [user, accessToken, loading, login, register, logout]
+  );
 }

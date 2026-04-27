@@ -1,63 +1,34 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { writeTokens } from "@/lib/auth-storage";
 
-import { useAppSession } from "@/components/Providers";
-import { completeGoogleLogin } from "@/lib/api/auth";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-
-export default function GoogleCallbackPage() {
+export default function GoogleOAuthCallbackPage() {
   const router = useRouter();
-  const { applyAuth } = useAppSession();
-  const [message, setMessage] = useState("Completing Google sign-in...");
 
   useEffect(() => {
-    const run = async () => {
+    const hash = typeof window !== "undefined" ? window.location.hash.replace(/^#/, "") : "";
+    const params = new URLSearchParams(hash);
+    const access = params.get("access_token");
+    const refresh = params.get("refresh_token");
+    if (access) {
       try {
-        const code = new URLSearchParams(window.location.search).get("code");
-        const client = getSupabaseBrowserClient();
-
-        if (code) {
-          const exchange = await client.auth.exchangeCodeForSession(code);
-          if (exchange.error) {
-            throw exchange.error;
-          }
-        }
-
-        const { data, error } = await client.auth.getUser();
-        if (error || !data.user) {
-          throw new Error("Unable to read Google user profile");
-        }
-
-        const email = data.user.email;
-        const sub = data.user.id;
-        const name =
-          (data.user.user_metadata?.full_name as string | undefined) ??
-          (data.user.user_metadata?.name as string | undefined) ??
-          "Google User";
-
-        if (!email) {
-          throw new Error("Google account email is missing");
-        }
-
-        const auth = await completeGoogleLogin({ email, name, sub });
-        applyAuth(auth);
-        router.replace("/account");
-      } catch (err) {
-        setMessage(err instanceof Error ? err.message : "Google login failed");
+        writeTokens(access, refresh, "local");
+        window.dispatchEvent(new Event("kofkan-auth-storage-updated"));
+      } catch {
+        /* ignore */
       }
-    };
-
-    void run();
-  }, [applyAuth, router]);
+      window.history.replaceState(null, "", "/auth/google/callback");
+      router.replace("/account");
+      return;
+    }
+    router.replace("/account?oauth_error=missing_token");
+  }, [router]);
 
   return (
-    <main className="kofkan-shell py-14">
-      <div className="mx-auto max-w-lg rounded-2xl border border-kofkan-border bg-white p-6 text-center">
-        <h1 className="text-2xl font-bold">Google Sign-In</h1>
-        <p className="mt-3 text-sm text-kofkan-muted">{message}</p>
-      </div>
-    </main>
+    <div className="mx-auto max-w-mobile px-5 py-16 text-center text-small text-kofkan-text-secondary dark:text-zinc-400">
+      Completing sign-in…
+    </div>
   );
 }

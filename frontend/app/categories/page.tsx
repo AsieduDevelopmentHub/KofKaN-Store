@@ -2,8 +2,12 @@ import Link from "next/link";
 
 import { fetchCategories } from "@/lib/api/products";
 
+// Resolved at request time so a build-time backend outage doesn't break deploys.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function CategoriesPage() {
-  const categories = await fetchCategories();
+  const categories = await fetchCategories().catch(() => []);
 
   return (
     <main className="kofkan-shell py-10 pb-24 md:pb-10">
