@@ -20,7 +20,7 @@ export default function TermsPage() {
           <p className="text-[11px] font-semibold uppercase tracking-wider text-kofkan-text-muted dark:text-zinc-500">
             KofKaN Store
           </p>
-          <h1 className="mt-2 font-serif text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h1 className="mt-2 font-display text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Terms of Service
           </h1>
           <p className="mt-2 text-kofkan-text-muted dark:text-zinc-500">Last updated: {UPDATED}</p>
@@ -32,7 +32,7 @@ export default function TermsPage() {
 
         <div className="space-y-10">
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               1. Who we are
             </h2>
             <p className="mt-3">
@@ -45,7 +45,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               2. Eligibility and your account
             </h2>
             <ul className="mt-3 list-inside list-disc space-y-2">
@@ -62,7 +62,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               3. Products, descriptions, and availability
             </h2>
             <p className="mt-3">
@@ -74,7 +74,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               4. Orders, pricing, and payment
             </h2>
             <ul className="mt-3 list-inside list-disc space-y-2">
@@ -94,7 +94,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               5. Delivery, pickup, and risk
             </h2>
             <p className="mt-3">
@@ -106,7 +106,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               6. Returns, refunds, and hygiene
             </h2>
             <p className="mt-3">
@@ -119,7 +119,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               7. Acceptable use
             </h2>
             <p className="mt-3">You agree not to:</p>
@@ -132,7 +132,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               8. Intellectual property
             </h2>
             <p className="mt-3">
@@ -143,7 +143,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               9. Disclaimer and limit of liability
             </h2>
             <p className="mt-3">
@@ -156,7 +156,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               10. Changes
             </h2>
             <p className="mt-3">
@@ -166,7 +166,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               11. Governing law and disputes
             </h2>
             <p className="mt-3">
@@ -177,7 +177,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               12. Privacy
             </h2>
             <p className="mt-3">

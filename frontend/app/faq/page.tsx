@@ -17,7 +17,7 @@ export default function FaqPage() {
       <ScreenHeader variant="inner" title="FAQs" left="back" backHref="/" right="none" />
       <article className="mx-auto max-w-mobile space-y-6 px-5 py-8 text-small leading-relaxed text-kofkan-text-secondary dark:text-zinc-400">
         <section>
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Ordering & delivery
           </h2>
           <p className="mt-2">
@@ -26,7 +26,7 @@ export default function FaqPage() {
           </p>
         </section>
         <section>
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Account & password
           </h2>
           <p className="mt-2">
@@ -35,7 +35,7 @@ export default function FaqPage() {
           </p>
         </section>
         <section>
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Need more help?
           </h2>
           <p className="mt-2">

@@ -89,7 +89,7 @@ export default function AdminProductsImportPage() {
     <div className="w-full min-w-0 max-w-4xl">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Bulk import</h1>
+          <h1 className="font-display text-page-title font-semibold">Bulk import</h1>
           <p className="text-small text-kofkan-text-secondary">
             Upload a CSV to create or update products in one go.
           </p>
@@ -103,7 +103,7 @@ export default function AdminProductsImportPage() {
       </div>
 
       <section className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-        <h2 className="font-serif text-section-title font-semibold">1. Prepare your file</h2>
+        <h2 className="font-display text-section-title font-semibold">1. Prepare your file</h2>
         <p className="mt-1 text-small text-kofkan-text-secondary">
           The import expects a UTF-8 CSV. The first row must be the header row. Supported columns:
         </p>
@@ -124,7 +124,7 @@ export default function AdminProductsImportPage() {
       </section>
 
       <section className="mt-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-        <h2 className="font-serif text-section-title font-semibold">2. Upload</h2>
+        <h2 className="font-display text-section-title font-semibold">2. Upload</h2>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <input
             ref={inputRef}
@@ -177,7 +177,7 @@ export default function AdminProductsImportPage() {
 
       {result && (
         <section className="mt-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-          <h2 className="font-serif text-section-title font-semibold">
+          <h2 className="font-display text-section-title font-semibold">
             3. Result{" "}
             <span className="text-[11px] uppercase tracking-wider text-kofkan-text-muted">
               ({result.mode === "commit" ? "committed" : "dry run"})
@@ -240,7 +240,7 @@ function Summary({
         {label}
       </p>
       <p
-        className={`mt-1 font-serif text-xl font-semibold ${
+        className={`mt-1 font-display text-xl font-semibold ${
           tone === "warn" ? "text-amber-700" : "text-kofkan-text-primary"
         }`}
       >

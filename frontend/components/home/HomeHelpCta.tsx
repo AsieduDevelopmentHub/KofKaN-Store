@@ -12,7 +12,7 @@ export function HomeHelpCta() {
     >
       <div className="mx-auto max-w-mobile">
         <div className="rounded-[10px] bg-gradient-to-br from-kofkan-crimson to-[#5c1f24] px-5 py-5 text-center shadow-md ring-1 ring-black/10">
-          <h2 id="help-heading" className="font-serif text-section-title font-semibold text-white">
+          <h2 id="help-heading" className="font-display text-section-title font-semibold text-white">
             Need a hand?
           </h2>
           <p className="mt-2 text-small leading-relaxed text-white/85">

@@ -349,7 +349,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
         <>
           <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
             <p className="text-small font-semibold uppercase tracking-wider text-kofkan-text-muted">Signed in as</p>
-            <h1 className="mt-1 font-serif text-page-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h1 className="mt-1 font-display text-page-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               {displayName}
             </h1>
             <p className="mt-0.5 text-small text-kofkan-text-secondary">
@@ -425,7 +425,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "settings" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Profile
           </h2>
           <form onSubmit={saveProfile} className="mt-4 space-y-3">
@@ -550,7 +550,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "appearance" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Appearance
           </h2>
           <p className="mt-1 text-small text-kofkan-text-secondary">Choose how KofKaN looks on this device.</p>
@@ -581,7 +581,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "address" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Default shipping profile
           </h2>
           <p className="mt-1 text-small text-kofkan-text-secondary dark:text-zinc-400">
@@ -739,7 +739,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
       {panel === "security" && (
         <div className="space-y-5">
           <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               Password
             </h2>
             <form onSubmit={changePw} className="mt-4 space-y-3">
@@ -784,7 +784,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "notifications" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Notifications
           </h2>
           <p className="mt-3 text-small leading-relaxed text-kofkan-text-secondary">
@@ -797,7 +797,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "verify" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Verify email
           </h2>
           {!u.email ? (
@@ -873,7 +873,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "newsletter" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Newsletter
           </h2>
           <p className="mt-1 text-small text-kofkan-text-secondary dark:text-zinc-400">
@@ -971,7 +971,7 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
 
       {panel === "danger" && (
         <section className="rounded-[12px] border border-kofkan-crimson/20 bg-white p-5 dark:border-red-900/40 dark:bg-zinc-900">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-crimson">Close account</h2>
+          <h2 className="font-display text-section-title font-semibold text-kofkan-crimson">Close account</h2>
           <p className="mt-1 text-small text-kofkan-text-secondary">This cannot be undone.</p>
           <form onSubmit={delAccount} className="mt-4 space-y-3">
             <input

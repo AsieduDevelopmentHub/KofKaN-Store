@@ -89,7 +89,7 @@ export default function AdminCouponsPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-page-title font-semibold">Coupons & discounts</h1>
+      <h1 className="font-display text-page-title font-semibold">Coupons & discounts</h1>
       <p className="mt-2 text-small text-kofkan-text-secondary">Create and manage discount codes.</p>
       <form
         onSubmit={(e) => void submit(e)}

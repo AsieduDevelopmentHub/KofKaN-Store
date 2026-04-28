@@ -65,7 +65,7 @@ export function AccountScreen({ initialPanel }: { initialPanel?: AccountPanel } 
   return (
     <div className="mx-auto max-w-mobile space-y-6 px-5 py-8">
       <div>
-        <h1 className="font-serif text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+        <h1 className="font-display text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
           Account
         </h1>
         <p className="mt-1 text-small leading-relaxed text-kofkan-text-secondary dark:text-zinc-400">
@@ -106,7 +106,7 @@ export function AccountScreen({ initialPanel }: { initialPanel?: AccountPanel } 
       {showPasswordRecovery ? (
         <section className="space-y-4 rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
           <div className="flex items-start justify-between gap-3">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
               Password recovery
             </h2>
             <button

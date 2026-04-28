@@ -224,7 +224,7 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
               ✓
             </div>
-            <h1 className="mt-3 font-serif text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+            <h1 className="mt-3 font-display text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
               {usedFallback
                 ? "Return request drafted in email"
                 : "Return request submitted"}
@@ -264,7 +264,7 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
         ) : detail ? (
           <form onSubmit={onSubmit} className="space-y-4">
             <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Which items?
               </h2>
               <ul className="mt-3 divide-y divide-kofkan-gray-soft/80 dark:divide-white/10">
@@ -294,7 +294,7 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
             </section>
 
             <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Reason
               </h2>
               <label className="mt-3 block text-small font-medium text-kofkan-text-primary dark:text-zinc-200">

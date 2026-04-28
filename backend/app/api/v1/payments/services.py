@@ -6,7 +6,6 @@ from __future__ import annotations
 import hashlib
 import hmac
 import logging
-import os
 import uuid
 from datetime import datetime
 
@@ -19,6 +18,7 @@ from sqlalchemy import text
 from app.db import DATABASE_URL, apply_postgres_session_user
 from app.models import Order, Invoice, PaystackInitIdempotency, PaystackTransaction, User
 from app.core import paystack_client
+from app.core.config import settings
 from app.core.email_service import EmailService
 from app.core.order_mail import line_items_for_order_email
 
@@ -93,11 +93,11 @@ def _upsert_paystack_transaction(
 
 
 def _currency() -> str:
-    return os.getenv("PAYSTACK_CURRENCY", "GHS").upper()
+    return (settings.paystack_currency or "GHS").upper()
 
 
 def _public_key() -> str | None:
-    pk = os.getenv("PAYSTACK_PUBLIC_KEY", "").strip()
+    pk = (settings.paystack_public_key or "").strip()
     return pk or None
 
 

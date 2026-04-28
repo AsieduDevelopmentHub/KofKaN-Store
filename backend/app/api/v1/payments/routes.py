@@ -2,7 +2,6 @@
 Paystack payment endpoints: initialize checkout, verify payment, webhook.
 """
 from typing import Annotated, Optional
-import os
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlmodel import Session
@@ -18,6 +17,7 @@ from app.api.v1.payments.schemas import (
 )
 from app.api.v1.payments import services as payment_services
 from app.core.placeholder_email import ensure_paystack_customer_email
+from app.core.config import settings
 
 router = APIRouter()
 
@@ -34,7 +34,7 @@ def _webhook_client_ip(request: Request) -> str | None:
 
 
 def _webhook_allowlist() -> set[str]:
-    raw = os.getenv("PAYSTACK_WEBHOOK_IP_ALLOWLIST", "").strip()
+    raw = (settings.paystack_webhook_ip_allowlist or "").strip()
     if not raw:
         return set()
     return {x.strip() for x in raw.split(",") if x.strip()}

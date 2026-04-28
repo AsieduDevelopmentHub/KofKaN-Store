@@ -48,7 +48,7 @@ export default function AdminLowStockPage() {
     <div className="w-full min-w-0 max-w-5xl">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Low stock</h1>
+          <h1 className="font-display text-page-title font-semibold">Low stock</h1>
           <p className="text-small text-kofkan-text-secondary">
             Base products and variant SKUs at or below your threshold. Restock soon to avoid missed
             orders.

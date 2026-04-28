@@ -40,7 +40,7 @@ export function HomeHowItWorks() {
       <div className="mx-auto max-w-mobile">
         <h2
           id="how-heading"
-          className="text-center font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.125rem]"
+          className="text-center font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.125rem]"
         >
           Shop in three steps
         </h2>

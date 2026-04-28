@@ -221,7 +221,7 @@ export function RevenueTrendChart({ stats, window = 30 }: Props) {
         {hovered && (
           <div className="pointer-events-none absolute left-2 top-2 rounded-lg bg-white/95 px-2.5 py-1.5 text-[11px] font-medium text-kofkan-text-primary shadow ring-1 ring-black/[0.08]">
             <p className="text-kofkan-text-muted">{fmtDateShort(hovered.date)}</p>
-            <p className="font-serif text-sm font-semibold text-kofkan-crimson">
+            <p className="font-display text-sm font-semibold text-kofkan-crimson">
               {formatGhs(hovered.revenue)}
             </p>
             <p className="text-[10px] text-kofkan-text-muted">

@@ -21,7 +21,7 @@ export default function RouteError({
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-kofkan-text-muted dark:text-zinc-500">
         Error 500
       </p>
-      <h1 className="font-serif text-page-title text-kofkan-text-primary dark:text-zinc-100">
+      <h1 className="font-display text-page-title text-kofkan-text-primary dark:text-zinc-100">
         Something went wrong
       </h1>
       <p className="max-w-md text-body text-kofkan-text-secondary dark:text-zinc-400">

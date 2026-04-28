@@ -146,7 +146,7 @@ function ConfirmBody({
   const danger = options.variant === "danger";
   return (
     <>
-      <h2 id="kofkan-dialog-title" className="font-serif text-[1.125rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+      <h2 id="kofkan-dialog-title" className="font-display text-[1.125rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
         {options.title ?? "Confirm"}
       </h2>
       <p id="kofkan-dialog-desc" className="mt-2 text-small leading-relaxed text-kofkan-text-secondary dark:text-zinc-400">
@@ -186,7 +186,7 @@ function AlertBody({
     <>
       <h2
         id="kofkan-dialog-title"
-        className={`font-serif text-[1.125rem] font-semibold ${err ? "text-kofkan-crimson" : "text-kofkan-text-primary dark:text-zinc-100"}`}
+        className={`font-display text-[1.125rem] font-semibold ${err ? "text-kofkan-crimson" : "text-kofkan-text-primary dark:text-zinc-100"}`}
       >
         {options.title ?? (err ? "Something went wrong" : "Notice")}
       </h2>

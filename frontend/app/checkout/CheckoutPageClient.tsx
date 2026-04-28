@@ -376,7 +376,7 @@ export function CheckoutPageClient() {
         <div className="px-4 pt-4">
           {step === "address" && (
             <section className="space-y-4 rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Delivery address
               </h2>
               <fieldset className="space-y-2">
@@ -491,7 +491,7 @@ export function CheckoutPageClient() {
 
           {step === "shipping" && (
             <section className="space-y-4 rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Shipping details
               </h2>
 
@@ -575,7 +575,7 @@ export function CheckoutPageClient() {
           {step === "review" && (
             <>
               <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-                <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+                <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                   Review items
                 </h2>
                 <ul className="mt-3 divide-y divide-kofkan-gray-soft/80 dark:divide-white/10">
@@ -613,7 +613,7 @@ export function CheckoutPageClient() {
               </section>
 
               <section className="mt-3 rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-                <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+                <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                   Shipping to
                 </h2>
                 <p className="mt-2 whitespace-pre-wrap text-small text-kofkan-text-secondary dark:text-zinc-300">
@@ -636,7 +636,7 @@ export function CheckoutPageClient() {
               </section>
 
               <section className="mt-3 rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-                <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+                <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                   Payment
                 </h2>
                 <p className="mt-2 text-small text-kofkan-text-secondary dark:text-zinc-400">

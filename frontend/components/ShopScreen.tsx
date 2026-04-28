@@ -186,7 +186,7 @@ export function ShopScreen() {
     <div className="bg-kofkan-cream pb-12 dark:bg-zinc-950">
       <div className="bg-kofkan-gold/5 py-8 mb-4 border-b border-kofkan-gray-soft/50 dark:bg-white/[0.02] dark:border-white/5">
         <div className="kofkan-storefront-max mx-auto px-4">
-          <h1 className="font-serif text-[1.6rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h1 className="font-display text-[1.6rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
             {tab === "all" ? "Discover Products" : tabKeys.find(t => t.key === tab)?.label}
           </h1>
           <p className="mt-1 text-small text-kofkan-text-secondary dark:text-zinc-400">

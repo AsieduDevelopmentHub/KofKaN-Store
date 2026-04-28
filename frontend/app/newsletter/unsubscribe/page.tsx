@@ -38,7 +38,7 @@ export default function NewsletterUnsubscribePage() {
       <ScreenHeader variant="inner" title="Newsletter" left="back" backHref="/" right="none" />
       <section className="kofkan-storefront-max px-4 py-6">
         <div className="mx-auto max-w-lg rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-          <h1 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h1 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Unsubscribe from updates
           </h1>
           <p className="mt-2 text-small text-kofkan-text-secondary dark:text-zinc-400">

@@ -41,7 +41,7 @@ export function HomeTrustAndLogistics() {
     >
       <h2
         id="trust-heading"
-        className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
+        className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
       >
         Why KofKaN
       </h2>
@@ -102,7 +102,7 @@ export function HomeTrustAndLogistics() {
         id="delivery"
         className="scroll-mt-20 mt-10 border-t border-kofkan-gray-soft pt-8 dark:border-white/10"
       >
-        <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+        <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
           Delivery &amp; pickup
         </h2>
         <p className="mt-1 text-small leading-relaxed text-kofkan-text-secondary dark:text-zinc-400">

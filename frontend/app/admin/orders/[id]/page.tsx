@@ -128,7 +128,7 @@ export default function AdminOrderDetailPage() {
         <Link href="/system/orders" className="text-small font-semibold text-kofkan-gold hover:underline">
           ← Orders
         </Link>
-        <h1 className="mt-3 font-serif text-page-title font-semibold">Order</h1>
+        <h1 className="mt-3 font-display text-page-title font-semibold">Order</h1>
         <AdminOrderDetailSkeleton />
       </div>
     );
@@ -152,7 +152,7 @@ export default function AdminOrderDetailPage() {
       </Link>
       <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Order #{order.id}</h1>
+          <h1 className="font-display text-page-title font-semibold">Order #{order.id}</h1>
           <p className="text-small text-kofkan-text-muted">
             {customerLabel || `User ${order.user_id}`} · Ordered {new Date(order.created_at).toLocaleString()}
           </p>
@@ -170,7 +170,7 @@ export default function AdminOrderDetailPage() {
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-          <h2 className="font-serif text-section-title font-semibold">Status</h2>
+          <h2 className="font-display text-section-title font-semibold">Status</h2>
           <p className="mt-2 text-small capitalize text-kofkan-text-secondary">
             Fulfillment: <strong className="text-kofkan-text-primary">{order.status}</strong>
           </p>
@@ -203,7 +203,7 @@ export default function AdminOrderDetailPage() {
         </section>
 
         <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-          <h2 className="font-serif text-section-title font-semibold">Shipping</h2>
+          <h2 className="font-display text-section-title font-semibold">Shipping</h2>
           <div className="mt-3 space-y-2 text-small text-kofkan-text-secondary">
             {order.shipping_address && <p className="whitespace-pre-wrap">{order.shipping_address}</p>}
             {order.shipping_contact_name && <p>Contact: {order.shipping_contact_name}</p>}
@@ -213,7 +213,7 @@ export default function AdminOrderDetailPage() {
       </div>
 
       <section className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-        <h2 className="font-serif text-section-title font-semibold">Mark shipped</h2>
+        <h2 className="font-display text-section-title font-semibold">Mark shipped</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <label className="block text-small font-medium text-kofkan-text-secondary">
             Tracking #
@@ -252,7 +252,7 @@ export default function AdminOrderDetailPage() {
       </section>
 
       <section className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-        <h2 className="font-serif text-section-title font-semibold">Cancel order</h2>
+        <h2 className="font-display text-section-title font-semibold">Cancel order</h2>
         <label className="mt-3 block text-small font-medium text-kofkan-text-secondary">
           Reason (shown to customer email)
           <input
@@ -272,7 +272,7 @@ export default function AdminOrderDetailPage() {
       </section>
 
       <section className="mt-6 w-full min-w-0 overflow-x-auto rounded-xl bg-white p-4 shadow-sm ring-1 ring-black/[0.06] sm:p-5">
-        <h2 className="font-serif text-section-title font-semibold">Line items</h2>
+        <h2 className="font-display text-section-title font-semibold">Line items</h2>
         <ul className="mt-3 min-w-0 divide-y divide-kofkan-gray-soft">
           {order.items.map((line) => {
             const img = line.product_image_url

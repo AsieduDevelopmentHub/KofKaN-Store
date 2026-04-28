@@ -76,7 +76,7 @@ export function AccountTwoFactorPanel() {
 
   return (
     <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-      <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+      <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
         Two-factor authentication
       </h2>
       <p className="mt-1 text-small text-kofkan-text-secondary">

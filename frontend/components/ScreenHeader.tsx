@@ -125,7 +125,7 @@ export function ScreenHeader(props: ScreenHeaderProps) {
             <FaChevronLeft />
           </Link>
         )}
-        <h1 className="min-w-0 flex-1 truncate text-center font-serif text-page-title font-semibold tracking-tight text-kofkan-text-primary dark:text-zinc-100">
+        <h1 className="min-w-0 flex-1 truncate text-center font-display text-page-title font-semibold tracking-tight text-kofkan-text-primary dark:text-zinc-100">
           {title}
         </h1>
         {right === "search" && (

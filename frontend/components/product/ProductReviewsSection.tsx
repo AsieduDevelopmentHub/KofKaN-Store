@@ -246,7 +246,7 @@ export function ProductReviewsSection({ productId }: Props) {
 
   return (
     <section ref={sectionRef} className="mt-10 border-t border-kofkan-gray-soft/80 pt-8 dark:border-white/10">
-      <h2 className="font-serif text-[1.05rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">Reviews</h2>
+      <h2 className="font-display text-[1.05rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">Reviews</h2>
       {err && (
         <p className="mt-2 rounded-[10px] bg-red-50 px-3 py-2 text-small text-red-800 ring-1 ring-red-100 dark:bg-red-950/40 dark:text-red-100">
           {err}

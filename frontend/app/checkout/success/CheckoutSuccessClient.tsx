@@ -103,7 +103,7 @@ export function CheckoutSuccessClient() {
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-700">
             ✓
           </div>
-          <h1 className="mt-3 font-serif text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h1 className="mt-3 font-display text-[1.35rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
             {status === "verified"
               ? "Payment confirmed"
               : status === "verifying"

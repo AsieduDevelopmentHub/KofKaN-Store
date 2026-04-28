@@ -445,7 +445,7 @@ export function ProductDetailScreen({ product: p }: Props) {
         <p className="mt-4 text-[10px] font-semibold uppercase tracking-[0.16em] text-kofkan-text-muted dark:text-zinc-500">
           {p.categoryLabel}
         </p>
-        <h1 className="mt-1 font-serif text-[1.35rem] font-semibold leading-tight text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.5rem]">
+        <h1 className="mt-1 font-display text-[1.35rem] font-semibold leading-tight text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.5rem]">
           {displayTitle}
         </h1>
         {selectedVariant ? (
@@ -545,7 +545,7 @@ export function ProductDetailScreen({ product: p }: Props) {
             <div className="flex items-end justify-between gap-3">
               <h2
                 id="related-products-heading"
-                className="font-serif text-[1.05rem] font-semibold text-kofkan-text-primary dark:text-zinc-100"
+                className="font-display text-[1.05rem] font-semibold text-kofkan-text-primary dark:text-zinc-100"
               >
                 {sameCategoryCount > 0 ? `More in ${p.categoryLabel}` : "You may also like"}
               </h2>

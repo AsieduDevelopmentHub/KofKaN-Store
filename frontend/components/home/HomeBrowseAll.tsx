@@ -40,7 +40,7 @@ export function HomeBrowseAll() {
             </p>
             <h2
               id="browse-all-heading"
-              className="mt-1 font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.125rem]"
+              className="mt-1 font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.125rem]"
             >
               All collections
             </h2>

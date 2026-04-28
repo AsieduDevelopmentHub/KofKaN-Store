@@ -165,7 +165,7 @@ export default function AdminStaffPage() {
 
   return (
     <div className="w-full min-w-0 max-w-full">
-      <h1 className="font-serif text-page-title font-semibold">Staff & admins</h1>
+      <h1 className="font-display text-page-title font-semibold">Staff & admins</h1>
       <p className="text-small text-kofkan-text-secondary">
         Create accounts for staff, assign roles, and fine-tune permission scopes.
       </p>
@@ -358,7 +358,7 @@ export default function AdminStaffPage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+        <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
           Current staff & admins
         </h2>
         <AdminSearchInput

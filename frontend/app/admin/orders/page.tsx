@@ -70,7 +70,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="w-full min-w-0 max-w-full">
-      <h1 className="font-serif text-page-title font-semibold">Orders</h1>
+      <h1 className="font-display text-page-title font-semibold">Orders</h1>
       <p className="text-small text-kofkan-text-secondary">Fulfillment, payment state, and invoices.</p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">

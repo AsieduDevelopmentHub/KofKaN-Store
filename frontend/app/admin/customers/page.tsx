@@ -50,7 +50,7 @@ export default function AdminCustomersPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Customers</h1>
+          <h1 className="font-display text-page-title font-semibold">Customers</h1>
           <p className="text-small text-kofkan-text-secondary">Registered shoppers (excludes admin accounts).</p>
         </div>
         <AdminSearchInput

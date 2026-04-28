@@ -76,7 +76,7 @@ export default function AdminPaymentsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Payments</h1>
+          <h1 className="font-display text-page-title font-semibold">Payments</h1>
           <p className="text-small text-kofkan-text-secondary">Paystack transaction log linked to orders.</p>
         </div>
         <AdminSearchInput

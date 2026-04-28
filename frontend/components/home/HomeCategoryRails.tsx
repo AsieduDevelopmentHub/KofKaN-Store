@@ -36,7 +36,7 @@ export function HomeCategoryRails() {
         return (
           <div key={key} className="mb-8 last:mb-0">
             <div className="mb-3 flex items-center justify-between px-4">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 {title}
               </h2>
               <Link

@@ -38,7 +38,7 @@ export default function HelpHubPage() {
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-kofkan-text-muted dark:text-zinc-500">
             How can we help?
           </p>
-          <h1 className="mt-1 font-serif text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+          <h1 className="mt-1 font-display text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
             Browse common topics
           </h1>
         </header>

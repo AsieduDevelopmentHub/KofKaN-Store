@@ -76,13 +76,13 @@ export default function AdminProductEditPage() {
       <Link href="/system/products" className="text-small font-semibold text-kofkan-gold hover:underline">
         ← Products
       </Link>
-      <h1 className="mt-3 font-serif text-page-title font-semibold">Edit product</h1>
+      <h1 className="mt-3 font-display text-page-title font-semibold">Edit product</h1>
       {err && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-small text-red-800">{err}</p>}
       {!product && !err && <AdminProductEditSkeleton />}
       {product && (
         <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1.2fr]">
           <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-            <h2 className="font-serif text-section-title font-semibold">Product details</h2>
+            <h2 className="font-display text-section-title font-semibold">Product details</h2>
             <div className="mt-4 space-y-3 text-small">
               <div className="h-44 overflow-hidden rounded-lg bg-kofkan-gray-soft">
                 {product.image_url ? (
@@ -118,7 +118,7 @@ export default function AdminProductEditPage() {
           </section>
           <section className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-black/[0.06]" id="edit">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-section-title font-semibold">Edit product</h2>
+              <h2 className="font-display text-section-title font-semibold">Edit product</h2>
               <span className="rounded-full bg-kofkan-cream px-3 py-1 text-[11px] font-semibold text-kofkan-text-muted">
                 Product #{id}
               </span>

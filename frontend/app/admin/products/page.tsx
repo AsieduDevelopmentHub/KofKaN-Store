@@ -77,7 +77,7 @@ export default function AdminProductsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Products</h1>
+          <h1 className="font-display text-page-title font-semibold">Products</h1>
           <p className="text-small text-kofkan-text-secondary">Manage catalog, pricing, and visibility.</p>
         </div>
         <div className="flex flex-wrap gap-2">

@@ -178,7 +178,7 @@ export default function AdminReturnsPage() {
     <div className="w-full min-w-0 max-w-full">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Returns</h1>
+          <h1 className="font-display text-page-title font-semibold">Returns</h1>
           <p className="text-small text-kofkan-text-secondary">
             Customer return and refund requests. {totalPending > 0 && (
               <span className="ml-1 font-semibold text-amber-700">{totalPending} awaiting review.</span>
@@ -243,7 +243,7 @@ export default function AdminReturnsPage() {
               >
                 <header className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-baseline gap-2">
-                    <span className="font-serif text-section-title font-semibold text-kofkan-crimson">
+                    <span className="font-display text-section-title font-semibold text-kofkan-crimson">
                       Return #{r.id}
                     </span>
                     <Link

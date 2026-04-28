@@ -127,7 +127,7 @@ export function NavSidebarPanel() {
         aria-label="Navigation menu"
       >
         <div className="border-b border-kofkan-gray-soft px-4 py-4 dark:border-white/10">
-          <p className="font-serif text-[1.05rem] font-semibold tracking-tight text-kofkan-text-primary dark:text-zinc-100">
+          <p className="font-display text-[1.05rem] font-semibold tracking-tight text-kofkan-text-primary dark:text-zinc-100">
             KofKaN
           </p>
           <p className="mt-1 text-[11px] leading-relaxed text-kofkan-text-secondary dark:text-zinc-400">

@@ -5,20 +5,21 @@ Uses PAYSTACK_SECRET_KEY; amounts are in the smallest currency unit (e.g. pesewa
 from __future__ import annotations
 
 import logging
-import os
 from typing import Any, Optional
 
 import httpx
+
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 
 def _secret_key() -> str:
-    return os.getenv("PAYSTACK_SECRET_KEY", "").strip()
+    return (settings.paystack_secret_key or "").strip()
 
 
 def _base_url() -> str:
-    return os.getenv("PAYSTACK_BASE_URL", "https://api.paystack.co").rstrip("/")
+    return (settings.paystack_base_url or "https://api.paystack.co").rstrip("/")
 
 
 def _headers() -> dict[str, str]:

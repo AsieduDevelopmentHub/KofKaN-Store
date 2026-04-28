@@ -161,7 +161,7 @@ export function ProductImagesManager({ accessToken, productId, onPrimaryChange }
     <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="font-serif text-section-title font-semibold">Gallery images</h2>
+          <h2 className="font-display text-section-title font-semibold">Gallery images</h2>
           <p className="text-small text-kofkan-text-secondary">
             Upload several photos so shoppers can inspect the product. The star marks
             the hero image shown on list pages.
@@ -258,7 +258,7 @@ export function ProductImagesManager({ accessToken, productId, onPrimaryChange }
       {variantPhotos.length > 0 && (
         <div className="mt-6 border-t border-kofkan-gray-soft/70 pt-4">
           <div className="flex items-baseline justify-between gap-2">
-            <h3 className="font-serif text-[0.95rem] font-semibold text-kofkan-text-primary">
+            <h3 className="font-display text-[0.95rem] font-semibold text-kofkan-text-primary">
               Variant photos
             </h3>
             <p className="text-[11px] text-kofkan-text-muted">

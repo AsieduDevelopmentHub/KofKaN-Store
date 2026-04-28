@@ -267,7 +267,7 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
             />
 
             <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Items
               </h2>
               <ul className="mt-3 divide-y divide-kofkan-gray-soft/80 dark:divide-white/10">
@@ -324,7 +324,7 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
             </section>
 
             <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                 Shipping
               </h2>
               <dl className="mt-3 space-y-2 text-small">
@@ -388,7 +388,7 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
 
             {detail.invoice ? (
               <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-                <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+                <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                   Invoice
                 </h2>
                 <p className="mt-2 text-small text-kofkan-text-secondary dark:text-zinc-400">
@@ -408,7 +408,7 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
               </section>
             ) : (
               <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-                <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+                <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
                   Invoice
                 </h2>
                 <p className="mt-2 text-small text-kofkan-text-secondary dark:text-zinc-400">

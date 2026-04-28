@@ -31,7 +31,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-black/[0.06]">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-kofkan-text-muted">{label}</p>
-      <p className="mt-1 font-serif text-[1.15rem] font-semibold text-kofkan-text-primary">{value}</p>
+      <p className="mt-1 font-display text-[1.15rem] font-semibold text-kofkan-text-primary">{value}</p>
     </div>
   );
 }
@@ -110,7 +110,7 @@ export function AdminDashboardContent() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-serif text-page-title font-semibold text-kofkan-text-primary">Dashboard</h1>
+          <h1 className="font-display text-page-title font-semibold text-kofkan-text-primary">Dashboard</h1>
           <p className="mt-1 text-small text-kofkan-text-secondary">
             Snapshot of sales, orders, and catalog health.
           </p>
@@ -183,7 +183,7 @@ export function AdminDashboardContent() {
       {accessToken && (
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <section className="min-w-0 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
               Revenue trend
             </h2>
             <p className="mt-1 text-[11px] text-kofkan-text-muted">
@@ -203,7 +203,7 @@ export function AdminDashboardContent() {
           </section>
 
           <section className="min-w-0 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
               Orders by status
             </h2>
             <p className="mt-1 text-[11px] text-kofkan-text-muted">
@@ -225,7 +225,7 @@ export function AdminDashboardContent() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section className="min-w-0 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
               Recent orders
             </h2>
             <Link href="/system/orders" className="text-small font-semibold text-kofkan-gold hover:underline">
@@ -330,7 +330,7 @@ export function AdminDashboardContent() {
 
         <section className="min-w-0 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+            <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
               Low stock
             </h2>
             <Link href="/system/inventory" className="text-small font-semibold text-kofkan-gold hover:underline">
@@ -386,7 +386,7 @@ export function AdminDashboardContent() {
 
       {data && data.top_products.length > 0 && (
         <section className="mt-8 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
             Top products
           </h2>
           <ul className="mt-3 divide-y divide-kofkan-gray-soft">

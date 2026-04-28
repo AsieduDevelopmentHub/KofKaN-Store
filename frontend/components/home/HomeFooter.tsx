@@ -23,7 +23,7 @@ export function HomeFooter() {
   return (
     <footer className="border-t border-kofkan-gray-soft bg-kofkan-deep px-4 py-8 text-kofkan-gray-soft dark:border-white/10">
       <div className="mx-auto max-w-mobile">
-        <p className="font-serif text-small font-semibold tracking-[0.12em] text-white">KOFKAN</p>
+        <p className="font-display text-small font-semibold tracking-[0.12em] text-white">KOFKAN</p>
         <p className="mt-1 text-[11px] leading-relaxed text-white/60">
           Embedded systems &amp; robotics — microcontrollers, sensors, motors, power, and prototyping tools.
         </p>

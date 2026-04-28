@@ -195,7 +195,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               className="h-8 w-8 rounded-sm object-contain"
             />
             <div>
-              <p className="font-serif text-lg font-semibold tracking-wide text-white">KofKaN</p>
+              <p className="font-display text-lg font-semibold tracking-wide text-white">KofKaN</p>
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-kofkan-gold/90">
                 System
               </p>
@@ -241,7 +241,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         >
           <Menu className="h-5 w-5" strokeWidth={2} />
         </button>
-        <span className="font-serif text-section-title font-semibold">Admin</span>
+        <span className="font-display text-section-title font-semibold">Admin</span>
         <span className="w-9" />
       </header>
 

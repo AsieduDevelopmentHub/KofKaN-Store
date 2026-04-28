@@ -59,7 +59,7 @@ export default function AdminSearchAnalyticsPage() {
     <div className="w-full min-w-0 max-w-full">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-page-title font-semibold">Search analytics</h1>
+          <h1 className="font-display text-page-title font-semibold">Search analytics</h1>
           <p className="text-small text-kofkan-text-secondary">
             What customers are searching, and where your catalog has gaps.
           </p>
@@ -99,7 +99,7 @@ export default function AdminSearchAnalyticsPage() {
           </section>
 
           <section className="mt-8">
-            <h2 className="font-serif text-section-title font-semibold">Top searches</h2>
+            <h2 className="font-display text-section-title font-semibold">Top searches</h2>
             <p className="text-small text-kofkan-text-secondary">
               Highest-volume queries customers ran on the storefront.
             </p>
@@ -124,7 +124,7 @@ export default function AdminSearchAnalyticsPage() {
           </section>
 
           <section className="mt-8">
-            <h2 className="font-serif text-section-title font-semibold">Zero-result queries</h2>
+            <h2 className="font-display text-section-title font-semibold">Zero-result queries</h2>
             <p className="text-small text-kofkan-text-secondary">
               Catalog gaps — consider adding products, synonyms, or redirects.
             </p>
@@ -166,7 +166,7 @@ function Stat({
         {label}
       </p>
       <p
-        className={`mt-1 font-serif text-2xl font-semibold ${
+        className={`mt-1 font-display text-2xl font-semibold ${
           tone === "warn" ? "text-amber-700" : "text-kofkan-text-primary"
         }`}
       >

@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     frontend_base_url: str = "http://localhost:3000"
     google_client_id: str = ""
     paystack_webhook_secret: str = ""
+    paystack_secret_key: str = ""
+    paystack_public_key: str = ""
+    paystack_base_url: str = "https://api.paystack.co"
+    paystack_currency: str = "GHS"
+    paystack_webhook_ip_allowlist: str = ""
     cors_allow_credentials: bool = True
 
     model_config = SettingsConfigDict(

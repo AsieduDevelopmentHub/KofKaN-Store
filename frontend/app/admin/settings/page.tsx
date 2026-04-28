@@ -139,7 +139,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-page-title font-semibold">Settings</h1>
+      <h1 className="font-display text-page-title font-semibold">Settings</h1>
       <p className="mt-2 text-small text-kofkan-text-secondary">
         Editable business settings stored in the database.
       </p>
@@ -149,7 +149,7 @@ export default function AdminSettingsPage() {
       ) : (
         <>
       <section className="mt-6 rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-        <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">Shipping matrix</h2>
+        <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">Shipping matrix</h2>
         <p className="mt-1 text-small text-kofkan-text-secondary">
           Set delivery fees by region, optional city-specific overrides, and courier extra charges.
         </p>

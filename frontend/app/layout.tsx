@@ -1,23 +1,29 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Orbitron, Inter, Roboto_Mono } from "next/font/google";
 import { Providers } from "@/components/Providers";
 import { cookieBannerNeeded } from "@/lib/cookie-consent-server";
 import { buildRootMetadata } from "@/lib/seo";
 import PWARegister from "@/components/PWARegister";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
-/** Editorial display serif — pairs cleanly with the modern electronics palette. */
-const cormorant = Cormorant_Garamond({
+/** Futuristic display font for electronics branding */
+const orbitron = Orbitron({
   subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-orbitron",
+  weight: ["400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-roboto-mono",
   display: "swap",
 });
 
@@ -30,7 +36,7 @@ export const metadata: Metadata = buildRootMetadata();
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const showCookieConsent = await cookieBannerNeeded();
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${orbitron.variable} ${inter.variable} ${robotoMono.variable}`}>
       <body>
         <PWARegister />
         <PWAInstallPrompt />

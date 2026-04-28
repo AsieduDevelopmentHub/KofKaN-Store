@@ -63,6 +63,16 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     (async () => {
       try {
+        // One-time merge: push guest wishlist into server on login.
+        if (typeof window !== "undefined") {
+          const guestIds = Array.from(guestWishIds);
+          if (guestIds.length) {
+            await Promise.allSettled(guestIds.map((id) => wishlistAdd(accessToken, Number(id))));
+            localStorage.removeItem("kofkan_guest_wishlist");
+            setGuestWishIds(new Set());
+          }
+        }
+
         const items = await wishlistList(accessToken);
         if (cancelled) return;
         const ids = new Set<string>();
@@ -78,7 +88,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [accessToken]);
+  }, [accessToken, guestWishIds]);
 
   const clearWishErr = useCallback(() => setWishErr(null), []);
 

@@ -34,7 +34,7 @@ export default function AdminProductNewPage() {
       <Link href="/system/products" className="text-small font-semibold text-kofkan-gold hover:underline">
         ← Products
       </Link>
-      <h1 className="mt-3 font-serif text-page-title font-semibold">New product</h1>
+      <h1 className="mt-3 font-display text-page-title font-semibold">New product</h1>
       <div className="mt-6 max-w-2xl rounded-xl bg-white p-6 shadow-sm ring-1 ring-black/[0.06]">
         {catsReady ? (
           <ProductForm accessToken={accessToken} mode="create" categoryHints={cats} />

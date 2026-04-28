@@ -205,7 +205,7 @@ export function ProductVariantsManager({ accessToken, productId }: Props) {
     <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h2 className="font-serif text-section-title font-semibold">Variants</h2>
+          <h2 className="font-display text-section-title font-semibold">Variants</h2>
           <p className="text-small text-kofkan-text-secondary">
             Optional variations (size, color, etc.). Attributes format: <code>color=red; size=M</code>.
           </p>

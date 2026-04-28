@@ -23,7 +23,7 @@ export default function HomePage() {
         className="scroll-mt-20 border-y border-kofkan-gray-soft bg-kofkan-cream px-5 py-6 text-center dark:border-white/10 dark:bg-zinc-950"
         aria-label="Brand tagline"
       >
-        <p className="font-serif text-[1.125rem] font-semibold leading-snug tracking-tight text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.2rem]">
+        <p className="font-display text-[1.125rem] font-semibold leading-snug tracking-tight text-kofkan-text-primary dark:text-zinc-100 sm:text-[1.2rem]">
           Build, Tinker, Innovate — Embedded Systems, Robotics & Programming Gear
         </p>
       </section>

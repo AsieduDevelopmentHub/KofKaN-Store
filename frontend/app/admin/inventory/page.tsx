@@ -123,7 +123,7 @@ export default function AdminInventoryPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-page-title font-semibold">Inventory</h1>
+      <h1 className="font-display text-page-title font-semibold">Inventory</h1>
       <p className="text-small text-kofkan-text-secondary">
         Stock for each product and each variant SKU. Every change is recorded in the movement log.
       </p>
@@ -202,7 +202,7 @@ export default function AdminInventoryPage() {
 
           <section className="mt-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
                 Stock levels
               </h2>
               <AdminSearchInput
@@ -308,7 +308,7 @@ export default function AdminInventoryPage() {
 
           <section className="mt-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
                 Movement log
               </h2>
               <AdminSearchInput

@@ -55,7 +55,7 @@ export function OrderStatusTimeline({ status, createdAt, updatedAt, isCancelled 
 
   return (
     <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
-      <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
+      <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100">
         Order progress
       </h2>
       {cancelled ? (

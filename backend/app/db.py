@@ -113,10 +113,15 @@ def _configure_postgres_rls_for_request(session: Session, request: Request) -> N
         _clear()
 
 
-def get_session(request: Request):
-    """Dependency: DB session with PostgreSQL RLS user context from the incoming request."""
+def get_session():
+    """Dependency: DB session.
+
+    Note: RLS request-context (app.current_user_id) is disabled in this dependency for now
+    because injecting `Request` into generator dependencies was causing runtime errors
+    in some environments. You can still set `app.current_user_id` explicitly via
+    `apply_postgres_session_user(session, user_id)` in code paths that need it.
+    """
     with Session(engine) as session:
-        _configure_postgres_rls_for_request(session, request)
         yield session
 
 

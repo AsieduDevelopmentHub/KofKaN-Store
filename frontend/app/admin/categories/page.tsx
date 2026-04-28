@@ -88,7 +88,7 @@ export default function AdminCategoriesPage() {
 
   return (
     <div className="w-full min-w-0 max-w-full">
-      <h1 className="font-serif text-page-title font-semibold">Categories</h1>
+      <h1 className="font-display text-page-title font-semibold">Categories</h1>
       <p className="text-small text-kofkan-text-secondary">Organize the catalog; slugs power SEO URLs.</p>
 
       <form

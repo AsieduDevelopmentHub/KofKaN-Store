@@ -33,7 +33,7 @@ export function WishlistScreen() {
       )}
 
       <header className="mb-4">
-        <h1 className="font-serif text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+        <h1 className="font-display text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
           Your wishlist
         </h1>
         <p className="mt-1 text-small text-kofkan-text-secondary dark:text-zinc-400">

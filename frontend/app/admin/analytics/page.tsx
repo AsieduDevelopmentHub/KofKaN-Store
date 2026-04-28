@@ -24,7 +24,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
       <p className="text-[10px] font-semibold uppercase tracking-wider text-kofkan-text-muted">
         {label}
       </p>
-      <p className="mt-1 font-serif text-[1.15rem] font-semibold text-kofkan-text-primary">
+      <p className="mt-1 font-display text-[1.15rem] font-semibold text-kofkan-text-primary">
         {value}
       </p>
     </div>
@@ -82,7 +82,7 @@ export default function AdminAnalyticsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-serif text-page-title font-semibold text-kofkan-text-primary">
+          <h1 className="font-display text-page-title font-semibold text-kofkan-text-primary">
             Analytics
           </h1>
           <p className="mt-1 text-small text-kofkan-text-secondary">
@@ -137,7 +137,7 @@ export default function AdminAnalyticsPage() {
         <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+              <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
                 Revenue trend
               </h2>
               <div className="mt-1 text-[11px] text-kofkan-text-muted">
@@ -157,7 +157,7 @@ export default function AdminAnalyticsPage() {
         </section>
 
         <section className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-black/[0.06]">
-          <h2 className="font-serif text-section-title font-semibold text-kofkan-text-primary">
+          <h2 className="font-display text-section-title font-semibold text-kofkan-text-primary">
             Orders by status
           </h2>
           <p className="mt-1 text-[11px] text-kofkan-text-muted">

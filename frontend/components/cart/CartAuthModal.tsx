@@ -38,7 +38,7 @@ export function CartAuthModal({ open, onDismiss, onAuthenticated }: Props) {
           <div>
             <h2
               id="cart-auth-title"
-              className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
+              className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
             >
               Sign in to use your cart
             </h2>

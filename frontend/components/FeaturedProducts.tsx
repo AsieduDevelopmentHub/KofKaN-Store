@@ -22,7 +22,7 @@ export function FeaturedProducts() {
         <div className="mt-3 px-4 md:px-6 lg:px-8">
           <h2
             id="featured-title"
-            className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
+            className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
           >
             Featured
           </h2>
@@ -53,7 +53,7 @@ export function FeaturedProducts() {
       <div className="mb-3 mt-3 flex items-center justify-between px-4 md:px-6 lg:px-8">
         <h2
           id="featured-title"
-          className="font-serif text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
+          className="font-display text-section-title font-semibold text-kofkan-text-primary dark:text-zinc-100"
         >
           Featured
         </h2>

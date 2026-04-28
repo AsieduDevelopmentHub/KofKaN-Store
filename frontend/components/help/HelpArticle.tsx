@@ -41,7 +41,7 @@ export function HelpArticle({ title, eyebrow, children }: Props) {
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-1 font-serif text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
+        <h1 className="mt-1 font-display text-[1.4rem] font-semibold text-kofkan-text-primary dark:text-zinc-100">
           {title}
         </h1>
 
