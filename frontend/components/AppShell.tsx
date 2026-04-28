@@ -11,6 +11,7 @@ import { StorefrontFooter } from "@/components/StorefrontFooter";
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin") || pathname?.startsWith("/system");
+  const isAccount = pathname?.startsWith("/account");
 
   return (
     <>
@@ -25,7 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="flex-1">
             {children}
           </div>
-          {!isAdmin && <StorefrontFooter />}
+          {!isAdmin && !isAccount && <StorefrontFooter />}
         </motion.div>
       </div>
       {!isAdmin && <BottomNav />}
