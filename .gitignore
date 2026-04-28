@@ -47,7 +47,6 @@ __pycache__
 /backend/.env
 /backend/.env.production
 /backend/replace_brand.py
-/backend/app/core/sku_generator.py
 /frontend/.env.local
 
 # nextjs uncommit
