@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { MockProduct } from "@/lib/mock-data";
-import { FaBag } from "@/components/FaIcons";
+import { FaCart } from "@/components/FaIcons";
 import { ProductPriceLabel } from "@/components/ProductPriceLabel";
 import { ProductWishlistButton } from "@/components/product/ProductWishlistButton";
 import { StarRating } from "@/components/StarRating";
@@ -58,7 +58,7 @@ export function ProductCardGrid({
           addProduct(p.id);
         }}
       >
-        <FaBag className="!h-[1.125rem] !w-[1.125rem] text-white" />
+        <FaCart className="!h-[1.125rem] !w-[1.125rem] text-white" />
       </button>
     </article>
   );

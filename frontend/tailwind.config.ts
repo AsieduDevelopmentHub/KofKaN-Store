@@ -1,17 +1,13 @@
 import type { Config } from "tailwindcss";
 
 /**
- * KofKaN Store — electronics palette.
+ * KofKaN Store — soft monochrome palette.
  *
  * The codebase was forked from Sikapa, which uses semantic tokens like
  * `kofkan-cream`, `kofkan-gold`, `kofkan-crimson`, `kofkan-text-primary`, etc.
  * We keep the SAME class names so we don't have to touch every component,
- * but remap the values to a tech / electronics-friendly palette:
- *
- *   - "gold"    → electric cyan  (primary CTA accent)
- *   - "crimson" → vivid red      (sale / alert badges)
- *   - "cream"   → cool off-white (light surface)
- *   - "bg-deep" → deep navy/black (hero, footer, dark dashboards)
+ * but remap the values to a near-black / near-white palette with subtle
+ * saturation so it reads as premium grayscale (not pure #000/#fff).
  */
 const config: Config = {
   darkMode: "class",
@@ -26,46 +22,47 @@ const config: Config = {
     extend: {
       colors: {
         kofkan: {
-          // === Primary electronics accents ===
-          cyan: "#00B8D9",
-          "cyan-dark": "#0099B8",
-          "cyan-hover": "#0099B8",
-          "cyan-soft": "#E6F7FA",
+          // === Soft monochrome accents (blue-gray tinted, not pure B/W) ===
+          // Keep token names stable (`cyan`, `gold`, `accent`, etc.) to avoid large refactors.
+          cyan: "#AEB7C2",
+          "cyan-dark": "#8E98A6",
+          "cyan-hover": "#9FA8B4",
+          "cyan-soft": "#EFF2F6",
 
           // === Surfaces ===
-          deep: "#0B0E14",
-          "bg-deep": "#0B0E14",
-          surface: "#161B22",
-          silver: "#E6EDF3",
-          cream: "#F4F6F8",
-          "bg-secondary": "#F4F6F8",
-          white: "#FFFFFF",
-          black: "#0B0E14",
+          deep: "#101318",
+          "bg-deep": "#101318",
+          surface: "#171C22",
+          silver: "#E9EDF2",
+          cream: "#F5F6F8",
+          "bg-secondary": "#F5F6F8",
+          white: "#F8F9FB",
+          black: "#0E1116",
 
           // === Borders / dividers ===
-          border: "#E2E8F0",
-          "border-dark": "#30363D",
-          "gray-soft": "#E2E8F0",
+          border: "#E2E6EC",
+          "border-dark": "#2A3038",
+          "gray-soft": "#E2E6EC",
 
           // === Text scale ===
-          "text-primary": "#0F172A",
-          "text-secondary": "#475569",
-          "text-muted": "#94A3B8",
-          muted: "#94A3B8",
-          charcoal: "#475569",
-          "hero-subtext": "#E6F7FA",
+          "text-primary": "#12161D",
+          "text-secondary": "#3E4652",
+          "text-muted": "#8A95A5",
+          muted: "#8A95A5",
+          charcoal: "#3E4652",
+          "hero-subtext": "#E8EBF0",
 
-          // === CTA aliases (Sikapa "gold" → electronics cyan) ===
-          gold: "#00B8D9",
-          "gold-hover": "#0099B8",
+          // === CTA aliases (monochrome) ===
+          gold: "#AEB7C2",
+          "gold-hover": "#9FA8B4",
 
-          // === Alert / sale aliases (Sikapa "crimson" → vivid red) ===
-          crimson: "#DC2626",
-          "crimson-dark": "#B91C1C",
+          // === Alert / sale aliases (still grayscale) ===
+          crimson: "#5E6773",
+          "crimson-dark": "#454D57",
 
-          // === Secondary accent (purple) ===
-          accent: "#7D52FF",
-          "accent-hover": "#653DD6",
+          // === Secondary accent (same family, slightly darker) ===
+          accent: "#B8C0CC",
+          "accent-hover": "#A8B0BC",
         },
       },
       fontFamily: {
@@ -85,8 +82,8 @@ const config: Config = {
         mobile: "430px",
       },
       boxShadow: {
-        soft: "0 4px 20px rgba(0, 184, 217, 0.12)",
-        glow: "0 0 20px rgba(0, 184, 217, 0.45)",
+        soft: "0 4px 20px rgba(30, 41, 59, 0.10)",
+        glow: "0 0 20px rgba(174, 183, 194, 0.35)",
       },
       keyframes: {
         "splash-in": {
@@ -94,12 +91,12 @@ const config: Config = {
           "100%": { opacity: "1", transform: "scale(1)" },
         },
         "cyan-glow": {
-          "0%, 100%": { filter: "drop-shadow(0 0 8px rgba(0, 184, 217, 0.35))" },
-          "50%": { filter: "drop-shadow(0 0 20px rgba(0, 184, 217, 0.65))" },
+          "0%, 100%": { filter: "drop-shadow(0 0 8px rgba(174, 183, 194, 0.25))" },
+          "50%": { filter: "drop-shadow(0 0 18px rgba(174, 183, 194, 0.45))" },
         },
         "gold-glow": {
-          "0%, 100%": { filter: "drop-shadow(0 0 8px rgba(0, 184, 217, 0.35))" },
-          "50%": { filter: "drop-shadow(0 0 20px rgba(0, 184, 217, 0.65))" },
+          "0%, 100%": { filter: "drop-shadow(0 0 8px rgba(174, 183, 194, 0.25))" },
+          "50%": { filter: "drop-shadow(0 0 18px rgba(174, 183, 194, 0.45))" },
         },
         "hero-model": {
           "0%": { opacity: "0", transform: "translateX(28px)" },
@@ -126,8 +123,8 @@ const config: Config = {
           "100%": { opacity: "0", filter: "blur(14px)", transform: "scale(1.035)" },
         },
         "splash-logo-glow": {
-          "0%, 100%": { filter: "drop-shadow(0 0 6px rgba(0, 184, 217, 0.4))" },
-          "50%": { filter: "drop-shadow(0 0 22px rgba(0, 184, 217, 0.85))" },
+          "0%, 100%": { filter: "drop-shadow(0 0 6px rgba(174, 183, 194, 0.30))" },
+          "50%": { filter: "drop-shadow(0 0 18px rgba(174, 183, 194, 0.55))" },
         },
       },
       animation: {

@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useCatalog } from "@/context/CatalogContext";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
-import { FaBag } from "@/components/FaIcons";
+import { FaCart } from "@/components/FaIcons";
 import { ProductWishlistButton } from "@/components/product/ProductWishlistButton";
 import { ProductPriceLabel } from "@/components/ProductPriceLabel";
 import { StarRating } from "@/components/StarRating";
@@ -329,7 +329,7 @@ export function ShopScreen() {
                   aria-label={`Add ${p.name} to cart`}
                   onClick={(e) => addToCartClick(e, p.id)}
                 >
-                  <FaBag className="!h-[1.125rem] !w-[1.125rem]" />
+                  <FaCart className="!h-[1.125rem] !w-[1.125rem]" />
                 </button>
               </div>
             </li>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FaBag, FaCart } from "@/components/FaIcons";
+import { FaCart } from "@/components/FaIcons";
 import { ProductCarouselRail } from "@/components/product/ProductCarouselRail";
 import { ProductPriceLabel } from "@/components/ProductPriceLabel";
 import { ProductReviewsSection } from "@/components/product/ProductReviewsSection";
@@ -100,7 +100,7 @@ function RelatedProductCard({
         aria-label={`Add ${item.name} to cart`}
         onClick={() => onAdd(item.id)}
       >
-        <FaBag className="!h-[1.125rem] !w-[1.125rem] text-white" />
+        <FaCart className="!h-[1.125rem] !w-[1.125rem] text-white" />
       </button>
     </article>
   );

@@ -4,35 +4,35 @@
 
 :root {
   color-scheme: light;
-  --kofkan-cyan: #00b8d9;
-  --kofkan-cyan-dark: #0099b8;
-  --kofkan-deep: #0b0e14;
-  --kofkan-surface: #161b22;
-  --kofkan-silver: #e6edf3;
-  --kofkan-accent: #7d52ff;
+  /* Soft monochrome (slightly tinted) */
+  --kofkan-cyan: #aeb7c2;
+  --kofkan-cyan-dark: #8e98a6;
+  --kofkan-deep: #101318;
+  --kofkan-surface: #171c22;
+  --kofkan-silver: #e9edf2;
+  --kofkan-accent: #b8c0cc;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Home hero — layered cyan + accent + deep navy (electronics aesthetic) */
+  /* Home hero — layered soft monochrome (premium grayscale) */
   --kofkan-hero-gradient: radial-gradient(
       ellipse 95% 70% at 88% 12%,
-      rgba(0, 184, 217, 0.32) 0%,
-      rgba(0, 184, 217, 0.12) 28%,
+      rgba(174, 183, 194, 0.24) 0%,
+      rgba(174, 183, 194, 0.1) 30%,
       transparent 58%
     ),
-    radial-gradient(ellipse 55% 45% at 8% 92%, rgba(125, 82, 255, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 8% 92%, rgba(184, 192, 204, 0.16) 0%, transparent 55%),
     radial-gradient(ellipse 100% 60% at 50% 100%, rgba(0, 0, 0, 0.45) 0%, transparent 52%),
     linear-gradient(
       118deg,
-      #0b0e14 0%,
-      #0e131c 18%,
-      #11192a 38%,
-      #0f2640 62%,
-      #0a3650 88%,
-      #003a4a 100%
+      #101318 0%,
+      #12161d 22%,
+      #151b23 44%,
+      #141a22 68%,
+      #11161d 100%
     );
 }
 
-/* Splash screen — shifting cool-tone gradient with cyan/purple highlights */
+/* Splash screen — soft monochrome gradient */
 @keyframes kofkan-splash-gradient-flow {
   0% {
     background-position: 0% 50%;
@@ -62,16 +62,16 @@
   inset: 0;
   background: linear-gradient(
     125deg,
-    #0b0e14,
-    #0a1f2e,
-    #00b8d9,
-    #1a4a8a,
-    #7d52ff,
-    #0099b8,
-    #0a1f2e,
-    #00d4ff,
-    #0b0e14,
-    #00b8d9
+    #0e1116,
+    #141922,
+    #1a202a,
+    #aeb7c2,
+    #e9edf2,
+    #8e98a6,
+    #171c22,
+    #f5f6f8,
+    #101318,
+    #aeb7c2
   );
   background-size: 480% 480%;
   animation: kofkan-splash-gradient-flow 16s ease-in-out infinite;
@@ -83,12 +83,12 @@
   inset: 0;
   background: radial-gradient(
       ellipse 75% 65% at 25% 25%,
-      rgba(0, 240, 255, 0.28) 0%,
+      rgba(174, 183, 194, 0.22) 0%,
       transparent 55%
     ),
     radial-gradient(
       ellipse 70% 60% at 88% 75%,
-      rgba(11, 14, 20, 0.5) 0%,
+      rgba(14, 17, 22, 0.55) 0%,
       transparent 50%
     );
   animation: kofkan-splash-sheen 9s ease-in-out infinite;
@@ -116,7 +116,7 @@ body {
 
 /* Custom-styled selects — add class `kofkan-select` alongside existing layout classes */
 select.kofkan-select {
-  @apply cursor-pointer appearance-none rounded-[10px] border-0 bg-kofkan-cream py-2.5 pl-3 pr-10 text-body text-kofkan-text-primary outline-none ring-1 ring-kofkan-gray-soft transition-shadow focus:ring-2 focus:ring-kofkan-cyan/40 dark:bg-zinc-800 dark:text-zinc-100 dark:ring-white/10;
+  @apply cursor-pointer appearance-none rounded-[10px] border-0 bg-kofkan-cream py-2.5 pl-3 pr-10 text-body text-kofkan-text-primary outline-none ring-1 ring-kofkan-gray-soft transition-shadow focus:ring-2 focus:ring-kofkan-cyan/35 dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236B6B6B' stroke-width='1.5' stroke-linecap='round' d='M1 1.5L6 6l5-4.5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
@@ -152,10 +152,10 @@ html.dark select.kofkan-select {
   inset: 0;
   opacity: 0.22;
   background-image:
-    linear-gradient(rgba(0, 184, 217, 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 184, 217, 0.11) 1px, transparent 1px),
-    radial-gradient(circle at 20% 30%, rgba(125, 82, 255, 0.16), transparent 42%),
-    radial-gradient(circle at 78% 18%, rgba(0, 184, 217, 0.18), transparent 46%);
+    linear-gradient(rgba(174, 183, 194, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(174, 183, 194, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 20% 30%, rgba(233, 237, 242, 0.12), transparent 42%),
+    radial-gradient(circle at 78% 18%, rgba(174, 183, 194, 0.16), transparent 46%);
   background-size: 22px 22px, 22px 22px, 100% 100%, 100% 100%;
   mix-blend-mode: screen;
   z-index: 0;
@@ -199,24 +199,24 @@ html.dark select.kofkan-select {
 /* Primary CTA — electric cyan gradient (electronics-flavored) */
 .kofkan-btn-gold,
 .kofkan-btn-cyan {
-  background: linear-gradient(180deg, #25cfee 0%, #00b8d9 42%, #0099b8 100%);
-  box-shadow: 0 2px 8px rgba(0, 184, 217, 0.22);
+  background: linear-gradient(180deg, #dfe4ea 0%, #aeb7c2 44%, #8e98a6 100%);
+  box-shadow: 0 2px 10px rgba(18, 22, 29, 0.12);
   color: #ffffff;
 }
 .kofkan-btn-gold:hover,
 .kofkan-btn-cyan:hover {
-  background: linear-gradient(180deg, #00b8d9 0%, #0099b8 100%);
+  background: linear-gradient(180deg, #b8c0cc 0%, #8e98a6 100%);
   color: #ffffff;
 }
 
-/* Secondary CTA — accent purple */
+/* Secondary CTA — slightly deeper monochrome */
 .kofkan-btn-accent {
-  background: linear-gradient(180deg, #9276ff 0%, #7d52ff 50%, #653dd6 100%);
-  box-shadow: 0 2px 8px rgba(125, 82, 255, 0.25);
+  background: linear-gradient(180deg, #cfd6df 0%, #b8c0cc 50%, #8e98a6 100%);
+  box-shadow: 0 2px 10px rgba(18, 22, 29, 0.14);
   color: #ffffff;
 }
 .kofkan-btn-accent:hover {
-  background: linear-gradient(180deg, #7d52ff 0%, #5a36c2 100%);
+  background: linear-gradient(180deg, #b8c0cc 0%, #8a95a5 100%);
   color: #ffffff;
 }
 
@@ -240,7 +240,7 @@ html.dark select.kofkan-select {
   @apply font-semibold text-kofkan-text-primary;
 }
 .kofkan-prose a {
-  @apply font-medium text-kofkan-cyan underline underline-offset-2;
+  @apply font-medium text-kofkan-charcoal underline underline-offset-2;
 }
 
 html.dark body {
