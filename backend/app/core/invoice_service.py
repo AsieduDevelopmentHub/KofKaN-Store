@@ -1,5 +1,5 @@
 """
-Invoice generation using ReportLab — KofKaN Store branded PDFs with line items,
+Invoice generation using ReportLab — KofKaN Technologies branded PDFs with line items,
 product names, SKUs, and thumbnails when images can be resolved.
 """
 from __future__ import annotations
@@ -26,15 +26,15 @@ logger = logging.getLogger(__name__)
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
 THUMB_MAX = 0.52 * inch
-# KofKaN luxury palette (warm ink, antique gold, cream accents)
-BRAND_PRIMARY = colors.HexColor("#2c1810")
-BRAND_ACCENT = colors.HexColor("#c9a962")
-BRAND_DEEP = colors.HexColor("#5c1528")
-TEXT_MUTED = colors.HexColor("#7a6a62")
-TEXT_BODY = colors.HexColor("#3d342f")
-PANEL_CREAM = colors.HexColor("#faf7f2")
-GRID_LINE = colors.HexColor("#e5ddd3")
-HEADER_TEXT_MUTED = colors.HexColor("#d4c4b0")
+# KofKaN Technologies — soft monochrome palette (premium grayscale)
+BRAND_PRIMARY = colors.HexColor("#101318")  # deep ink
+BRAND_ACCENT = colors.HexColor("#AEB7C2")   # soft accent
+BRAND_DEEP = colors.HexColor("#3E4652")     # emphasis
+TEXT_MUTED = colors.HexColor("#8A95A5")
+TEXT_BODY = colors.HexColor("#12161D")
+PANEL_CREAM = colors.HexColor("#F5F6F8")
+GRID_LINE = colors.HexColor("#E2E6EC")
+HEADER_TEXT_MUTED = colors.HexColor("#E8EBF0")
 LOGO_MAX_W = 1.15 * inch
 
 
@@ -123,7 +123,7 @@ def _header_logo_flowable() -> Image | None:
 
 
 class InvoiceService:
-    """Generate KofKaN Store PDF invoices."""
+    """Generate KofKaN Technologies PDF invoices."""
 
     @staticmethod
     def generate_invoice_pdf(
@@ -133,7 +133,7 @@ class InvoiceService:
         order_items: list[OrderItem],
         products_by_id: Optional[dict[int, Product]] = None,
         variants_by_id: Optional[dict[int, ProductVariant]] = None,
-        company_name: str = "KofKaN Store",
+        company_name: str = "KofKaN Technologies",
         currency_code: str | None = None,
     ) -> bytes:
         """
@@ -146,7 +146,7 @@ class InvoiceService:
             order_items: Line items
             products_by_id: Map of product id -> Product (for names, SKU, images)
             variants_by_id: Map of variant id -> ProductVariant for variant lines
-            company_name: Header brand (default KofKaN Store)
+            company_name: Header brand (default KofKaN Technologies)
             currency_code: ISO currency for amounts (default PAYSTACK_CURRENCY or GHS)
         """
         cur = (currency_code or os.getenv("PAYSTACK_CURRENCY", "GHS")).strip().upper()
@@ -211,13 +211,13 @@ class InvoiceService:
         issued = invoice.issued_at.strftime("%Y-%m-%d") if invoice.issued_at else "—"
         left_block = (
             f"<b><font size='20' color='white'>{escape(company_name)}</font></b><br/>"
-            f"<font size='9' color='#d4c4b0'>Official tax invoice · {escape(issued)}</font>"
+            f"<font size='9' color='#E8EBF0'>Official tax invoice · {escape(issued)}</font>"
         )
         right_block = (
             f"<para alignment='right'>"
             f"<font size='22' color='white'>INVOICE</font><br/>"
-            f"<font size='9' color='#d4c4b0'>{escape(invoice.invoice_number)}</font><br/>"
-            f"<font size='9' color='#d4c4b0'>Order ORD-{order.id}</font>"
+            f"<font size='9' color='#E8EBF0'>{escape(invoice.invoice_number)}</font><br/>"
+            f"<font size='9' color='#E8EBF0'>Order ORD-{order.id}</font>"
             f"</para>"
         )
         logo = _header_logo_flowable()
@@ -365,7 +365,7 @@ class InvoiceService:
                 desc_short = detail_src
                 if len(desc_short) > 120:
                     desc_short = desc_short[:117] + "…"
-                desc_bits += f"<br/><font size='8' color='#7a6a62'>{escape(desc_short)}</font>"
+                desc_bits += f"<br/><font size='8' color='#8A95A5'>{escape(desc_short)}</font>"
             desc = Paragraph(desc_bits, product_title)
             line_total = float(item.quantity * item.price_at_purchase)
             rows.append(
@@ -458,7 +458,7 @@ class InvoiceService:
         elements.append(Spacer(1, 0.35 * inch))
         year = datetime.utcnow().year
         footer_txt = (
-            f"<para alignment='center'><font size='8' color='#7a6a62'>"
+            f"<para alignment='center'><font size='8' color='#8A95A5'>"
             f"Thank you for shopping with {escape(company_name)}.<br/>"
             f"This document was generated electronically and is valid without signature.<br/>"
             f"© {year} {escape(company_name)} · Invoice {escape(invoice.invoice_number)}"

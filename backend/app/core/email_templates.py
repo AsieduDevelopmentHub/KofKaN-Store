@@ -7,15 +7,16 @@ import html
 import os
 from urllib.parse import quote
 
-# KofKaN luxury palette (inline email-safe)
-INK = "#1a0f0c"
-CRIMSON = "#8b1e3f"
-GOLD = "#b8945f"
-CREAM = "#faf7f2"
-PAPER = "#ffffff"
-STROKE = "#e5ddd3"
-MUTED = "#6b5e56"
-WINE = "#5c1528"
+# KofKaN Technologies — soft monochrome palette (email-safe)
+# Keep these as hex constants because many email clients strip CSS variables.
+INK = "#12161D"
+ACCENT = "#AEB7C2"
+ACCENT_DARK = "#8E98A6"
+BG = "#F5F6F8"
+PAPER = "#FFFFFF"
+STROKE = "#E2E6EC"
+MUTED = "#8A95A5"
+INK_SOFT = "#3E4652"
 
 _frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 _logo_url = os.getenv("EMAIL_LOGO_URL", "").strip()
@@ -25,10 +26,10 @@ def brand_wordmark_html() -> str:
     """Text logo when EMAIL_LOGO_URL is not set."""
     return (
         f'<span style="font-family:Georgia,\'Times New Roman\',serif;font-size:28px;'
-        f'font-weight:600;letter-spacing:0.06em;color:{CRIMSON};">KofKaN</span>'
+        f'font-weight:600;letter-spacing:0.06em;color:{INK};">KofKaN</span>'
         f'<span style="font-family:Georgia,serif;font-size:11px;display:block;'
         f'color:{MUTED};letter-spacing:0.2em;text-transform:uppercase;margin-top:4px;">'
-        f'Enterprise</span>'
+        f'Technologies</span>'
     )
 
 
@@ -37,7 +38,7 @@ def header_block() -> str:
         safe = html.escape(_logo_url, quote=True)
         return (
             f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-            f'style="border-bottom:2px solid {GOLD};padding-bottom:20px;margin-bottom:24px;">'
+            f'style="border-bottom:2px solid {ACCENT};padding-bottom:20px;margin-bottom:24px;">'
             f"<tr><td align=\"center\">"
             f'<img src="{safe}" alt="KofKaN" width="180" style="display:block;'
             f'max-width:180px;height:auto;border:0;margin:0 auto;" />'
@@ -45,7 +46,7 @@ def header_block() -> str:
         )
     return (
         f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
-        f'style="border-bottom:2px solid {GOLD};padding-bottom:20px;margin-bottom:24px;">'
+        f'style="border-bottom:2px solid {ACCENT};padding-bottom:20px;margin-bottom:24px;">'
         f'<tr><td align="center">{brand_wordmark_html()}</td></tr></table>'
     )
 
@@ -53,7 +54,7 @@ def header_block() -> str:
 def preheader_span(text: str) -> str:
     t = html.escape(text.strip())
     return (
-        f'<div style="display:none;font-size:1px;color:{CREAM};line-height:1px;'
+        f'<div style="display:none;font-size:1px;color:{BG};line-height:1px;'
         f'max-height:0;max-width:0;opacity:0;overflow:hidden;">{t}</div>'
     )
 
@@ -73,24 +74,24 @@ def wrap_email(
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{safe_title}</title>
 </head>
-<body style="margin:0;padding:0;background-color:{CREAM};">
+<body style="margin:0;padding:0;background-color:{BG};">
 {preheader_span(preheader) if preheader else ""}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:{CREAM};padding:32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:{BG};padding:32px 16px;">
 <tr><td align="center">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:{PAPER};border-radius:12px;border:1px solid {STROKE};overflow:hidden;box-shadow:0 8px 32px rgba(26,15,12,0.06);">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:{PAPER};border-radius:12px;border:1px solid {STROKE};overflow:hidden;box-shadow:0 10px 30px rgba(16,19,24,0.08);">
 <tr><td style="padding:32px 28px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:{INK};font-size:15px;line-height:1.55;">
 {header_block()}
-<h1 style="margin:0 0 16px;font-size:22px;font-weight:600;color:{INK};letter-spacing:-0.02em;">{safe_title}</h1>
+<h1 style="margin:0 0 16px;font-size:22px;font-weight:650;color:{INK};letter-spacing:-0.02em;">{safe_title}</h1>
 {inner_html}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;padding-top:24px;border-top:1px solid {STROKE};">
 <tr><td style="font-size:13px;color:{MUTED};">
 With appreciation,<br/>
-<span style="color:{CRIMSON};font-weight:600;">The KofKaN team</span>
+<span style="color:{INK};font-weight:650;">KofKaN Technologies</span>
 </td></tr></table>
 </td></tr></table>
 <p style="max-width:600px;margin:20px auto 0;font-size:12px;color:{MUTED};text-align:center;line-height:1.5;">
-You are receiving this message because you have an account or order with KofKaN Store.<br/>
-<a href="{html.escape(_frontend_url, quote=True)}" style="color:{GOLD};text-decoration:none;">Visit the store</a>
+You are receiving this message because you have an account or order with KofKaN Technologies.<br/>
+<a href="{html.escape(_frontend_url, quote=True)}" style="color:{ACCENT_DARK};text-decoration:none;">Visit KofKaN</a>
 </p>
 </td></tr></table>
 </body>
@@ -113,9 +114,9 @@ def greeting_line(name: str) -> str:
 def otp_box(code: str) -> str:
     c = html.escape(code.strip())
     return (
-        f'<div style="background:{CREAM};border:1px solid {STROKE};border-radius:10px;'
+        f'<div style="background:{BG};border:1px solid {STROKE};border-radius:10px;'
         f'padding:24px;text-align:center;margin:24px 0;">'
-        f'<span style="font-size:26px;font-weight:600;letter-spacing:0.25em;color:{WINE};">{c}</span></div>'
+        f'<span style="font-size:26px;font-weight:650;letter-spacing:0.25em;color:{INK};">{c}</span></div>'
     )
 
 
@@ -124,8 +125,8 @@ def primary_button(href: str, label: str) -> str:
     l = html.escape(label)
     return (
         f'<table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px auto;">'
-        f'<tr><td align="center" style="border-radius:8px;background:{CRIMSON};">'
-        f'<a href="{h}" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:600;'
+        f'<tr><td align="center" style="border-radius:8px;background:{INK};">'
+        f'<a href="{h}" style="display:inline-block;padding:14px 28px;font-size:15px;font-weight:650;'
         f'color:#ffffff;text-decoration:none;border-radius:8px;">{l}</a>'
         f"</td></tr></table>"
     )
@@ -136,7 +137,7 @@ def link_fallback(url: str) -> str:
     return (
         f'<p style="margin:16px 0 0;font-size:13px;color:{MUTED};">'
         f"If the button does not work, copy this link:</p>"
-        f'<p style="margin:8px 0 0;word-break:break-all;font-size:12px;color:{CRIMSON};">{u}</p>'
+        f'<p style="margin:8px 0 0;word-break:break-all;font-size:12px;color:{INK_SOFT};">{u}</p>'
     )
 
 
@@ -162,7 +163,7 @@ def order_lines_table(
             )
         else:
             img_html = (
-                f'<div style="width:56px;height:56px;border-radius:8px;background:{CREAM};'
+                f'<div style="width:56px;height:56px;border-radius:8px;background:{BG};'
                 f'border:1px solid {STROKE};"></div>'
             )
         detail_html = ""
@@ -188,7 +189,7 @@ def order_lines_table(
     return (
         f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
         f'style="border:1px solid {STROKE};border-radius:10px;overflow:hidden;margin:20px 0;">'
-        f'<tr style="background:{CREAM};">'
+        f'<tr style="background:{BG};">'
         f'<th align="left" style="padding:10px 8px 10px 12px;font-size:11px;text-transform:uppercase;'
         f'letter-spacing:0.08em;color:{MUTED};"></th>'
         f'<th align="left" style="padding:10px 8px;font-size:11px;text-transform:uppercase;'
@@ -203,11 +204,11 @@ def order_lines_table(
 def order_total_bar(order_total: float, currency: str) -> str:
     cur = html.escape(currency.strip().upper() or "GHS")
     return (
-        f'<div style="background:linear-gradient(135deg,{CREAM} 0%,#f3ebe3 100%);'
+        f'<div style="background:linear-gradient(135deg,{BG} 0%,#eef1f6 100%);'
         f'border:1px solid {STROKE};border-radius:10px;padding:20px 22px;margin:8px 0 4px;">'
         f'<table role="presentation" width="100%"><tr>'
         f'<td style="font-size:14px;color:{MUTED};">Order total</td>'
-        f'<td align="right" style="font-size:20px;font-weight:700;color:{CRIMSON};">'
+        f'<td align="right" style="font-size:20px;font-weight:750;color:{INK};">'
         f"{cur} {order_total:,.2f}</td>"
         f"</tr></table></div>"
     )

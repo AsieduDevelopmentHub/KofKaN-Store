@@ -22,7 +22,7 @@ class EmailService:
         to_email: str,
         subject: str,
         html_content: str,
-        from_email: str = "KofKaN Store <no-reply@kofkan.auralenx.com>"
+        from_email: str = "KofKaN Technologies <no-reply@kofkan.auralenx.com>"
     ) -> bool:
         """
         Send email using Resend API.

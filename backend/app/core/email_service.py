@@ -14,7 +14,10 @@ load_dotenv()
 
 resend_api_key = os.getenv("RESEND_API_KEY")
 email_enabled = os.getenv("EMAIL_ENABLED", "false").lower() == "true"
-default_from_email = os.getenv("DEFAULT_FROM_EMAIL", "KofKaN Store <no-reply@localhost>")
+default_from_email = os.getenv(
+    "DEFAULT_FROM_EMAIL",
+    "KofKaN Technologies <no-reply@localhost>",
+)
 frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 if email_enabled and resend_api_key:
@@ -72,7 +75,7 @@ class EmailService:
     @staticmethod
     def send_welcome_email(email: str, first_name: str | None = None, background_tasks: BackgroundTasks | None = None) -> bool:
         name = first_name or "there"
-        subject = "Welcome to KofKaN Store"
+        subject = "Welcome to KofKaN Technologies"
         inner = (
             T.greeting_line(name)
             + T.paragraph(
@@ -151,7 +154,7 @@ class EmailService:
         subject = "Account deleted — KofKaN"
         inner = (
             T.greeting_line(name)
-            + T.paragraph("Your KofKaN Store account has been deleted as requested.")
+            + T.paragraph("Your KofKaN account has been deleted as requested.")
             + T.muted_paragraph("Personal data is removed according to our privacy policy. You are welcome back anytime.")
         )
         html_content = T.wrap_email(
