@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
 
 revision: str = "q2r3s4t5u6v7"
@@ -18,8 +19,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column("user", sa.Column("google_sub", sa.String(length=255), nullable=True))
-    op.create_index(op.f("ix_user_google_sub"), "user", ["google_sub"], unique=True)
+    bind = op.get_bind()
+    insp = inspect(bind)
+    cols = {c["name"] for c in insp.get_columns("user")} if insp.has_table("user") else set()
+    if "google_sub" not in cols:
+        op.add_column("user", sa.Column("google_sub", sa.String(length=255), nullable=True))
+
+    idx = {i["name"] for i in insp.get_indexes("user")} if insp.has_table("user") else set()
+    idx_name = op.f("ix_user_google_sub")
+    if idx_name not in idx:
+        op.create_index(idx_name, "user", ["google_sub"], unique=True)
 
 
 def downgrade() -> None:

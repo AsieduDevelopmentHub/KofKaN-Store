@@ -12,7 +12,15 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision = 'a83bbcaf54ed'
-down_revision = None
+# NOTE: This repository originally had two Alembic roots:
+# - 787cd71d6603 (the real initial schema)
+# - a83bbcaf54ed (a legacy placeholder)
+#
+# On a fresh database, Alembic would try to upgrade from the legacy root first,
+# which led to missing core tables (like "order") later in the chain.
+# We re-root this legacy revision under the real initial schema so upgrades
+# always create the full baseline tables first.
+down_revision = '787cd71d6603'
 branch_labels = None
 depends_on = None
 

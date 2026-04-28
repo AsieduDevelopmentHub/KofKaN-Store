@@ -108,7 +108,10 @@ def upgrade():
         batch.alter_column("name", existing_type=sa.String(length=120), nullable=False)
         batch.create_unique_constraint("uq_user_username", ["username"])
 
-    op.create_index("ix_user_username", "user", ["username"], unique=False)
+    # Initial schema already created ix_user_username; keep this step idempotent.
+    idx = {ix["name"] for ix in inspect(op.get_bind()).get_indexes("user")}
+    if "ix_user_username" not in idx:
+        op.create_index("ix_user_username", "user", ["username"], unique=False)
 
 
 def downgrade():

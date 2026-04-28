@@ -71,9 +71,8 @@ def seed_demo_data() -> None:
                 voltage_spec="5V",
                 category_id=category_ids["microcontrollers"],
                 price=580.00,
-                stock_quantity=24,
+                in_stock=24,
                 image_url="https://images.unsplash.com/photo-1516110833967-0b5716ca1387?auto=format&fit=crop&w=900&q=80",
-                is_featured=True,
                 description="Beginner-friendly kit with UNO board, breadboard, jumper wires, and core components.",
             ),
             Product(
@@ -84,9 +83,8 @@ def seed_demo_data() -> None:
                 voltage_spec="3.3V",
                 category_id=category_ids["microcontrollers"],
                 price=165.00,
-                stock_quantity=40,
+                in_stock=40,
                 image_url="https://images.unsplash.com/photo-1553406830-ef2513450d76?auto=format&fit=crop&w=900&q=80",
-                is_featured=True,
                 description="Low-power microcontroller with dual-core processor and wireless connectivity.",
             ),
             Product(
@@ -97,7 +95,7 @@ def seed_demo_data() -> None:
                 voltage_spec="5V-12V",
                 category_id=category_ids["sensors"],
                 price=45.00,
-                stock_quantity=120,
+                in_stock=120,
                 image_url="https://images.unsplash.com/photo-1581092583537-20d51b4b4f1b?auto=format&fit=crop&w=900&q=80",
                 description="Adjustable sensitivity and delay timer for motion-triggered automation projects.",
             ),
@@ -109,9 +107,8 @@ def seed_demo_data() -> None:
                 voltage_spec="5V USB-C",
                 category_id=category_ids["microcontrollers"],
                 price=1320.00,
-                stock_quantity=18,
+                in_stock=18,
                 image_url="https://images.unsplash.com/photo-1591799265444-d66432b91588?auto=format&fit=crop&w=900&q=80",
-                is_featured=True,
                 description="Powerful single-board computer for robotics, IoT gateways, and embedded projects.",
             ),
             Product(
@@ -122,7 +119,7 @@ def seed_demo_data() -> None:
                 voltage_spec="3.3V",
                 category_id=category_ids["microcontrollers"],
                 price=95.00,
-                stock_quantity=60,
+                in_stock=60,
                 image_url="https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&w=900&q=80",
                 description="WiFi-ready microcontroller board for smart home and IoT prototypes.",
             ),
@@ -134,7 +131,7 @@ def seed_demo_data() -> None:
                 voltage_spec="3.0V-5.5V",
                 category_id=category_ids["sensors"],
                 price=38.00,
-                stock_quantity=140,
+                in_stock=140,
                 image_url="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
                 description="Accurate digital sensor for climate monitoring and smart agriculture.",
             ),
@@ -146,7 +143,7 @@ def seed_demo_data() -> None:
                 voltage_spec="5V",
                 category_id=category_ids["sensors"],
                 price=32.00,
-                stock_quantity=200,
+                in_stock=200,
                 image_url="https://images.unsplash.com/photo-1563770557125-198f7d2f2f5c?auto=format&fit=crop&w=900&q=80",
                 description="Non-contact distance measurement module for obstacle detection systems.",
             ),
@@ -158,7 +155,7 @@ def seed_demo_data() -> None:
                 voltage_spec="3V-5V",
                 category_id=category_ids["sensors"],
                 price=55.00,
-                stock_quantity=95,
+                in_stock=95,
                 image_url="https://images.unsplash.com/photo-1581092160612-31ad9f5b9f84?auto=format&fit=crop&w=900&q=80",
                 description="6-axis motion tracking module for drones and balancing robots.",
             ),
@@ -170,7 +167,7 @@ def seed_demo_data() -> None:
                 voltage_spec="220V AC in / 12V DC out",
                 category_id=category_ids["power-batteries"],
                 price=220.00,
-                stock_quantity=48,
+                in_stock=48,
                 image_url="https://images.unsplash.com/photo-1584277261846-c6a1672ed979?auto=format&fit=crop&w=900&q=80",
                 description="Stable DC output supply for LED strips, CNC controllers, and automation builds.",
             ),
@@ -182,7 +179,7 @@ def seed_demo_data() -> None:
                 voltage_spec="3.7V",
                 category_id=category_ids["power-batteries"],
                 price=42.00,
-                stock_quantity=300,
+                in_stock=300,
                 image_url="https://images.unsplash.com/photo-1609592806950-23f8f3628dd0?auto=format&fit=crop&w=900&q=80",
                 description="High-capacity lithium-ion cell for portable electronics and battery packs.",
             ),
@@ -194,7 +191,7 @@ def seed_demo_data() -> None:
                 voltage_spec="5V Input",
                 category_id=category_ids["power-batteries"],
                 price=18.00,
-                stock_quantity=260,
+                in_stock=260,
                 image_url="https://images.unsplash.com/photo-1563770660941-10a6360762a2?auto=format&fit=crop&w=900&q=80",
                 description="USB charging board with battery protection for single-cell lithium packs.",
             ),
@@ -206,7 +203,7 @@ def seed_demo_data() -> None:
                 voltage_spec="4.8V-7.2V",
                 category_id=category_ids["robotics-motors"],
                 price=78.00,
-                stock_quantity=80,
+                in_stock=80,
                 image_url="https://images.unsplash.com/photo-1591808216268-ce0a1b5944f7?auto=format&fit=crop&w=900&q=80",
                 description="Metal gear servo with strong torque ideal for robotic arms and RC projects.",
             ),
@@ -218,7 +215,7 @@ def seed_demo_data() -> None:
                 voltage_spec="12V",
                 category_id=category_ids["robotics-motors"],
                 price=165.00,
-                stock_quantity=54,
+                in_stock=54,
                 image_url="https://images.unsplash.com/photo-1581092921461-39b9d08a9b2b?auto=format&fit=crop&w=900&q=80",
                 description="Precision stepper motor for 3D printers, CNC, and positioning systems.",
             ),
@@ -230,7 +227,7 @@ def seed_demo_data() -> None:
                 voltage_spec="5V-35V",
                 category_id=category_ids["robotics-motors"],
                 price=49.00,
-                stock_quantity=170,
+                in_stock=170,
                 image_url="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=900&q=80",
                 description="Dual-channel motor control module for DC motor direction and speed control.",
             ),
@@ -242,7 +239,7 @@ def seed_demo_data() -> None:
                 voltage_spec="220V",
                 category_id=category_ids["tools-prototyping"],
                 price=185.00,
-                stock_quantity=36,
+                in_stock=36,
                 image_url="https://images.unsplash.com/photo-1562408590-e32931084e23?auto=format&fit=crop&w=900&q=80",
                 description="Complete soldering set with stand, tips, wick, and accessories.",
             ),
@@ -254,7 +251,7 @@ def seed_demo_data() -> None:
                 voltage_spec="N/A",
                 category_id=category_ids["tools-prototyping"],
                 price=24.00,
-                stock_quantity=240,
+                in_stock=240,
                 image_url="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?auto=format&fit=crop&w=900&q=80",
                 description="Reusable prototyping board for rapid testing without soldering.",
             ),
@@ -266,7 +263,7 @@ def seed_demo_data() -> None:
                 voltage_spec="N/A",
                 category_id=category_ids["tools-prototyping"],
                 price=28.00,
-                stock_quantity=190,
+                in_stock=190,
                 image_url="https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=900&q=80",
                 description="Male-to-male, male-to-female, and female-to-female jumper assortment.",
             ),
@@ -281,10 +278,8 @@ def seed_demo_data() -> None:
                 existing.voltage_spec = product.voltage_spec
                 existing.category_id = product.category_id
                 existing.price = product.price
-                existing.currency = product.currency
-                existing.stock_quantity = product.stock_quantity
+                existing.in_stock = product.in_stock
                 existing.image_url = product.image_url
-                existing.is_featured = product.is_featured
                 existing.is_active = True
                 existing.description = product.description
                 existing.warranty_months = product.warranty_months
@@ -297,9 +292,10 @@ def seed_demo_data() -> None:
         if not admin:
             session.add(
                 User(
+                    username="admin",
+                    name="KofKaN Admin",
                     email="admin@kofkan.store",
-                    full_name="KofKaN Admin",
-                    password_hash=get_password_hash("Admin@123"),
+                    hashed_password=get_password_hash("Admin@123"),
                     is_admin=True,
                     admin_role="super_admin",
                     admin_permissions="view_dashboard,manage_newsletter,manage_orders,manage_products",
@@ -310,5 +306,11 @@ def seed_demo_data() -> None:
             admin.admin_role = "super_admin"
             if not (admin.admin_permissions or "").strip():
                 admin.admin_permissions = "view_dashboard,manage_newsletter,manage_orders,manage_products"
+            if not (admin.username or "").strip():
+                admin.username = "admin"
+            if not (admin.name or "").strip():
+                admin.name = "KofKaN Admin"
+            if not (admin.hashed_password or "").strip():
+                admin.hashed_password = get_password_hash("Admin@123")
             session.add(admin)
         session.commit()

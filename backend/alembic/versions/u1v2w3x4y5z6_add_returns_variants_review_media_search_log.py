@@ -30,6 +30,11 @@ def upgrade() -> None:
             return False
         return any(i["name"] == idx for i in insp.get_indexes(table))
 
+    def has_column(table: str, col: str) -> bool:
+        if not has_table(table):
+            return False
+        return any(c["name"] == col for c in insp.get_columns(table))
+
     # ---- orderreturn ----
     if not has_table("orderreturn"):
         op.create_table(
@@ -51,9 +56,34 @@ def upgrade() -> None:
             sa.ForeignKeyConstraint(["resolved_by"], ["user.id"]),
             sa.PrimaryKeyConstraint("id"),
         )
+    else:
+        # Older schemas may have `orderreturn` without these columns.
+        for name, column in (
+            ("details", sa.Column("details", sa.String(length=4000), nullable=True)),
+            (
+                "preferred_outcome",
+                sa.Column(
+                    "preferred_outcome",
+                    sa.String(length=24),
+                    nullable=False,
+                    server_default="refund",
+                ),
+            ),
+            (
+                "status",
+                sa.Column("status", sa.String(length=24), nullable=False, server_default="pending"),
+            ),
+            ("admin_notes", sa.Column("admin_notes", sa.String(length=4000), nullable=True)),
+            ("resolved_by", sa.Column("resolved_by", sa.Integer(), nullable=True)),
+            ("resolved_at", sa.Column("resolved_at", sa.DateTime(), nullable=True)),
+            ("updated_at", sa.Column("updated_at", sa.DateTime(), nullable=False, server_default=sa.func.now())),
+        ):
+            if not has_column("orderreturn", name):
+                op.add_column("orderreturn", column)
+
     for idx_col in ("order_id", "user_id", "status", "resolved_by"):
         idx_name = op.f(f"ix_orderreturn_{idx_col}")
-        if has_table("orderreturn") and not has_index("orderreturn", idx_name):
+        if has_table("orderreturn") and has_column("orderreturn", idx_col) and not has_index("orderreturn", idx_name):
             op.create_index(idx_name, "orderreturn", [idx_col], unique=False)
 
     # ---- orderreturnitem ----

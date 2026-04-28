@@ -22,13 +22,18 @@ def upgrade() -> None:
     inspector = inspect(bind)
     if not inspector.has_table("product"):
         return
+    cols = {c["name"] for c in inspector.get_columns("product")}
     idx = {ix["name"] for ix in inspector.get_indexes("product")}
     name = "ix_product_list_active_cat_created"
     if name not in idx:
+        # `category` was replaced with `category_id` in the KofKaN schema.
+        cat_col = "category_id" if "category_id" in cols else ("category" if "category" in cols else None)
+        if cat_col is None:
+            return
         op.create_index(
             name,
             "product",
-            ["is_active", "category", "created_at"],
+            ["is_active", cat_col, "created_at"],
             unique=False,
         )
 

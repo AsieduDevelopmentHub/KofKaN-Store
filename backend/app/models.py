@@ -10,7 +10,9 @@ class ProductBase(SQLModel):
     description: Optional[str] = None
     price: float
     image_url: Optional[str] = None
-    category: Optional[str] = Field(default=None, sa_column=Column("category", String, nullable=True))
+    # Supabase/Postgres schema uses `category_id` (FK to `category.id`).
+    # Keep `category` as a derived/compat field at the API layer, not as a DB column.
+    category_id: Optional[int] = Field(default=None, foreign_key="category.id", index=True)
     sku: Optional[str] = Field(default=None, max_length=120, index=True) 
     weight: Optional[float] = None
     in_stock: int = 0

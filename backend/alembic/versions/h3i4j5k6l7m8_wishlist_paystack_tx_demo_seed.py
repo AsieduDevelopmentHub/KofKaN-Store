@@ -78,7 +78,10 @@ def upgrade():
             unique=False,
         )
 
-    _seed_demo_catalog(bind)
+    # Demo seeding during migrations is fragile because the catalog schema has
+    # evolved (e.g. stock_quantity -> in_stock, currency/is_featured removed).
+    # We seed via `backend/scripts/seed_db.py` instead.
+    # _seed_demo_catalog(bind)
 
 
 def _seed_demo_catalog(bind):
@@ -125,7 +128,7 @@ def _seed_demo_catalog(bind):
         text(
             f"""
             INSERT INTO product (
-                name, slug, description, price, image_url, category, in_stock,
+                name, slug, description, price, image_url, category_id, in_stock,
                 created_at, is_active, sales_count, sku, avg_rating, weight
             ) VALUES
             (:n1, :s1, :d1, 129.99, NULL, :c1, 25, {now_fn}, true, 12, 'DEMO-EL-001', 4.5, 0.4),
@@ -155,9 +158,9 @@ def _seed_demo_catalog(bind):
             "n6": "Demo Canvas Tote Bag",
             "s6": "demo-canvas-tote-bag",
             "d6": "Test product: Everyday canvas tote.",
-            "c1": str(eid),
-            "c2": str(hid),
-            "c3": str(fid),
+            "c1": int(eid),
+            "c2": int(hid),
+            "c3": int(fid),
         },
     )
 

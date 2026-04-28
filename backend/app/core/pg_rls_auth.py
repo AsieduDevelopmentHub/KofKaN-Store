@@ -18,7 +18,12 @@ from app.models import EmailSubscription, PasswordReset, User
 
 
 def pg_rls_enabled() -> bool:
-    return DATABASE_URL.startswith("postgresql")
+    # These SECURITY DEFINER helpers are optional and require SQL functions to
+    # be installed in the DB (see `backend/tools/rls/rls_setup.py`).
+    #
+    # Default to OFF so a fresh Supabase DB works without extra setup.
+    flag = (os.getenv("PG_RLS_FUNCTIONS") or "").strip().lower()
+    return DATABASE_URL.startswith("postgresql") and flag in ("1", "true", "yes", "on")
 
 
 def fetch_user_for_login(session: Session, identifier: str) -> User | None:
