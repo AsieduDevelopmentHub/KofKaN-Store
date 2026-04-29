@@ -12,7 +12,7 @@ import { formatGhs } from "@/lib/mock-data";
 import { orderStatusLabel, orderStatusPillClass } from "@/lib/order-status-ui";
 import { OrderListSkeleton, SkeletonBlock } from "@/components/StorefrontSkeletons";
 
-const STATUS_FILTERS = ["all", "pending", "processing", "shipped", "delivered", "cancelled"] as const;
+const STATUS_FILTERS = ["all", "pending", "processing", "packed", "shipped", "delivered", "cancelled"] as const;
 type StatusFilter = (typeof STATUS_FILTERS)[number];
 
 function formatOrderDate(iso: string): string {

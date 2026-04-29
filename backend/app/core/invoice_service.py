@@ -440,7 +440,14 @@ class InvoiceService:
         )
         elements.append(totals)
 
-        if order.tracking_number or order.shipping_provider:
+        order_status = (order.status or "").strip().lower()
+        # Customers get shipment tracking/cancellation details in the order UI.
+        # For shipped (and completed/cancelled) orders, we omit those from the PDF.
+        if (order.tracking_number or order.shipping_provider) and order_status not in {
+            "shipped",
+            "delivered",
+            "cancelled",
+        }:
             elements.append(Spacer(1, 0.22 * inch))
             elements.append(Paragraph("Shipping", h_section))
             ship_parts = []

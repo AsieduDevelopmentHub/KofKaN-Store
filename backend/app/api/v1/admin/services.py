@@ -448,7 +448,7 @@ async def update_order_status(
     new_status: str,
 ) -> Order:
     """Update order status."""
-    valid_statuses = ["pending", "processing", "shipped", "delivered", "cancelled"]
+    valid_statuses = ["pending", "processing", "packed", "shipped", "delivered", "cancelled"]
     
     if new_status not in valid_statuses:
         raise HTTPException(

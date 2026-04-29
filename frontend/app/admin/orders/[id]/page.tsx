@@ -18,7 +18,7 @@ import { formatGhs } from "@/lib/mock-data";
 import { AdminOrderDetailSkeleton } from "@/components/admin/Skeleton";
 
 /** Quick status changes (shipped / cancelled use dedicated forms below). */
-const QUICK_STATUSES = ["pending", "processing", "delivered"] as const;
+const QUICK_STATUSES = ["pending", "processing", "packed", "delivered"] as const;
 
 export default function AdminOrderDetailPage() {
   const params = useParams();

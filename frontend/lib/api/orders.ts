@@ -15,6 +15,9 @@ export type OrderRow = {
   shipping_provider?: string | null;
   shipping_contact_name?: string | null;
   shipping_contact_phone?: string | null;
+  tracking_number?: string | null;
+  estimated_delivery?: string | null;
+  cancel_reason?: string | null;
   notes?: string | null;
   payment_status?: string;
   paystack_reference?: string | null;

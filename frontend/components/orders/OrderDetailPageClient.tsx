@@ -360,6 +360,22 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
                     </dd>
                   </div>
                 ) : null}
+                {detail.tracking_number ? (
+                  <div>
+                    <dt className="text-kofkan-text-muted dark:text-zinc-500">Tracking #</dt>
+                    <dd className="font-mono font-medium text-kofkan-text-primary dark:text-zinc-200">
+                      {detail.tracking_number}
+                    </dd>
+                  </div>
+                ) : null}
+                {detail.estimated_delivery ? (
+                  <div>
+                    <dt className="text-kofkan-text-muted dark:text-zinc-500">Est. delivery</dt>
+                    <dd className="font-medium text-kofkan-text-primary dark:text-zinc-200">
+                      {formatWhen(detail.estimated_delivery)}
+                    </dd>
+                  </div>
+                ) : null}
                 {detail.shipping_address ? (
                   <div>
                     <dt className="text-kofkan-text-muted dark:text-zinc-500">Address</dt>
@@ -381,6 +397,14 @@ export function OrderDetailPageClient({ orderIdParam }: Props) {
                   <div>
                     <dt className="text-kofkan-text-muted dark:text-zinc-500">Notes</dt>
                     <dd className="whitespace-pre-wrap text-kofkan-text-secondary dark:text-zinc-300">{detail.notes}</dd>
+                  </div>
+                ) : null}
+                {detail.cancel_reason ? (
+                  <div>
+                    <dt className="text-kofkan-text-muted dark:text-zinc-500">Cancelled reason</dt>
+                    <dd className="whitespace-pre-wrap text-kofkan-text-secondary dark:text-zinc-300">
+                      {detail.cancel_reason}
+                    </dd>
                   </div>
                 ) : null}
               </dl>

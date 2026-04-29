@@ -6,11 +6,12 @@ type Props = {
   stats: Record<string, number>;
 };
 
-const STATUS_ORDER = ["pending", "processing", "shipped", "delivered", "cancelled"];
+const STATUS_ORDER = ["pending", "processing", "packed", "shipped", "delivered", "cancelled"];
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "#d97706",
   processing: "#2563eb",
+  packed: "#7c3aed",
   shipped: "#6366f1",
   delivered: "#059669",
   cancelled: "#dc2626",

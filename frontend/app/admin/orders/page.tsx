@@ -8,7 +8,7 @@ import { formatGhs } from "@/lib/mock-data";
 import { AdminSearchInput } from "@/components/admin/AdminSearchInput";
 import { AdminOrdersPageSkeleton } from "@/components/admin/Skeleton";
 
-const FILTERS = ["all", "pending", "processing", "shipped", "delivered", "cancelled"] as const;
+const FILTERS = ["all", "pending", "processing", "packed", "shipped", "delivered", "cancelled"] as const;
 
 export default function AdminOrdersPage() {
   const { accessToken } = useAuth();
