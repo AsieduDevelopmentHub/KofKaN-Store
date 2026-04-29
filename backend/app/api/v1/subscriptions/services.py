@@ -32,10 +32,9 @@ async def subscribe_email(session: Session, email: str, *, marketing_opt_in: boo
 
     if existing:
         if existing.is_subscribed:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email is already subscribed",
-            )
+            # Idempotent subscribe: returning success avoids noisy UX for users who
+            # submit an email that is already on the list.
+            return existing
         updated = newsletter_run_reactivate(session, email.strip().lower())
         if not updated:
             raise HTTPException(
