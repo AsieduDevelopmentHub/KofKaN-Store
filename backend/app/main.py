@@ -43,7 +43,7 @@ _redoc_url = None if _disable_openapi else "/redoc"
 _openapi_url = None if _disable_openapi else "/openapi.json"
 
 app = FastAPI(
-    title="Sikapa Enterprise API",
+    title="KofKaN Technologies API",
     description="Secure API for product browsing, authentication, and orders with HTTPS/TLS encryption.",
     version="0.1.0",
     docs_url=_docs_url,
@@ -94,7 +94,7 @@ if _cors_regex:
 app.add_middleware(CORSMiddleware, **_cors_kwargs)
 app.add_middleware(GZipMiddleware, minimum_size=1200)
 
-_request_log = logging.getLogger("sikapa.request")
+_request_log = logging.getLogger("kofkan.request")
 
 
 @app.middleware("http")
@@ -151,14 +151,14 @@ def on_startup() -> None:
             # We don't await because it's an async function being called from sync startup,
             # but in this case, we can use anyio.run or just let the first user warm it.
             # However, for 'lite' deployments, we'll just log it.
-            logging.getLogger("sikapa").info("Cache warm-up: Admin Dashboard metrics ready")
+            logging.getLogger("kofkan").info("Cache warm-up: Admin Dashboard metrics ready")
     except Exception as e:
-        logging.getLogger("sikapa").warning("Cache warm-up failed: %s", e)
+        logging.getLogger("kofkan").warning("Cache warm-up failed: %s", e)
 
     if cache.ping():
-        logging.getLogger("sikapa").info("Redis cache: connected and healthy")
+        logging.getLogger("kofkan").info("Redis cache: connected and healthy")
     else:
-        logging.getLogger("sikapa").info("Running with InMemoryCache (LRU-lite)")
+        logging.getLogger("kofkan").info("Running with InMemoryCache (LRU-lite)")
 
 
 @app.on_event("shutdown")
@@ -194,7 +194,7 @@ def root() -> dict:
     protocol = "https" if _https_enabled else "http"
     return {
         "status": "ok",
-        "message": "Sikapa Enterprise backend is running securely.",
+        "message": "KofKaN Technologies backend is running securely.",
         "protocol": protocol,
         "security": "TLS/HTTPS enabled" if _https_enabled else "HTTP mode",
     }
@@ -205,7 +205,7 @@ def root() -> dict:
 def health_check() -> dict:
     return {
         "status": "healthy",
-        "service": "Sikapa Enterprise API",
+        "service": "KofKaN Technologies API",
         "version": "0.1.0",
         "security": "HTTPS/TLS" if _https_enabled else "HTTP",
     }

@@ -235,7 +235,7 @@ async def send_order_confirmation_email(
 async def generate_invoice_pdf(
     session: Session,
     order_id: int,
-    company_name: str = "Sikapa Enterprise",
+    company_name: str = "KofKaN Technologies",
 ) -> bytes:
     """
     Generate PDF invoice for an order.

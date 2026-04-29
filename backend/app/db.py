@@ -138,6 +138,7 @@ def create_db_and_tables() -> None:
     """Create all database tables from SQLModel definitions."""
     SQLModel.metadata.create_all(engine)
     _ensure_emailsubscription_schema_compat()
+    _ensure_review_schema_compat()
 
 
 def _ensure_emailsubscription_schema_compat() -> None:
@@ -186,4 +187,43 @@ def _ensure_emailsubscription_schema_compat() -> None:
                     "ALTER TABLE emailsubscription "
                     "ALTER COLUMN created_at SET DEFAULT NOW()"
                 )
+            )
+
+
+def _ensure_review_schema_compat() -> None:
+    """
+    Backward-compatible review schema fix-up.
+
+    Some deployed databases have an older `review` table without newer fields
+    expected by the current ORM model (`verified_purchase`, `helpful_count`,
+    `updated_at`). Ensure those columns exist so review listing endpoints do not
+    fail with UndefinedColumn.
+    """
+    insp = inspect(engine)
+    if not insp.has_table("review"):
+        return
+
+    cols = {c["name"] for c in insp.get_columns("review")}
+    with engine.begin() as conn:
+        if "verified_purchase" not in cols:
+            conn.execute(
+                text(
+                    "ALTER TABLE review "
+                    "ADD COLUMN verified_purchase BOOLEAN NOT NULL DEFAULT false"
+                )
+            )
+        if "helpful_count" not in cols:
+            conn.execute(
+                text(
+                    "ALTER TABLE review "
+                    "ADD COLUMN helpful_count INTEGER NOT NULL DEFAULT 0"
+                )
+            )
+        if "updated_at" not in cols:
+            conn.execute(text("ALTER TABLE review ADD COLUMN updated_at TIMESTAMP"))
+
+        cols_after = {c["name"] for c in inspect(conn).get_columns("review")}
+        if "updated_at" in cols_after and "created_at" in cols_after:
+            conn.execute(
+                text("UPDATE review SET updated_at = COALESCE(updated_at, created_at)")
             )
