@@ -249,7 +249,7 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
                 </>
               )}
             </p>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-wrap sm:justify-center">
               <Link
                 href={`/orders/${orderId}`}
                 className="rounded-[10px] bg-kofkan-gold px-4 py-2.5 text-small font-semibold text-white"
@@ -261,6 +261,12 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
                 className="rounded-[10px] border border-kofkan-gray-soft bg-white px-4 py-2.5 text-small font-semibold text-kofkan-text-primary dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-100"
               >
                 Return policy
+              </Link>
+              <Link
+                href="/account/returns"
+                className="rounded-[10px] border border-kofkan-gray-soft bg-white px-4 py-2.5 text-small font-semibold text-kofkan-text-primary dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-100"
+              >
+                View my returns
               </Link>
             </div>
           </section>

@@ -8,6 +8,14 @@ import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 import { useAppSession } from "@/components/Providers";
 import { createReturn, fetchMyReturns, type OrderReturn } from "@/lib/api/returns";
 
+function formatWhen(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    return iso;
+  }
+}
+
 function ReturnsContent() {
   const { token } = useAppSession();
   const searchParams = useSearchParams();
@@ -112,7 +120,22 @@ function ReturnsContent() {
               <li key={r.id} className="rounded-xl border border-kofkan-border bg-kofkan-bg-secondary p-4 text-sm">
                 <p className="font-medium">Order #{r.order_id}</p>
                 <p className="mt-1 text-kofkan-muted">{r.reason}</p>
-                <p className="mt-2 text-xs capitalize text-kofkan-charcoal">Status: {r.status}</p>
+                    <div className="mt-2 space-y-1">
+                      <p className="text-xs capitalize text-kofkan-charcoal">Status: {r.status}</p>
+                      <p className="text-xs text-kofkan-muted">
+                        Outcome: <span className="font-medium text-kofkan-text-primary">{r.preferred_outcome}</span>
+                      </p>
+                      {r.resolved_at ? (
+                        <p className="text-xs text-kofkan-muted">
+                          Resolved: <span className="font-medium text-kofkan-text-primary">{formatWhen(r.resolved_at)}</span>
+                        </p>
+                      ) : null}
+                      {r.admin_notes ? (
+                        <p className="text-xs text-kofkan-muted">
+                          Update: <span className="font-medium text-kofkan-text-primary">{r.admin_notes}</span>
+                        </p>
+                      ) : null}
+                    </div>
               </li>
             ))}
           </ul>
