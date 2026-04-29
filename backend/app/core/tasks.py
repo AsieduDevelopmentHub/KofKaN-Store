@@ -44,7 +44,10 @@ def send_email_immediate(
         return "skipped-placeholder"
 
     if not email_enabled or not resend_api_key:
-        logger.debug("Email disabled — would send '%s' to %s", subject, to_email)
+        if not email_enabled:
+            logger.info("Email send skipped — EMAIL_ENABLED=false (subject='%s')", subject)
+        else:
+            logger.warning("Email send skipped — RESEND_API_KEY missing (subject='%s')", subject)
         return "debug-mode"
 
     resend.api_key = resend_api_key

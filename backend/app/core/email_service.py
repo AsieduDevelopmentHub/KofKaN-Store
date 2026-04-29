@@ -30,7 +30,7 @@ else:
 
 
 from fastapi import BackgroundTasks
-from app.core.tasks import send_email_task, send_email_immediate
+from app.core.tasks import send_email_immediate
 
 class EmailService:
     """Service for sending emails via Resend API."""
@@ -57,20 +57,10 @@ class EmailService:
             )
             return "queued-in-background"
 
-        # 2. Fallback: Celery (if infrastructure exists)
-        try:
-            send_email_task.delay(
-                to_email=to_email,
-                subject=subject,
-                html_content=html_content,
-                from_email=from_email,
-            )
-            return "queued-in-celery"
-        except Exception as e:
-            # 3. Last Resort: Immediate sync (blocks request)
-            import logging
-            logging.getLogger(__name__).warning("Celery failed, sending synchronously: %s", e)
-            return send_email_immediate(to_email, subject, html_content, from_email)
+        # 2. Reliability fallback: send immediately.
+        # Many call sites (orders/payments/admin actions) don't pass FastAPI BackgroundTasks.
+        # Queueing to Celery without a running worker results in "email never sent".
+        return send_email_immediate(to_email, subject, html_content, from_email)
 
     @staticmethod
     def send_welcome_email(email: str, first_name: str | None = None, background_tasks: BackgroundTasks | None = None) -> bool:
