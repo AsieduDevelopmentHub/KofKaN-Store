@@ -179,3 +179,11 @@ def _ensure_emailsubscription_schema_compat() -> None:
                     "SET subscribed_at = COALESCE(subscribed_at, created_at)"
                 )
             )
+            # Legacy schemas often kept `created_at` as NOT NULL without a DB default.
+            # Current model writes `subscribed_at` instead, so ensure inserts still work.
+            conn.execute(
+                text(
+                    "ALTER TABLE emailsubscription "
+                    "ALTER COLUMN created_at SET DEFAULT NOW()"
+                )
+            )
