@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 import { useAuth } from "@/context/AuthContext";
 import { ordersDetail, type OrderDetail } from "@/lib/api/orders";
 import { paystackVerify } from "@/lib/api/payments";
@@ -69,8 +70,12 @@ export function CheckoutSuccessClient() {
 
   if (authLoading) {
     return (
-      <main className="min-h-[40vh] bg-kofkan-cream px-4 py-16 text-center text-small text-kofkan-text-secondary dark:bg-zinc-950 dark:text-zinc-400">
-        Loading…
+      <main className="bg-kofkan-cream px-4 py-6 dark:bg-zinc-950" aria-hidden>
+        <div className="mx-auto max-w-mobile space-y-3">
+          <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+          <SkeletonBlock className="h-20 w-full rounded-[12px]" />
+          <SkeletonBlock className="h-10 w-full rounded-[10px]" />
+        </div>
       </main>
     );
   }

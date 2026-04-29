@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
+import { ProductGridSkeleton } from "@/components/StorefrontSkeletons";
 import { ProductCardGrid } from "@/components/product/ProductCardGrid";
 import { useAuth } from "@/context/AuthContext";
 import { useCatalog } from "@/context/CatalogContext";
@@ -44,7 +45,7 @@ export function WishlistScreen() {
       </header>
 
       {(authLoading || catalogLoading) && saved.length === 0 ? (
-        <p className="py-8 text-center text-small text-kofkan-text-secondary dark:text-zinc-400">Loading…</p>
+        <ProductGridSkeleton count={6} />
       ) : saved.length === 0 ? (
         <div className="rounded-[12px] bg-white p-6 text-center ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
           <p className="font-semibold text-kofkan-text-primary dark:text-zinc-100">No saved items yet.</p>

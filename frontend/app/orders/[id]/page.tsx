@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { OrderListSkeleton } from "@/components/StorefrontSkeletons";
 import { OrderDetailPageClient } from "@/components/orders/OrderDetailPageClient";
 import { pageMetadata } from "@/lib/seo";
 
@@ -15,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 function DetailFallback() {
   return (
-    <main className="min-h-[40vh] bg-kofkan-cream px-4 py-16 text-center text-small text-kofkan-text-secondary dark:bg-zinc-950 dark:text-zinc-400">
-      Loading…
+    <main className="bg-kofkan-cream px-4 py-6 dark:bg-zinc-950">
+      <OrderListSkeleton count={1} />
     </main>
   );
 }

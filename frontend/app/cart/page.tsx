@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { ProductListSkeleton } from "@/components/StorefrontSkeletons";
 import { pageMetadata } from "@/lib/seo";
 import { CartPageClient } from "./CartPageClient";
 
@@ -11,8 +12,10 @@ export default function CartPage() {
   return (
     <Suspense
       fallback={
-        <main className="bg-kofkan-cream px-4 py-14 text-center text-small text-kofkan-text-secondary">
-          Loading cart…
+        <main className="bg-kofkan-cream px-4 py-6 dark:bg-zinc-950">
+          <div className="mx-auto max-w-mobile">
+            <ProductListSkeleton count={3} />
+          </div>
         </main>
       }
     >

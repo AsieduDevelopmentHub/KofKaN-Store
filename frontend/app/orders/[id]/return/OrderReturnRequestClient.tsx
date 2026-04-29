@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 import { useAuth } from "@/context/AuthContext";
 import { ordersDetail, type OrderDetail, type OrderLineItem } from "@/lib/api/orders";
 import { returnsCreate, type OrderReturn } from "@/lib/api/returns";
@@ -181,8 +182,12 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
 
   if (authLoading) {
     return (
-      <main className="min-h-[40vh] bg-kofkan-cream px-4 py-16 text-center text-small text-kofkan-text-secondary dark:bg-zinc-950 dark:text-zinc-400">
-        Loading…
+      <main className="bg-kofkan-cream px-4 py-6 dark:bg-zinc-950" aria-hidden>
+        <div className="mx-auto max-w-mobile space-y-3">
+          <SkeletonBlock className="h-6 w-40 rounded" />
+          <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+          <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+        </div>
       </main>
     );
   }
@@ -260,7 +265,10 @@ export function OrderReturnRequestClient({ orderIdParam }: Props) {
             </div>
           </section>
         ) : loading && !detail ? (
-          <p className="py-8 text-center text-small text-kofkan-text-secondary dark:text-zinc-400">Loading order…</p>
+          <div className="space-y-3 py-2" aria-hidden>
+            <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+            <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+          </div>
         ) : detail ? (
           <form onSubmit={onSubmit} className="space-y-4">
             <section className="rounded-[12px] bg-white p-4 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">

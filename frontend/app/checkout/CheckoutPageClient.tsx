@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ScreenHeader } from "@/components/ScreenHeader";
+import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { ordersCreate, ordersShippingOptions, type ShippingOptions } from "@/lib/api/orders";
@@ -323,8 +324,17 @@ export function CheckoutPageClient() {
 
   if (authLoading) {
     return (
-      <main className="min-h-[40vh] bg-kofkan-cream px-4 py-16 text-center text-small text-kofkan-text-secondary dark:bg-zinc-950 dark:text-zinc-400">
-        Loading…
+      <main className="bg-kofkan-cream px-4 py-6 dark:bg-zinc-950" aria-hidden>
+        <div className="mx-auto max-w-mobile space-y-3">
+          <SkeletonBlock className="h-6 w-40 rounded" />
+          <SkeletonBlock className="h-4 w-24 rounded" />
+          <div className="rounded-[12px] bg-white p-4 ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
+            <SkeletonBlock className="h-4 w-32 rounded" />
+            <SkeletonBlock className="mt-3 h-10 w-full rounded-[10px]" />
+            <SkeletonBlock className="mt-2 h-10 w-full rounded-[10px]" />
+            <SkeletonBlock className="mt-2 h-20 w-full rounded-[10px]" />
+          </div>
+        </div>
       </main>
     );
   }

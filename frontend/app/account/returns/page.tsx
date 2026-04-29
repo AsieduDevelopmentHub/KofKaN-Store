@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 
 import { useAppSession } from "@/components/Providers";
 import { createReturn, fetchMyReturns, type OrderReturn } from "@/lib/api/returns";
@@ -124,7 +125,17 @@ function ReturnsContent() {
 
 export default function ReturnsPage() {
   return (
-    <Suspense fallback={<main className="kofkan-shell py-10">Loading…</main>}>
+    <Suspense
+      fallback={
+        <main className="kofkan-shell py-10" aria-hidden>
+          <div className="space-y-3">
+            <SkeletonBlock className="h-6 w-28 rounded" />
+            <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+            <SkeletonBlock className="h-24 w-full rounded-[12px]" />
+          </div>
+        </main>
+      }
+    >
       <ReturnsContent />
     </Suspense>
   );

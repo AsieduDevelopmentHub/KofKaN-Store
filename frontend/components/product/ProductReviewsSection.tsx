@@ -258,7 +258,10 @@ export function ProductReviewsSection({ productId }: Props) {
           <div className="h-20 animate-pulse rounded-[10px] bg-kofkan-gray-soft dark:bg-zinc-800" />
         </div>
       ) : loading ? (
-        <p className="mt-3 text-small text-kofkan-text-muted">Loading reviews…</p>
+        <div className="mt-3 space-y-3" aria-hidden>
+          <div className="h-20 animate-pulse rounded-[10px] bg-kofkan-gray-soft dark:bg-zinc-800" />
+          <div className="h-20 animate-pulse rounded-[10px] bg-kofkan-gray-soft dark:bg-zinc-800" />
+        </div>
       ) : list.length === 0 ? (
         <p className="mt-3 text-small text-kofkan-text-secondary">No reviews yet.</p>
       ) : (

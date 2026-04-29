@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 import { AccountAuthForm } from "@/components/auth/AccountAuthForm";
 import { AccountSignedInHub, type AccountPanel } from "@/components/account/AccountSignedInHub";
 import { useAuth } from "@/context/AuthContext";
@@ -29,8 +30,14 @@ export function AccountScreen({ initialPanel }: { initialPanel?: AccountPanel } 
 
   if (loading && !user) {
     return (
-      <div className="mx-auto max-w-mobile px-5 py-16 text-center text-small text-kofkan-text-secondary dark:text-zinc-400">
-        Loading…
+      <div className="mx-auto max-w-mobile space-y-4 px-5 py-8" aria-hidden>
+        <SkeletonBlock className="h-6 w-32 rounded" />
+        <SkeletonBlock className="h-4 w-3/4 rounded" />
+        <div className="rounded-[12px] bg-white p-5 ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">
+          <SkeletonBlock className="h-10 w-full rounded-[10px]" />
+          <SkeletonBlock className="mt-3 h-10 w-full rounded-[10px]" />
+          <SkeletonBlock className="mt-3 h-10 w-1/2 rounded-[10px]" />
+        </div>
       </div>
     );
   }
