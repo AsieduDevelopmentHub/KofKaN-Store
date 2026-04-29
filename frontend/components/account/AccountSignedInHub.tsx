@@ -13,6 +13,7 @@ import {
   authVerifyEmail,
 } from "@/lib/api/auth";
 import { newsletterSubscribe, newsletterUnsubscribe } from "@/lib/api/subscriptions";
+import { AccountOrdersPanel } from "@/components/account/AccountOrdersPanel";
 import {
   GHANA_CITY_OTHER,
   GHANA_REGIONS,
@@ -37,6 +38,7 @@ export type AccountPanel =
   | "notifications"
   | "verify"
   | "newsletter"
+  | "orders"
   | "danger";
 
 type Panel = AccountPanel;
@@ -372,6 +374,18 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
           </section>
 
           <div className="space-y-2">
+            <Link
+              href="/account/returns"
+              className="kofkan-tap block rounded-[12px] bg-white px-4 py-3.5 text-small font-semibold text-kofkan-text-primary shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10"
+            >
+              <span className="block text-small font-semibold">View my returns</span>
+              <span className="mt-0.5 block text-small text-kofkan-text-muted">Track status and updates</span>
+            </Link>
+            <NavRow
+              label="Orders"
+              hint="Track deliveries, returns, and hide history"
+              onClick={() => setPanel("orders")}
+            />
             <NavRow
               label="Profile & settings"
               hint="Name, username, email, phone"
@@ -422,6 +436,8 @@ export function AccountSignedInHub({ initialPanel }: { initialPanel?: AccountPan
           </button>
         </>
       )}
+
+      {panel === "orders" && <AccountOrdersPanel />}
 
       {panel === "settings" && (
         <section className="rounded-[12px] bg-white p-5 shadow-sm ring-1 ring-black/[0.06] dark:bg-zinc-900 dark:ring-white/10">

@@ -38,6 +38,7 @@ def user_has_paid_purchase_for_product(session: Session, user_id: int, product_i
         .where(Order.user_id == user_id)
         .where(OrderItem.product_id == product_id)
         .where(Order.payment_status == "paid")
+        .where(Order.status == "delivered")
     )
     row = session.exec(stmt).first()
     return row is not None
