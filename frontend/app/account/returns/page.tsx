@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { SkeletonBlock } from "@/components/StorefrontSkeletons";
 
 import { useAppSession } from "@/components/Providers";
-import { createReturn, fetchMyReturns, type OrderReturn } from "@/lib/api/returns";
+import { fetchMyReturns, type OrderReturn } from "@/lib/api/returns";
 
 function formatWhen(iso: string): string {
   try {
@@ -18,11 +18,11 @@ function formatWhen(iso: string): string {
 
 function ReturnsContent() {
   const { token } = useAppSession();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const presetOrder = searchParams.get("order");
   const [returns, setReturns] = useState<OrderReturn[]>([]);
   const [orderId, setOrderId] = useState(presetOrder ?? "");
-  const [reason, setReason] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -50,18 +50,9 @@ function ReturnsContent() {
       setMessage("Enter a valid order number.");
       return;
     }
-    if (reason.trim().length < 3) {
-      setMessage("Describe the reason (at least 3 characters).");
-      return;
-    }
-    try {
-      await createReturn(token, id, reason.trim());
-      setReason("");
-      setMessage("Return request submitted.");
-      setReturns(await fetchMyReturns(token));
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Request failed");
-    }
+    setMessage("");
+    setReturns(await fetchMyReturns(token).catch(() => []));
+    router.push(`/orders/${id}/return`);
   };
 
   if (!token) {
@@ -95,21 +86,12 @@ function ReturnsContent() {
               placeholder="e.g. 12"
             />
           </label>
-          <label className="mt-3 block text-xs font-medium text-kofkan-muted">
-            Reason
-            <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="mt-1 min-h-[100px] w-full rounded-lg border border-kofkan-border px-3 py-2"
-              placeholder="Wrong item, defective, etc."
-            />
-          </label>
           <button
             type="button"
             onClick={() => void submit()}
             className="mt-4 rounded-xl bg-kofkan-black px-4 py-2.5 text-sm font-semibold text-kofkan-white"
           >
-            Submit request
+            Continue to request
           </button>
           {message ? <p className="mt-3 text-sm text-kofkan-muted">{message}</p> : null}
         </div>
