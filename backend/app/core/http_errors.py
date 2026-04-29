@@ -60,7 +60,17 @@ async def request_validation_exception_handler(
 
 
 async def integrity_error_handler(request: Request, exc: IntegrityError) -> JSONResponse:
+    raw = str(getattr(exc, "orig", exc)).lower()
+    if "emailsubscription" in raw and ("unique" in raw or "duplicate" in raw):
+        detail = "This email is already subscribed."
+    elif "unique" in raw or "duplicate" in raw:
+        detail = "That value already exists. Please use a different one."
+    elif "foreign key" in raw or "violates foreign key" in raw:
+        detail = "This action references data that does not exist."
+    else:
+        detail = "This action could not be completed. Please review your input and try again."
+
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
-        content={"detail": "This action could not be completed. Check that products exist and try again."},
+        content={"detail": detail},
     )
