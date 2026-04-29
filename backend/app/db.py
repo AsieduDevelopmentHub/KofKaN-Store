@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import Request
-from sqlalchemy import event, text
+from sqlalchemy import event, inspect, text
 from sqlmodel import Session, SQLModel, create_engine, select
 
 # Load environment variables from .env file
@@ -137,3 +137,45 @@ def get_session_context():
 def create_db_and_tables() -> None:
     """Create all database tables from SQLModel definitions."""
     SQLModel.metadata.create_all(engine)
+    _ensure_emailsubscription_schema_compat()
+
+
+def _ensure_emailsubscription_schema_compat() -> None:
+    """
+    Backward-compatible newsletter schema fix-up.
+
+    Some deployed databases were created from an older migration where
+    `emailsubscription` lacks newer columns (`user_id`, `subscribed_at`,
+    `unsubscribed_at`, `verification_token`, `verified`). That causes
+    runtime 500s when the ORM selects/inserts with the current model.
+    """
+    insp = inspect(engine)
+    if not insp.has_table("emailsubscription"):
+        return
+
+    cols = {c["name"] for c in insp.get_columns("emailsubscription")}
+    with engine.begin() as conn:
+        if "user_id" not in cols:
+            conn.execute(text("ALTER TABLE emailsubscription ADD COLUMN user_id INTEGER"))
+        if "subscribed_at" not in cols:
+            conn.execute(text("ALTER TABLE emailsubscription ADD COLUMN subscribed_at TIMESTAMP"))
+        if "unsubscribed_at" not in cols:
+            conn.execute(text("ALTER TABLE emailsubscription ADD COLUMN unsubscribed_at TIMESTAMP"))
+        if "verification_token" not in cols:
+            conn.execute(text("ALTER TABLE emailsubscription ADD COLUMN verification_token VARCHAR(255)"))
+        if "verified" not in cols:
+            conn.execute(
+                text(
+                    "ALTER TABLE emailsubscription ADD COLUMN verified BOOLEAN NOT NULL DEFAULT false"
+                )
+            )
+
+        # Backfill `subscribed_at` from legacy `created_at` when present.
+        cols_after = {c["name"] for c in inspect(conn).get_columns("emailsubscription")}
+        if "subscribed_at" in cols_after and "created_at" in cols_after:
+            conn.execute(
+                text(
+                    "UPDATE emailsubscription "
+                    "SET subscribed_at = COALESCE(subscribed_at, created_at)"
+                )
+            )

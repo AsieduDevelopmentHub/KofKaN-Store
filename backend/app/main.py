@@ -61,10 +61,23 @@ app.add_middleware(SlowAPIMiddleware)
 if _https_enabled and os.getenv("DEBUG", "false").lower() != "true":
     app.add_middleware(HTTPSRedirectMiddleware)
 
-_cors_raw = os.getenv(
-    "CORS_ORIGINS"
-)
-cors_origins = [o.strip() for o in _cors_raw.split(",") if o.strip()]
+_cors_raw = os.getenv("CORS_ORIGINS", "")
+_frontend_url = os.getenv("FRONTEND_URL", "").strip()
+_frontend_base_url = os.getenv("FRONTEND_BASE_URL", "").strip()
+
+# Build a deduplicated CORS origin allowlist from explicit CORS_ORIGINS plus
+# frontend URLs commonly set in deployment environments.
+_cors_candidates: list[str] = []
+_cors_candidates.extend([o.strip() for o in _cors_raw.split(",") if o.strip()])
+if _frontend_url:
+    _cors_candidates.append(_frontend_url.rstrip("/"))
+if _frontend_base_url:
+    _cors_candidates.append(_frontend_base_url.rstrip("/"))
+
+cors_origins: list[str] = []
+for origin in _cors_candidates:
+    if origin not in cors_origins:
+        cors_origins.append(origin)
 cors_allow_credentials = os.getenv("CORS_ALLOW_CREDENTIALS", "true").lower() == "true"
 _cors_regex = os.getenv("CORS_ORIGIN_REGEX", "").strip()
 
