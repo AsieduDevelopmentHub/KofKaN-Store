@@ -89,6 +89,7 @@ export async function apiFetchJson<T>(path: string, init?: RequestInit): Promise
   const url = `${getApiV1Base()}${path.startsWith("/") ? path : `/${path}`}`;
   const res = await fetch(url, {
     ...init,
+    cache: init?.cache ?? "no-store",
     headers: {
       Accept: "application/json",
       ...init?.headers,
@@ -114,6 +115,7 @@ export async function apiFetchBlobAuth(
   const doFetch = (tok: string) =>
     fetch(url, {
       ...init,
+      cache: init?.cache ?? "no-store",
       headers: {
         Accept: "*/*",
         Authorization: `Bearer ${tok.trim()}`,
@@ -146,6 +148,7 @@ export async function apiFetchJsonAuth<T>(
   const doFetch = (tok: string) =>
     fetch(url, {
       ...init,
+      cache: init?.cache ?? "no-store",
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${tok.trim()}`,
@@ -180,6 +183,7 @@ export async function apiFetchFormAuth<T>(
   const doFetch = (tok: string) =>
     fetch(url, {
       method,
+      cache: init?.cache ?? "no-store",
       headers: {
         Authorization: `Bearer ${tok.trim()}`,
       },
