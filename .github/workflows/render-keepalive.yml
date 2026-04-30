@@ -1,0 +1,66 @@
+# Pings the Render backend so a free-tier instance stays warm (optional).
+#
+# IMPORTANT: Scheduled workflows only run from the repository DEFAULT branch
+# (Settings → General → Default branch).  If the default branch is `main` you
+# must merge this file into `main` before cron will ever fire — cron triggers
+# on non-default branches are silently ignored.
+#
+# Actions must also be enabled: Settings → Actions → General → "Allow all
+# actions".  If you see "0 workflow runs" everywhere in the Actions tab, this
+# switch is almost always the cause on new repositories.
+#
+# Why you might see "0 workflow runs" even with everything enabled:
+#   - schedule (cron) only creates a run at the next tick (every 10 min below),
+#     and history stays empty until the first tick.
+#   - workflow_dispatch only appears after you click "Run workflow" once.
+#
+# This file also triggers on push when THIS workflow changes on the default
+# branch, so merging an update gives you an immediate run in the Actions tab.
+
+name: Render keepalive
+
+run-name: "Render keepalive (${{ github.event_name }})"
+
+on:
+  schedule:
+    # Every 10 minutes UTC — keeps Render warm without spamming Actions history.
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+  # Immediate run when this workflow file is updated on main integration branches
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/render-keepalive.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: render-keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping KofKaN backend on Render
+        env:
+          BACKEND_URL: https://kofkan-backend.onrender.com
+        run: |
+          set -e
+          for path in /health /healthz /; do
+            # `-w '%{http_code}'` prints the status so the log is actionable.
+            code=$(curl -sS -o /tmp/body -w "%{http_code}" \
+              --connect-timeout 30 \
+              --max-time 90 \
+              "${BACKEND_URL}${path}" || echo "000")
+            echo "${BACKEND_URL}${path} -> ${code}"
+            if [ "${code}" = "200" ]; then
+              exit 0
+            fi
+          done
+          echo "Ping failed for /health, /healthz and /"
+          tail -c 500 /tmp/body || true
+          exit 1
