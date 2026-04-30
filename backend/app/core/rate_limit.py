@@ -13,8 +13,11 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 def _get_limiter() -> Limiter:
+    # In test/CI we don't want a hard dependency on Redis being available.
+    # SlowAPI's default in-memory storage is sufficient for unit tests.
+    testing = os.getenv("TESTING", "").strip().lower() == "true"
     redis_url = os.getenv("REDIS_URL", "").strip()
-    if redis_url:
+    if redis_url and not testing:
         return Limiter(key_func=get_remote_address, storage_uri=redis_url)
     return Limiter(key_func=get_remote_address)
 

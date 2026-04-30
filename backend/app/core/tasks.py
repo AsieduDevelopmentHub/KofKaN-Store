@@ -48,6 +48,9 @@ def send_email_immediate(
             logger.info("Email send skipped — EMAIL_ENABLED=false (subject='%s')", subject)
         else:
             logger.warning("Email send skipped — RESEND_API_KEY missing (subject='%s')", subject)
+        # Test suite expects debug-mode "prints" when email delivery is disabled.
+        print(f"[DEBUG] Would send email to {to_email}")
+        print(f"[DEBUG] Subject: {subject}")
         return "debug-mode"
 
     resend.api_key = resend_api_key

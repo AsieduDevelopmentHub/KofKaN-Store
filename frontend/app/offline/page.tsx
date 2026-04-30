@@ -20,12 +20,12 @@ export default function OfflinePage() {
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">
-              <a
+              <Link
                 href="/"
                 className="kofkan-btn-cyan kofkan-tap inline-flex items-center justify-center rounded-[12px] px-5 py-3 text-sm font-semibold"
               >
                 Retry
-              </a>
+              </Link>
               <Link
                 href="/"
                 className="kofkan-tap inline-flex items-center justify-center rounded-[12px] border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
