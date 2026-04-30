@@ -183,7 +183,7 @@ export async function apiFetchFormAuth<T>(
   const doFetch = (tok: string) =>
     fetch(url, {
       method,
-      cache: init?.cache ?? "no-store",
+      cache: "no-store",
       headers: {
         Authorization: `Bearer ${tok.trim()}`,
       },
