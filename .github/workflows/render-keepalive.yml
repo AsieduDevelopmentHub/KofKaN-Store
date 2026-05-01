@@ -47,7 +47,7 @@ jobs:
     steps:
       - name: Ping KofKaN backend on Render
         env:
-          BACKEND_URL: https://kofkan-backend.onrender.com
+          BACKEND_URL: https://kofkan-store.onrender.com
         run: |
           set -e
           for path in /health /healthz /; do
